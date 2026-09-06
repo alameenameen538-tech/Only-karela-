@@ -81,17 +81,28 @@
     .sender-name.owner-name { color: #f87171 !important; }
     .sender-name.admin-name { color: #60a5fa !important; }
     .msg-time { font-size: 0.72rem; color: #6b7280; font-weight: 500; }
-    .quoted-box { background: rgba(30, 33, 44, 0.9); border-left: 3.5px solid #00a8e8; border-radius: 6px; padding: 5px 8px; margin-bottom: 4px; font-size: 0.78rem; color: #9ca3af; }
-    .quoted-user { font-weight: bold; color: #e5e7eb; font-size: 0.75rem; }
     .msg-content { background: #171922; border: 1px solid rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 12px; word-break: break-word; font-size: 0.94rem; color: #f3f4f6; }
     .hanu-secret-bg .msg-content { background: rgba(43, 17, 56, 0.82) !important; border: 1px solid rgba(236, 72, 153, 0.35) !important; }
+
+    /* വീഡിയോ ഡൗൺലോഡ് & കണ്ടെയ്നർ സ്റ്റൈൽ */
+    .video-card-box {
+      background: #090a0f; border: 1px solid #db2777; border-radius: 12px;
+      padding: 10px; margin-top: 6px; max-width: 320px;
+    }
+    .video-card-title {
+      font-size: 0.78rem; font-weight: bold; color: #ec4899; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .download-action-btn {
+      display: inline-flex; align-items: center; gap: 6px; background: #db2777;
+      color: #fff; text-decoration: none; padding: 6px 12px; border-radius: 6px;
+      font-size: 0.75rem; font-weight: bold; margin-top: 8px; border: none; cursor: pointer;
+    }
 
     #bottom-input-bar { background: #15171e; padding: 8px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #202330; flex-shrink: 0; }
     .input-action-btn { background: none; border: none; color: #9ca3af; font-size: 1.35rem; cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
     #input { border: 1px solid #242735; padding: 10px 14px; flex: 1; border-radius: 20px; background: #1b1e27; color: white; outline: none; font-size: 0.95rem; }
     #send-btn { background: none; border: none; color: #00a8e8; font-size: 1.3rem; cursor: pointer; }
 
-    /* സ്ക്രീൻഷോട്ടിലെ കൃത്യമായ അക്കൗണ്ട് & പ്രൊഫൈൽ മോഡൽ */
     #account-profile-modal {
       display: none; position: fixed; inset: 0; z-index: 6000;
       background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
@@ -102,100 +113,31 @@
       overflow: hidden; box-shadow: 0 0 35px rgba(220, 38, 38, 0.35); border: 1.5px solid #3b1117;
       display: flex; flex-direction: column;
     }
-    .profile-card-header {
-      padding: 14px 16px 8px 16px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .badge-chip {
-      background: rgba(255,255,255,0.08); border-radius: 14px; padding: 4px 10px;
-      font-size: 0.78rem; font-weight: bold; display: flex; align-items: center; gap: 4px;
-    }
-    .profile-center-avatar-wrap {
-      display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0 12px 0;
-    }
-    .profile-main-dp-ring {
-      width: 86px; height: 86px; border-radius: 50%; padding: 3px;
-      border: 2px solid #fff; position: relative; margin-bottom: 8px;
-    }
+    .profile-card-header { padding: 14px 16px 8px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .badge-chip { background: rgba(255,255,255,0.08); border-radius: 14px; padding: 4px 10px; font-size: 0.78rem; font-weight: bold; }
+    .profile-center-avatar-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0 12px 0; }
+    .profile-main-dp-ring { width: 86px; height: 86px; border-radius: 50%; padding: 3px; border: 2px solid #fff; position: relative; margin-bottom: 8px; }
     .profile-main-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-    .profile-dp-cam-btn {
-      position: absolute; bottom: 0; right: 0; background: #222; border: 1.5px solid #fff;
-      border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center;
-      justify-content: center; font-size: 0.75rem; cursor: pointer;
-    }
-    .profile-user-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin: 0; display: flex; align-items: center; gap: 6px; }
-    .music-action-pill {
-      background: rgba(255,255,255,0.12); border: none; border-radius: 16px;
-      padding: 4px 14px; font-size: 0.76rem; color: #fff; margin-top: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;
-    }
-
-    /* ചുവപ്പ് ടാബ് ബാർ (Account / More / Info) */
-    .profile-red-tab-bar {
-      background: #b91c1c; display: flex; padding: 3px;
-    }
-    .prof-tab-btn {
-      flex: 1; padding: 10px 0; background: none; border: none; color: #fca5a5;
-      font-size: 0.92rem; font-weight: bold; cursor: pointer; text-align: center;
-    }
-    .prof-tab-btn.active {
-      background: rgba(0,0,0,0.25); color: #ffffff; border-radius: 6px;
-    }
-
-    /* ടാബ് ബോഡി ഉള്ളടക്കം */
-    .profile-tab-body {
-      padding: 14px 18px; max-height: 280px; overflow-y: auto; background: #0c0d12;
-    }
-    .prof-menu-row {
-      display: flex; align-items: center; gap: 14px; padding: 11px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.92rem; color: #e5e7eb; cursor: pointer;
-    }
-    .prof-info-row {
-      display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem;
-    }
-    .prof-info-label { color: #9ca3af; display: flex; align-items: center; gap: 8px; }
+    .profile-user-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin: 0; }
+    .profile-red-tab-bar { background: #b91c1c; display: flex; padding: 3px; }
+    .prof-tab-btn { flex: 1; padding: 10px 0; background: none; border: none; color: #fca5a5; font-size: 0.92rem; font-weight: bold; cursor: pointer; text-align: center; }
+    .prof-tab-btn.active { background: rgba(0,0,0,0.25); color: #ffffff; border-radius: 6px; }
+    .profile-tab-body { padding: 14px 18px; max-height: 280px; overflow-y: auto; background: #0c0d12; }
+    .prof-info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; }
+    .prof-info-label { color: #9ca3af; }
     .prof-info-val { font-weight: 600; color: #fff; }
 
-    .hexagon-badge-row {
-      display: flex; justify-content: center; gap: 8px; margin-top: 14px; padding-top: 8px;
-    }
-    .hex-badge {
-      width: 38px; height: 38px; border-radius: 8px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #fff;
-    }
-
-    /* സ്ക്രീൻഷോട്ടിലെ വലത് യൂസർ ഡ്രോയർ */
     #right-drawer {
       position: fixed; top: 0; right: -100%; width: 100%; max-width: 340px; height: 100%;
       background: #15171e; z-index: 3000; transition: right 0.25s ease; display: flex; flex-direction: column;
     }
     #right-drawer.open { right: 0; }
-    .drawer-top-icons-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; background: #111218; border-bottom: 1px solid #202330;
-    }
+    .drawer-top-icons-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #111218; border-bottom: 1px solid #202330; }
     .drawer-top-icons-bar button { background: none; border: none; color: #9ca3af; font-size: 1.15rem; cursor: pointer; }
-    .stories-carousel-row {
-      display: flex; gap: 12px; overflow-x: auto; padding: 12px 14px;
-      border-bottom: 1px solid #202330; background: #15171e; flex-shrink: 0;
-    }
-    .stories-carousel-row::-webkit-scrollbar { display: none; }
-    .story-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex-shrink: 0; }
-    .story-dp-wrap {
-      width: 52px; height: 52px; border-radius: 50%; padding: 2px;
-      border: 2px solid #e11d48; display: flex; align-items: center; justify-content: center;
-    }
-    .story-dp-wrap.add-story { border-color: #06b6d4; background: rgba(6, 182, 212, 0.1); }
-    .story-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-    .story-label { font-size: 0.68rem; color: #9ca3af; max-width: 54px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .online-pill-strip {
-      margin: 10px 14px 4px 14px; background: #000;
-      border: 1.5px solid #00a8e8; border-radius: 20px; padding: 6px 0;
-      text-align: center; font-size: 0.85rem; font-weight: 800; color: #fff;
-    }
+    .online-pill-strip { margin: 10px 14px 4px 14px; background: #000; border: 1.5px solid #00a8e8; border-radius: 20px; padding: 6px 0; text-align: center; font-size: 0.85rem; font-weight: 800; color: #fff; }
     .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
     .u-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
     .u-avatar-wrap { width: 40px; height: 40px; border-radius: 50%; padding: 2px; border: 2px solid #ec4899; flex-shrink: 0; cursor: pointer; }
-    .u-avatar-wrap.blue-border { border-color: #00a8e8; }
     .u-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
     #custom-side-drawer {
@@ -258,7 +200,6 @@
         <button class="nav-icon" onclick="reloadChatPage()" title="Refresh">🔄</button>
         <button class="nav-icon" onclick="shareYouTubePrompt()" title="Share YouTube Video">▶️</button>
         <button class="nav-icon" onclick="openRightUsers()">👥</button>
-        <button class="nav-icon" onclick="alert('No new notifications')">🔔</button>
         <div class="header-dp-wrap" onclick="openUserProfileModal(myName, myRole, true)">
           <img id="nav-user-dp" class="header-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user">
           <div class="online-green-badge"></div>
@@ -283,7 +224,7 @@
 
   <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-  <!-- കൃത്യമായ Bochat അക്കൗണ്ട് & പ്രൊഫൈൽ മോഡൽ (സ്ക്രീൻഷോട്ടിലെ പോലെ) -->
+  <!-- അക്കൗണ്ട് & പ്രൊഫൈൽ മോഡൽ -->
   <div id="account-profile-modal">
     <div class="profile-card-container">
       <div class="profile-card-header">
@@ -292,8 +233,6 @@
           <div class="badge-chip" style="color:#38bdf8;">👍 5</div>
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
-          <span style="cursor:pointer;" onclick="changeProfilePicPrompt()">📷</span>
-          <span style="cursor:pointer;" onclick="alert('Profile view mode')">👁️</span>
           <span style="cursor:pointer; font-weight:bold; font-size:1.1rem;" onclick="closeProfileModal()">✕</span>
         </div>
       </div>
@@ -301,66 +240,29 @@
       <div class="profile-center-avatar-wrap">
         <div class="profile-main-dp-ring">
           <img id="prof-modal-dp" class="profile-main-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user">
-          <div class="profile-dp-cam-btn" onclick="changeProfilePicPrompt()">📷</div>
         </div>
         <div style="font-size:0.75rem; color:#38bdf8; font-weight:bold;">🔹 VIP</div>
         <h3 id="prof-modal-username" class="profile-user-title">Ameen7</h3>
-        <button class="music-action-pill" onclick="toggleProfileAudio()">▶ Profile Music</button>
       </div>
 
-      <!-- ചുവപ്പ് ടാബ് ബാർ (Account / More / Info) -->
       <div class="profile-red-tab-bar">
         <button id="tab-btn-info" class="prof-tab-btn active" onclick="switchProfileTab('info')">Info</button>
         <button id="tab-btn-account" class="prof-tab-btn" onclick="switchProfileTab('account')">Account</button>
-        <button id="tab-btn-more" class="prof-tab-btn" onclick="switchProfileTab('more')">More</button>
       </div>
 
-      <!-- ടാബ് ഉള്ളടക്കം -->
       <div class="profile-tab-body">
-        <!-- 1. Info Tab -->
         <div id="prof-tab-content-info">
           <div class="prof-info-row"><span class="prof-info-label">❤️ Relationship</span> <span class="prof-info-val">In a relationship</span></div>
           <div class="prof-info-row"><span class="prof-info-label">🌐 Country</span> <span class="prof-info-val">India</span></div>
-          <div class="prof-info-row"><span class="prof-info-label">🔤 Language</span> <span class="prof-info-val">English</span></div>
-          <div class="prof-info-row"><span class="prof-info-label">👤 Member since</span> <span class="prof-info-val">2026-06-28</span></div>
           <div class="prof-info-row"><span class="prof-info-label">🏠 Current room</span> <span class="prof-info-val" id="prof-info-room">Kerala Chat Room</span></div>
-          <div class="prof-info-row"><span class="prof-info-label">👁️ Last seen</span> <span class="prof-info-val">Online now</span></div>
-          
-          <div class="hexagon-badge-row">
-            <div class="hex-badge" style="background:#e11d48;">📈<span>6</span></div>
-            <div class="hex-badge" style="background:#0284c7;">💬<span>1</span></div>
-            <div class="hex-badge" style="background:#9333ea;">👥<span>1</span></div>
-            <div class="hex-badge" style="background:#d97706;">🪙<span>9</span></div>
-            <div class="hex-badge" style="background:#db2777;">💎<span>3</span></div>
-          </div>
         </div>
-
-        <!-- 2. Account Tab -->
         <div id="prof-tab-content-account" style="display:none;">
-          <div class="prof-menu-row" onclick="editProfileField('Name')">📇 Edit info</div>
-          <div class="prof-menu-row" onclick="editProfileField('Relationship')">❤️ Edit relationship</div>
-          <div class="prof-menu-row" onclick="editProfileField('About')">❓ Edit about me</div>
-          <div class="prof-menu-row" onclick="editProfileField('Mood')">🤍 Edit mood</div>
-          <div class="prof-menu-row" onclick="editProfileField('Email')">✉️ Edit email</div>
-          <div class="prof-menu-row" onclick="editProfileField('Password')">🔑 Change password</div>
-        </div>
-
-        <!-- 3. More Tab -->
-        <div id="prof-tab-content-more" style="display:none;">
-          <div class="prof-menu-row" onclick="alert('Send a gift')">🎁 Gifts</div>
-          <div class="prof-menu-row" onclick="alert('Manage friends')">👤+ Manage friends</div>
-          <div class="prof-menu-row" onclick="alert('Manage ignores')">🚫 Manage ignores</div>
-          <div class="prof-menu-row" onclick="alert('Preferences')">👤 Preferences</div>
-          <div class="prof-menu-row" onclick="alert('Privacy settings')">👻 Privacy settings</div>
-          <div class="prof-menu-row" onclick="alert('Language: Malayalam / English')">🌐 Language/Location</div>
-          <div class="prof-menu-row" style="color:#f87171;" onclick="logoutApp()">↪️ Logout options</div>
-          <div class="prof-menu-row" style="color:#ef4444;" onclick="alert('Delete request submitted')">🗑️ Delete account</div>
+          <div class="prof-info-row" style="cursor:pointer;" onclick="logoutApp()"><span class="prof-info-label" style="color:#ef4444;">🚪 Logout</span></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- സൈഡ് ഡ്രോയർ -->
   <div id="custom-side-drawer">
     <div class="drawer-header-card">
       <div class="room-badge-art">മലയാളം</div>
@@ -371,27 +273,13 @@
     </div>
     <div class="drawer-menu-item" onclick="openModal('wallet-modal')"><div class="drawer-menu-item-left"><span class="menu-icon" style="color:#facc15;">🪙</span><span>My Wallet</span></div></div>
     <div class="drawer-menu-item" onclick="openModal('room-modal')"><div class="drawer-menu-item-left"><span class="menu-icon">🏠</span><span>Room list</span></div></div>
-    <div class="drawer-menu-item" onclick="openUserProfileModal(myName, myRole, true)"><div class="drawer-menu-item-left"><span class="menu-icon">👤</span><span>My Account / Profile</span></div></div>
-    <div class="drawer-menu-item" onclick="openModal('owner-mod-modal')" id="owner-mod-panel-menu" style="display:none; color:#38bdf8;"><div class="drawer-menu-item-left"><span class="menu-icon">🛡️</span><span>Blocked / Muted Users</span></div></div>
     <div class="drawer-menu-item" onclick="logoutApp()" style="color:#ef4444; margin-top:12px;"><div class="drawer-menu-item-left"><span class="menu-icon">🚪</span><span>Logout</span></div></div>
   </div>
 
-  <!-- വലത് ഡ്രോയർ (Stories + Online Users) -->
   <div id="right-drawer">
     <div class="drawer-top-icons-bar">
       <button onclick="closeAllDrawers()">✕</button>
       <button style="color:#00a8e8;">👥</button>
-      <button onclick="openUserProfileModal(myName, myRole, true)">👤</button>
-      <button>🛡️</button>
-      <button>📞</button>
-      <button>🔍</button>
-      <button>📷</button>
-    </div>
-    <div class="stories-carousel-row" id="stories-strip">
-      <div class="story-item" onclick="addNewStoryPrompt()">
-        <div class="story-dp-wrap add-story"><span style="font-size:1.5rem; color:#06b6d4;">💖</span></div>
-        <span class="story-label">Add Story</span>
-      </div>
     </div>
     <div class="online-pill-strip">Online <span id="active-user-count">1</span></div>
     <ul id="user-rows" class="user-scroll-list"></ul>
@@ -401,7 +289,6 @@
     <div class="modal-box" style="text-align: center;">
       <h3>Select Room</h3>
       <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Kerala Chat Room')"><span>💬 Kerala Chat Room</span> <span>Enter</span></button>
-      <button class="game-btn" style="background:#8b5cf6;" onclick="selectRoom('LoFi Room')"><span>🎶 LoFi Room</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#db2777;" onclick="selectRoom('hanu ameen secret room 💗')"><span>💗 hanu ameen secret room 🔒</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
     </div>
@@ -521,7 +408,6 @@
 
     function logoutApp() { localStorage.clear(); window.location.reload(); }
 
-    // റിയൽ YouTube ഷെയറിംഗ് (എല്ലാ റൂമുകളിലും ലഭ്യമാണ്)
     function shareYouTubePrompt() {
       const url = prompt("YouTube വീഡിയോ ലിങ്ക് നൽകുക:");
       if (!url) return;
@@ -534,12 +420,11 @@
       }
     }
 
-    // റിയൽ TikTok / Reels ഷെയറിംഗ് (hanu ameen secret room-ൽ മാത്രം അനുവദനീയം)
     function shareTikTokPrompt() {
       if (currentRoom !== 'hanu ameen secret room 💗') {
         return alert("⛔ TikTok / Reels ആക്‌സസ് 'hanu ameen secret room 💗'-ൽ മാത്രമേ സാധിക്കൂ!");
       }
-      const url = prompt("TikTok അല്ലെങ്കിൽ Reels വീഡിയോ URL നൽകുക:");
+      const url = prompt("TikTok അല്ലെങ്കിൽ വീഡിയോ URL നൽകുക (MP4 direct link):");
       if (url && url.trim()) {
         socket.emit('chat message', { type: 'tiktok', content: url.trim() });
       }
@@ -556,6 +441,16 @@
       return false;
     }
 
+    // വീഡിയോ ഫയൽ നേരിട്ട് ഫോണിലേക്ക് ഡൗൺലോഡ് ചെയ്യാനുള്ള ഫങ്ഷൻ
+    window.downloadVideoFile = function(url, filename = 'video.mp4') {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+
     function renderMessage(data) {
       const li = document.createElement('li');
       li.id = data.id;
@@ -564,23 +459,37 @@
       const type = data.type || 'text';
       const textBody = data.text || data.content;
 
-      if (type === 'text') contentHtml = `<div>${textBody}</div>`;
-      else if (type === 'youtube') {
+      if (type === 'text') {
+        contentHtml = `<div>${textBody}</div>`;
+      } else if (type === 'youtube') {
         contentHtml = `
           <div style="margin-top:6px;">
             <iframe width="100%" height="200" src="https://www.youtube.com/embed/${data.content}" frameborder="0" allowfullscreen style="border-radius:10px; max-width:320px;"></iframe>
           </div>
         `;
-      } else if (type === 'tiktok') {
+      } else if (type === 'tiktok' || type === 'video') {
+        // വീഡിയോ പ്ലെയറും ഒപ്പം ഡൗൺലോഡ് ബട്ടണും
         contentHtml = `
-          <div style="margin-top:6px; background:#000; padding:8px; border-radius:10px; max-width:280px; border:1px solid #db2777;">
-            <small style="color:#ec4899; font-weight:bold;">🎵 TikTok / Reel Media</small>
-            <video controls src="${data.content}" style="width:100%; border-radius:8px; margin-top:4px; max-height:280px;"></video>
+          <div class="video-card-box">
+            <div class="video-card-title">🎬 Video Media</div>
+            <video controls playsinline preload="metadata" src="${data.content}" style="width:100%; border-radius:8px; max-height:280px; background:#000;"></video>
+            <div>
+              <button class="download-action-btn" onclick="downloadVideoFile('${data.content}', 'kcr_video_${Date.now()}.mp4')">
+                ⬇️ Download Video
+              </button>
+            </div>
           </div>
         `;
-      } else if (type === 'image') contentHtml = `<img src="${data.content}" style="max-width:220px; border-radius:10px;">`;
-      else if (type === 'video') contentHtml = `<video controls src="${data.content}" style="max-width:220px; border-radius:10px;"></video>`;
-      else if (type === 'audio') contentHtml = `<audio controls src="${data.content}" style="max-width:230px; height:38px;"></audio>`;
+      } else if (type === 'image') {
+        contentHtml = `
+          <div>
+            <img src="${data.content}" style="max-width:220px; border-radius:10px; display:block;">
+            <button class="download-action-btn" onclick="downloadVideoFile('${data.content}', 'image_${Date.now()}.png')">⬇️ Download Image</button>
+          </div>
+        `;
+      } else if (type === 'audio') {
+        contentHtml = `<audio controls src="${data.content}" style="max-width:230px; height:38px;"></audio>`;
+      }
 
       li.innerHTML = `
         <img class="msg-avatar" src="${data.avatar}" onclick="openUserProfileModal('${data.user}', '${data.role}', false)">
@@ -609,7 +518,6 @@
       chatArea.scrollTop = chatArea.scrollHeight;
     });
 
-    // പ്രൊഫൈൽ മോഡൽ ഫങ്ഷനുകൾ (സ്ക്രീൻഷോട്ടുകളിലെ ഡിസൈൻ)
     function openUserProfileModal(userName, userRole, isSelf) {
       closeAllDrawers();
       document.getElementById('prof-modal-username').textContent = userName;
@@ -625,11 +533,8 @@
     function switchProfileTab(tab) {
       document.getElementById('tab-btn-info').classList.remove('active');
       document.getElementById('tab-btn-account').classList.remove('active');
-      document.getElementById('tab-btn-more').classList.remove('active');
-
       document.getElementById('prof-tab-content-info').style.display = 'none';
       document.getElementById('prof-tab-content-account').style.display = 'none';
-      document.getElementById('prof-tab-content-more').style.display = 'none';
 
       if (tab === 'info') {
         document.getElementById('tab-btn-info').classList.add('active');
@@ -637,30 +542,7 @@
       } else if (tab === 'account') {
         document.getElementById('tab-btn-account').classList.add('active');
         document.getElementById('prof-tab-content-account').style.display = 'block';
-      } else if (tab === 'more') {
-        document.getElementById('tab-btn-more').classList.add('active');
-        document.getElementById('prof-tab-content-more').style.display = 'block';
       }
-    }
-
-    function changeProfilePicPrompt() {
-      const url = prompt("പുതിയ Profile Image URL നൽകുക:");
-      if (url && url.trim()) {
-        myAvatar = url.trim();
-        localStorage.setItem('kcr_avatar', myAvatar);
-        document.getElementById('nav-user-dp').src = myAvatar;
-        document.getElementById('prof-modal-dp').src = myAvatar;
-        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
-      }
-    }
-
-    function editProfileField(field) {
-      const val = prompt(`പുതിയ ${field} നൽകുക:`);
-      if (val) alert(`${field} അപ്‌ഡേറ്റ് ചെയ്തു!`);
-    }
-
-    function toggleProfileAudio() {
-      alert("Playing profile background audio theme...");
     }
 
     socket.on('update users', (usersList) => {
@@ -685,11 +567,20 @@
       });
     });
 
+    // ഫോണിൽ നിന്ന് വീഡിയോ / ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുമ്പോൾ
     function handleMediaUpload(el) {
       const file = el.files[0];
       if (!file) return;
+      if (file.size > 25 * 1024 * 1024) return alert("വീഡിയോ സൈസ് 25MB-ൽ കുറവായിരിക്കണം!");
+
       const reader = new FileReader();
-      reader.onload = e => socket.emit('chat message', { type: file.type.startsWith('video') ? 'video' : 'image', content: e.target.result });
+      reader.onload = e => {
+        const isVid = file.type.startsWith('video');
+        socket.emit('chat message', {
+          type: isVid ? 'video' : 'image',
+          content: e.target.result
+        });
+      };
       reader.readAsDataURL(file);
       el.value = '';
     }
