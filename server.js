@@ -10,7 +10,7 @@ app.use(express.static('public'));
 
 const users = {};
 const stories = [];
-const dynamicAdmins = new Set(); // Owner ആഡ് ചെയ്യുന്ന മോഡറേറ്റർമാർ
+const dynamicAdmins = new Set();
 
 const roomCurrentTrack = {
     'LoFi Room': 'jfKfPfyJRdk'
@@ -23,16 +23,6 @@ const roomMessages = {
     'Staff Room': []
 };
 
-const OWNERS = ['ameen', 'owner'];
-const DEFAULT_ADMINS = ['admin', 'mod'];
-
-function getRole(name) {
-    const lower = (name || '').toLowerCase().trim();
-    if (OWNERS.some(o => lower.includes(o))) return 'Owner';
-    if (dynamicAdmins.has(lower) || DEFAULT_ADMINS.some(a => lower.includes(a))) return 'Admin';
-    return 'Member';
-}
-
 io.on('connection', (socket) => {
     socket.emit('load stories', stories);
 
@@ -40,7 +30,13 @@ io.on('connection', (socket) => {
         socket.currentRoom = data.room || 'Normal Room';
         socket.join(socket.currentRoom);
         
-        const role = getRole(data.name);
+        let role = data.clientRole || 'Member';
+        const lower = (data.name || '').toLowerCase().trim();
+
+        if (dynamicAdmins.has(lower)) {
+            role = 'Admin';
+        }
+
         const isOwnerOrAdmin = role === 'Owner' || role === 'Admin';
 
         users[socket.id] = { 
@@ -52,7 +48,6 @@ io.on('connection', (socket) => {
             isVip: isOwnerOrAdmin ? true : (data.isVip || false)
         };
 
-        io.emit('update users all', Object.values(users));
         io.to(socket.currentRoom).emit('update users', Object.values(users).filter(u => u.room === socket.currentRoom));
         socket.emit('load room messages', roomMessages[socket.currentRoom] || []);
 
@@ -118,7 +113,6 @@ io.on('connection', (socket) => {
         io.to(room).emit('chat message', botMsg);
     });
 
-    // ഓണർക്ക് ആരെയും Moderator/Admin ആക്കാനും മാറ്റാനുമുള്ള ഫംഗ്ഷൻ
     socket.on('toggle moderator', (targetSocketId) => {
         const currentUser = users[socket.id];
         if (currentUser && currentUser.role === 'Owner') {

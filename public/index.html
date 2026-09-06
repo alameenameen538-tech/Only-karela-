@@ -13,7 +13,6 @@
       background: radial-gradient(circle at 10% 20%, #17102e 0%, #09090f 90%);
     }
 
-    /* ലൈവ് ലോഗിൻ / വെൽക്കം സ്ക്രീൻ */
     #login-screen {
       position: fixed; inset: 0; z-index: 5000;
       background: radial-gradient(circle at 50% 30%, #1e1145, #080711);
@@ -75,10 +74,7 @@
       border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;
     }
 
-    #main-chat {
-      flex: 1; overflow-y: auto; padding: 1rem;
-      background: transparent;
-    }
+    #main-chat { flex: 1; overflow-y: auto; padding: 1rem; background: transparent; }
     #messages { list-style: none; margin: 0; padding: 0; }
     #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; }
     .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00e5ff; flex-shrink: 0; }
@@ -168,13 +164,13 @@
 </head>
 <body>
 
-  <!-- പ്രീമിയം ലോഗിൻ / എൻട്രി സ്ക്രീൻ -->
+  <!-- ലോഗിൻ സ്ക്രീൻ -->
   <div id="login-screen">
     <div class="login-card">
       <img id="login-dp-preview" class="login-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=welcome" alt="Avatar">
       <h2 style="margin: 0 0 6px 0; color: #fff; font-size: 1.4rem;">Kerala Chat</h2>
       <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 18px;">റൂമിൽ പ്രവേശിക്കാൻ പേര് നൽകുക</p>
-      <input type="text" id="login-username-input" class="login-input" placeholder="Your Name / Handle" maxlength="20">
+      <input type="text" id="login-username-input" class="login-input" placeholder="Your Name" maxlength="20">
       <button class="login-btn" onclick="enterChatRoom()">ENTER CHAT 🚀</button>
     </div>
   </div>
@@ -232,12 +228,11 @@
       <li class="menu-row" onclick="openModal('spin-modal')"><span>🎡</span> Daily Free Spin (സ്പിൻ)</li>
       <li class="menu-row" onclick="openModal('dice-modal')"><span>🎲</span> Dice & Ludo Game</li>
       <li class="menu-row" onclick="openModal('vip-modal')"><span>💎</span> VIP Store (സ്റ്റോർ)</li>
-      <li class="menu-row" onclick="openModal('admin-modal')" id="owner-tools-menu" style="display:none; color:#f87171;"><span>👑</span> Owner Control (അഡ്മിൻ മാനേജ്)</li>
       <li class="menu-row" onclick="editNamePrompt()"><span>✏️</span> Edit Name (പേര് മാറ്റുക)</li>
     </ul>
   </div>
 
-  <!-- വലത് യൂസർ ലിസ്റ്റ് (ഇവിടെ ഓണർക്ക് മോഡറേറ്റർ ആക്കാനുള്ള ബട്ടൺ ഉണ്ടാകും) -->
+  <!-- വലത് യൂസർ ലിസ്റ്റ് -->
   <div id="right-drawer">
     <div style="display:flex; justify-content:space-between; padding:14px; background:#18152b; border-bottom:1px solid #26213f;">
       <button class="icon-btn" onclick="closeAllDrawers()">✕</button>
@@ -263,7 +258,7 @@
     </div>
   </div>
 
-  <!-- സ്പിൻ വീൽ മോഡൽ -->
+  <!-- സ്പിൻ മോഡൽ -->
   <div id="spin-modal" class="modal">
     <div class="modal-box">
       <h3>🎡 Lucky Free Spin</h3>
@@ -299,33 +294,49 @@
   <script>
     const socket = io();
     const STAFF_ROOM_PASSWORD = "staff123";
+    
+    // രഹസ്യ ഓണർ പിൻ (Owner PIN): താങ്കൾക്ക് മാത്രം അറിയാവുന്ന പിൻ
+    const OWNER_SECRET_PIN = "7788";
 
     let myName = localStorage.getItem('kcr_name') || "";
     let myAvatar = localStorage.getItem('kcr_dp') || "";
     let myCoins = parseInt(localStorage.getItem('kcr_coins') || '120');
     let isVip = localStorage.getItem('kcr_vip') === 'true';
     let currentRoom = "Normal Room";
-    let myRole = 'Member';
+    let myRole = localStorage.getItem('kcr_role') || 'Member';
     let isOwnerOrAdmin = false;
 
-    // മുൻപ് പേര് ഉണ്ടെങ്കിൽ ലോഗിൻ ബോക്സിൽ കാണിക്കുക
     if (myName) {
       document.getElementById('login-username-input').value = myName;
       document.getElementById('login-dp-preview').src = myAvatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
     }
 
-    function checkUserRole(name) {
-      const lower = (name || '').toLowerCase();
-      if (lower.includes('ameen') || lower.includes('owner')) return 'Owner';
-      if (lower.includes('admin') || lower.includes('mod')) return 'Admin';
+    function verifyOwnerAuth(name) {
+      const lower = (name || '').toLowerCase().trim();
+      if (lower === 'ameen' || lower === 'owner') {
+        const savedAuth = sessionStorage.getItem('is_owner_authenticated');
+        if (savedAuth === 'true') return 'Owner';
+
+        const enteredPin = prompt("🔐 Enter Owner Secret PIN (ഓണർ രഹസ്യ പിൻ നൽകുക):");
+        if (enteredPin === OWNER_SECRET_PIN) {
+          sessionStorage.setItem('is_owner_authenticated', 'true');
+          return 'Owner';
+        } else {
+          alert("❌ തെറ്റായ പിൻ! താങ്കൾ സാധാരണ മെമ്പറായി ലോഗിൻ ചെയ്യപ്പെടുന്നു.");
+          return 'Member';
+        }
+      }
       return myRole === 'Admin' ? 'Admin' : 'Member';
     }
 
     function enterChatRoom() {
       const val = document.getElementById('login-username-input').value.trim();
-      if (!val) return alert("ദയവായി ഒരു പേര് ടൈപ്പ് ചെയ്യുക!");
+      if (!val) return alert("ദയവായി ഒരു പേര് നൽകുക!");
 
       myName = val;
+      myRole = verifyOwnerAuth(myName);
+      localStorage.setItem('kcr_role', myRole);
+
       myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
       localStorage.setItem('kcr_name', myName);
       localStorage.setItem('kcr_dp', myAvatar);
@@ -334,17 +345,12 @@
       document.getElementById('app-layout').style.display = 'flex';
 
       updateProfileUI();
-      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip });
+      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
     }
 
     function updateProfileUI() {
-      myRole = checkUserRole(myName);
       isOwnerOrAdmin = myRole === 'Owner' || myRole === 'Admin';
       document.getElementById('drawer-user-name').textContent = myName;
-
-      if (myRole === 'Owner') {
-        document.getElementById('owner-tools-menu').style.display = 'flex';
-      }
 
       if (isOwnerOrAdmin) {
         document.getElementById('coin-balance').innerHTML = '♾️ Unlimited';
@@ -365,6 +371,7 @@
     socket.on('role updated', (data) => {
       myRole = data.role;
       isVip = data.isVip;
+      localStorage.setItem('kcr_role', myRole);
       localStorage.setItem('kcr_vip', isVip ? 'true' : 'false');
       updateProfileUI();
       alert(`🎉 നിങ്ങളുടെ പദവി മാറി: താങ്കൾ ഇപ്പോൾ ${myRole} ആണ്!`);
@@ -408,7 +415,7 @@
     }
 
     function openShareMusicPrompt() {
-      const url = prompt("YouTube അല്ലെങ്കിൽ YouTube Music ലിങ്ക് പേസ്റ്റ് ചെയ്യുക:");
+      const url = prompt("YouTube ലിങ്ക് പേസ്റ്റ് ചെയ്യുക:");
       if (!url) return;
       const vId = extractVideoID(url);
       if (vId) {
@@ -498,7 +505,6 @@
       if(el) el.remove();
     });
 
-    // ഓണർക്ക് ആളുകളെ Moderator ആക്കാനുള്ള ഫംഗ്ഷൻ
     window.toggleMod = function(targetId, targetName, isNowMod) {
       const action = isNowMod ? "മോഡറേറ്റർ പദവി മാറ്റണോ?" : "മോഡറേറ്റർ (Admin) ആക്കണോ?";
       if (confirm(`${targetName}-നെ ${action}`)) {
@@ -539,12 +545,15 @@
       closeAllDrawers();
       const n = prompt("പുതിയ പേര് നൽകുക:", myName);
       if(n && n.trim()) {
+        sessionStorage.removeItem('is_owner_authenticated');
         myName = n.trim();
+        myRole = verifyOwnerAuth(myName);
         localStorage.setItem('kcr_name', myName);
+        localStorage.setItem('kcr_role', myRole);
         myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
         localStorage.setItem('kcr_dp', myAvatar);
         updateProfileUI();
-        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip });
+        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip, clientRole: myRole });
       }
     }
 
@@ -604,7 +613,7 @@
       localStorage.setItem('kcr_vip', 'true');
       updateProfileUI();
       closeModal('vip-modal');
-      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true });
+      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true, clientRole: myRole });
     }
   </script>
 </body>
