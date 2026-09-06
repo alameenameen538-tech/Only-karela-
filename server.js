@@ -15,13 +15,15 @@ let roomMessages = {
     'Kerala Chat Room': [],
     'LoFi Room': [],
     'Game Room': [],
-    'Staff Room': []
+    'hanu ameen secret room 💗': []
 };
 
-// പഴയ മെസ്സേജുകൾ ഫയലിൽ നിന്നെടുക്കുന്നു
 if (fs.existsSync(MSG_FILE)) {
     try {
         roomMessages = JSON.parse(fs.readFileSync(MSG_FILE, 'utf8'));
+        if (!roomMessages['hanu ameen secret room 💗']) {
+            roomMessages['hanu ameen secret room 💗'] = roomMessages['Staff Room'] || [];
+        }
     } catch (e) {
         console.log('Error reading messages file');
     }
@@ -106,8 +108,6 @@ io.on('connection', (socket) => {
         };
 
         io.to(socket.currentRoom).emit('update users', Object.values(users).filter(u => u.room === socket.currentRoom));
-        
-        // നിലവിലെ റൂമിലെ പഴയ മെസ്സേജുകൾ അയച്ചുകൊടുക്കുന്നു
         socket.emit('load room messages', roomMessages[socket.currentRoom] || []);
     });
 
@@ -123,8 +123,6 @@ io.on('connection', (socket) => {
 
         io.to(prevRoom).emit('update users', Object.values(users).filter(u => u.room === prevRoom));
         io.to(newRoom).emit('update users', Object.values(users).filter(u => u.room === newRoom));
-        
-        // റൂം മാറുമ്പോൾ ആ റൂമിലെ മുൻപത്തെ മെസ്സേജുകൾ അയച്ചുകൊടുക്കുന്നു
         socket.emit('load room messages', roomMessages[newRoom]);
     });
 
@@ -146,7 +144,6 @@ io.on('connection', (socket) => {
         if (!roomMessages[room]) roomMessages[room] = [];
         roomMessages[room].push(messageData);
 
-        // പരമാവധി 200 മെസ്സേജുകൾ വരെ സൂക്ഷിക്കുന്നു
         if (roomMessages[room].length > 200) roomMessages[room].shift();
         saveMessagesToFile();
 
