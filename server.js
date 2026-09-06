@@ -14,7 +14,6 @@ const roomCurrentTrack = {
     'LoFi Room': 'jfKfPfyJRdk'
 };
 
-// ഓരോ റൂമിലെയും മെസ്സേജുകൾ സേവ് ചെയ്യാൻ
 const roomMessages = {
     'Normal Room': [],
     'LoFi Room': [],
@@ -51,8 +50,6 @@ io.on('connection', (socket) => {
         };
 
         io.to(socket.currentRoom).emit('update users', Object.values(users).filter(u => u.room === socket.currentRoom));
-        
-        // റൂമിൽ കയറുമ്പോൾ മുമ്പത്തെ എല്ലാ മെസ്സേജുകളും അയച്ചു കൊടുക്കുന്നു
         socket.emit('load room messages', roomMessages[socket.currentRoom] || []);
 
         if (socket.currentRoom === 'LoFi Room' && roomCurrentTrack['LoFi Room']) {
@@ -72,8 +69,6 @@ io.on('connection', (socket) => {
 
         io.to(prevRoom).emit('update users', Object.values(users).filter(u => u.room === prevRoom));
         io.to(newRoom).emit('update users', Object.values(users).filter(u => u.room === newRoom));
-
-        // പുതിയ റൂമിലെ പഴയ മെസ്സേജുകൾ ലോഡ് ചെയ്യുന്നു
         socket.emit('load room messages', roomMessages[newRoom]);
 
         if (newRoom === 'LoFi Room' && roomCurrentTrack['LoFi Room']) {
@@ -102,7 +97,23 @@ io.on('connection', (socket) => {
         io.to(room).emit('chat message', messageData);
     });
 
-    // മെസ്സേജ് ഡിലീറ്റ് ചെയ്യൽ (Admin അല്ലെങ്കിൽ Owner മാത്രം)
+    socket.on('game broadcast', (msg) => {
+        const user = users[socket.id] || { name: 'Player' };
+        const room = socket.currentRoom;
+        const botMsg = {
+            id: 'bot_' + Date.now(),
+            user: '🎲 Game Bot',
+            text: `<strong>${user.name}</strong> ${msg}`,
+            avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=gamebot',
+            role: 'Bot',
+            isVip: false,
+            room: room
+        };
+        if (!roomMessages[room]) roomMessages[room] = [];
+        roomMessages[room].push(botMsg);
+        io.to(room).emit('chat message', botMsg);
+    });
+
     socket.on('delete message', (msgId) => {
         const user = users[socket.id];
         if (user && (user.role === 'Owner' || user.role === 'Admin')) {
@@ -129,5 +140,5 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = 3000;
-server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

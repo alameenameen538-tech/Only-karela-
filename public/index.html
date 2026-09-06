@@ -6,7 +6,6 @@
   <style>
     * { box-sizing: border-box; }
     html, body { height: 100%; height: 100dvh; margin: 0; padding: 0; background: #0c0c0e; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
-    
     #app-layout { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
 
     #header { background: #16161a; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #23232a; flex-shrink: 0; }
@@ -22,7 +21,7 @@
 
     #main-chat { flex: 1; overflow-y: auto; padding: 1rem; }
     #messages { list-style: none; margin: 0; padding: 0; }
-    #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; position: relative; }
+    #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; }
     .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00e5ff; flex-shrink: 0; }
     .msg-avatar.owner-avatar { border: 2.5px solid #ef4444; box-shadow: 0 0 10px #ef4444; }
     .msg-avatar.admin-avatar { border: 2.5px solid #3b82f6; box-shadow: 0 0 10px #3b82f6; }
@@ -39,11 +38,8 @@
     .role-badge.admin { background: #2563eb; color: white; }
     .role-badge.vip { background: #d97706; color: white; }
 
-    .msg-content { background: #1a1a22; padding: 8px 14px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px; position: relative; }
-    
-    /* അഡ്മിന് മാത്രമുള്ള ഡിലീറ്റ് ബട്ടൺ */
-    .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; padding: 0; opacity: 0.7; }
-    .admin-del-btn:hover { opacity: 1; }
+    .msg-content { background: #1a1a22; padding: 8px 14px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px; }
+    .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
 
     #input-bar { background: #16161a; padding: 10px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #23232a; flex-shrink: 0; }
     #input { border: none; padding: 12px 16px; flex: 1; border-radius: 24px; background: #22222a; color: white; outline: none; font-size: 0.95rem; }
@@ -85,6 +81,7 @@
       </div>
     </div>
 
+    <!-- LoFi Room YouTube Player Bar -->
     <div id="lofi-player-bar">
       <div class="lofi-track-info">
         <span>🎧</span>
@@ -111,7 +108,7 @@
 
   <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-  <!-- ഇടത് മെനു -->
+  <!-- ഇടത് മെനു (എല്ലാ ഗെയിമുകളും ഇവിടെയുണ്ട്) -->
   <div id="left-drawer">
     <div style="padding:16px; background:#222228; border-bottom:1px solid #2d2d35;">
       <small style="color:#9ca3af;">Profile</small>
@@ -120,7 +117,10 @@
     </div>
     <ul style="list-style:none; padding:0; margin:0;">
       <li class="menu-row" onclick="openModal('room-modal')"><span>🏠</span> Room list (റൂമുകൾ)</li>
-      <li class="menu-row" onclick="editNamePrompt()"><span>✏️</span> Edit Name</li>
+      <li class="menu-row" onclick="openModal('spin-modal')"><span>🎡</span> Daily Free Spin (സ്പിൻ)</li>
+      <li class="menu-row" onclick="openModal('dice-modal')"><span>🎲</span> Dice & Ludo Game</li>
+      <li class="menu-row" onclick="openModal('vip-modal')"><span>💎</span> VIP Store (സ്റ്റോർ)</li>
+      <li class="menu-row" onclick="editNamePrompt()"><span>✏️</span> Edit Name (പേര് മാറ്റുക)</li>
     </ul>
   </div>
 
@@ -150,12 +150,46 @@
     </div>
   </div>
 
+  <!-- സ്പിൻ വീൽ മോഡൽ -->
+  <div id="spin-modal" class="modal">
+    <div class="modal-box">
+      <h3>🎡 Lucky Free Spin</h3>
+      <div id="wheel" style="width:140px; height:140px; border-radius:50%; border:5px solid #eab308; margin:15px auto; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); transition:transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);">🎁</div>
+      <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">സ്പിൻ ചെയ്ത് കോയിൻ നേടൂ!</p>
+      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW</button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('spin-modal')">Close</button>
+    </div>
+  </div>
+
+  <!-- ഡൈസ് & ലുഡോ മോഡൽ -->
+  <div id="dice-modal" class="modal">
+    <div class="modal-box">
+      <h3>🎲 Dice & Mini Ludo</h3>
+      <div id="dice-view" style="font-size:3.5rem; margin:15px 0;">🎲</div>
+      <button class="game-btn" style="background:#8b5cf6; justify-content:center;" onclick="rollDiceOnly()">Roll Dice</button>
+      <button class="game-btn" style="background:#ec4899; justify-content:center;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('dice-modal')">Close</button>
+    </div>
+  </div>
+
+  <!-- വിഐപി മോഡൽ -->
+  <div id="vip-modal" class="modal">
+    <div class="modal-box">
+      <h3 style="color:#facc15;">💎 VIP Store</h3>
+      <p style="font-size:0.85rem; color:#9ca3af;">സ്വർണ്ണ നിറത്തിലുള്ള പേരും ബാഡ്ജും നേടാം (200 Coins)</p>
+      <button class="game-btn" style="background:#f59e0b; color:#000; justify-content:center;" onclick="purchaseVip()">Unlock VIP</button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('vip-modal')">Close</button>
+    </div>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
 
     let myName = localStorage.getItem('kcr_name') || "User_" + Math.floor(Math.random()*1000);
     let myAvatar = localStorage.getItem('kcr_dp') || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+    let myCoins = parseInt(localStorage.getItem('kcr_coins') || '120');
+    let isVip = localStorage.getItem('kcr_vip') === 'true';
     let currentRoom = "Normal Room";
 
     function checkUserRole(name) {
@@ -177,11 +211,20 @@
         document.getElementById('coin-balance').innerHTML = '♾️ Unlimited';
         document.getElementById('vip-status-badge').textContent = myRole === 'Owner' ? '👑 OWNER' : '🛡️ ADMIN';
         document.getElementById('vip-status-badge').style.background = myRole === 'Owner' ? '#dc2626' : '#2563eb';
+      } else {
+        document.getElementById('coin-balance').textContent = myCoins;
+        if (isVip) {
+          document.getElementById('vip-status-badge').textContent = '👑 VIP MEMBER';
+          document.getElementById('vip-status-badge').style.background = '#eab308';
+        } else {
+          document.getElementById('vip-status-badge').textContent = 'Member';
+          document.getElementById('vip-status-badge').style.background = '#374151';
+        }
       }
     }
     updateProfileUI();
 
-    socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom });
+    socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip });
 
     function openLeftMenu() { document.getElementById('left-drawer').classList.add('open'); document.getElementById('overlay').style.display='block'; }
     function openActiveUsers() { document.getElementById('right-drawer').classList.add('open'); document.getElementById('overlay').style.display='block'; }
@@ -194,6 +237,9 @@
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function selectRoom(roomName) {
+      if (roomName === 'Staff Room' && !isOwnerOrAdmin && !isVip) {
+        return alert("Staff Room-ൽ പ്രവേശിക്കാൻ VIP അല്ലെങ്കിൽ Staff privilege ആവശ്യമാണ്!");
+      }
       currentRoom = roomName;
       document.getElementById('header-room-name').textContent = `🏠 ${roomName} ▼`;
       document.getElementById('messages').innerHTML = '';
@@ -208,6 +254,31 @@
       closeModal('room-modal');
     }
 
+    function extractVideoID(url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function openShareMusicPrompt() {
+      const url = prompt("YouTube അല്ലെങ്കിൽ YouTube Music ലിങ്ക് പേസ്റ്റ് ചെയ്യുക:");
+      if (!url) return;
+      const vId = extractVideoID(url);
+      if (vId) {
+        socket.emit('share yt track', vId);
+      } else {
+        alert("ശരിയായ YouTube ലിങ്ക് നൽകുക!");
+      }
+    }
+
+    socket.on('play yt track', (data) => {
+      if (currentRoom === 'LoFi Room') {
+        const frame = document.getElementById('yt-player');
+        frame.src = `https://www.youtube.com/embed/${data.videoId}?autoplay=1&enablejsapi=1`;
+        document.getElementById('current-track-label').textContent = `Playing: ${data.sharedBy}`;
+      }
+    });
+
     function sendMessage() {
       const inp = document.getElementById('input');
       const text = inp.value.trim();
@@ -217,7 +288,6 @@
       }
     }
 
-    // മെസ്സേജ് ബോക്സ് സ്ക്രീനിൽ കാണിക്കാൻ
     function renderMessage(data) {
       const li = document.createElement('li');
       li.id = data.id;
@@ -240,9 +310,8 @@
         badgeHtml = '<span class="role-badge vip">VIP</span>';
       }
 
-      // അഡ്മിൻ അല്ലെങ്കിൽ ഓണർ ആണെങ്കിൽ മാത്രം ഡിലീറ്റ് ബട്ടൺ ചേർക്കുന്നു
       const deleteBtnHtml = isOwnerOrAdmin 
-        ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete Message">🗑️</button>` 
+        ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete">🗑️</button>` 
         : '';
 
       li.innerHTML = `
@@ -257,7 +326,6 @@
       document.getElementById('messages').appendChild(li);
     }
 
-    // പഴയ മെസ്സേജുകൾ ലോഡ് ചെയ്യൽ
     socket.on('load room messages', (msgs) => {
       const msgList = document.getElementById('messages');
       msgList.innerHTML = '';
@@ -266,14 +334,12 @@
       chatArea.scrollTop = chatArea.scrollHeight;
     });
 
-    // പുതിയ മെസ്സേജ് വരുമ്പോൾ
     socket.on('chat message', data => {
       renderMessage(data);
       const chatArea = document.getElementById('main-chat');
       chatArea.scrollTop = chatArea.scrollHeight;
     });
 
-    // അഡ്മിൻ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യുമ്പോൾ
     window.deleteMsg = function(id) {
       if(confirm("ഈ മെസ്സേജ് നീക്കം ചെയ്യണോ?")) {
         socket.emit('delete message', id);
@@ -312,8 +378,69 @@
         myName = n.trim();
         localStorage.setItem('kcr_name', myName);
         updateProfileUI();
-        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom });
+        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip });
       }
+    }
+
+    // സ്പിൻ വീൽ ഫംഗ്ഷൻ
+    let canSpin = true;
+    function spinTheWheel() {
+      if (!isOwnerOrAdmin && !canSpin) return alert("ദിവസേനയുള്ള സ്പിൻ കഴിഞ്ഞു!");
+      if (!isOwnerOrAdmin) canSpin = false;
+      const deg = 1800 + Math.floor(Math.random() * 360);
+      document.getElementById('wheel').style.transform = `rotate(${deg}deg)`;
+      setTimeout(() => {
+        const reward = [20, 40, 50, 100][Math.floor(Math.random() * 4)];
+        if (!isOwnerOrAdmin) {
+          myCoins += reward;
+          localStorage.setItem('kcr_coins', myCoins);
+        }
+        updateProfileUI();
+        document.getElementById('spin-msg').textContent = `🎉 നിങ്ങൾക്ക് ${reward} കോയിനുകൾ ലഭിച്ചു!`;
+        socket.emit('game broadcast', `സ്പിൻ വീലിൽ നിന്ന് ${reward} കോയിനുകൾ നേടി! 🎡`);
+      }, 3100);
+    }
+
+    // ഡൈസ് & ലുഡോ ഫംഗ്ഷൻ
+    const diceIcons = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    function rollDiceOnly() {
+      const val = Math.floor(Math.random() * 6) + 1;
+      document.getElementById('dice-view').textContent = diceIcons[val - 1];
+      socket.emit('game broadcast', `ഡൈസ് റോൾ ചെയ്തു ${val} അടിച്ചു! 🎲`);
+    }
+
+    function playLudoChallenge() {
+      if (!isOwnerOrAdmin && myCoins < 20) return alert("കോയിനുകൾ തികയില്ല!");
+      if (!isOwnerOrAdmin) {
+        myCoins -= 20;
+        localStorage.setItem('kcr_coins', myCoins);
+      }
+      const val = Math.floor(Math.random() * 6) + 1;
+      document.getElementById('dice-view').textContent = diceIcons[val - 1];
+      if (val === 6) {
+        if (!isOwnerOrAdmin) {
+          myCoins += 100;
+          localStorage.setItem('kcr_coins', myCoins);
+        }
+        alert("🎉 ലുഡോയിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു!");
+        socket.emit('game broadcast', `ലുഡോ ചലഞ്ചിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു! 🏆`);
+      } else {
+        alert(`കിട്ടിയത് ${val}. ${isOwnerOrAdmin ? 'Unlimited കോയിൻ ആയതിനാൽ കുറയില്ല!' : '20 കോയിൻ നഷ്ടപ്പെട്ടു!'}`);
+      }
+      updateProfileUI();
+    }
+
+    function purchaseVip() {
+      if (isOwnerOrAdmin) return alert("താങ്കൾ Owner/Admin ആയതിനാൽ എല്ലാ VIP ഫീച്ചറുകളും ഇതിനകം അൺലോക്ക് ആണ്! 👑");
+      if (isVip) return alert("താങ്കൾ ഇതിനകം VIP ആണ്!");
+      if (myCoins < 200) return alert("200 കോയിനുകൾ വേണം!");
+      myCoins -= 200;
+      isVip = true;
+      localStorage.setItem('kcr_coins', myCoins);
+      localStorage.setItem('kcr_vip', 'true');
+      updateProfileUI();
+      closeModal('vip-modal');
+      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true });
     }
   </script>
 </body>
