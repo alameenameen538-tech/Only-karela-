@@ -109,6 +109,7 @@
     .role-badge { font-size: 0.62rem; padding: 1px 5px; border-radius: 3px; font-weight: 800; }
     .role-badge.owner { background: #dc2626; color: white; }
     .role-badge.admin { background: #2563eb; color: white; }
+    .role-badge.vip { background: #eab308; color: #000; }
     .msg-content {
       background: #1c1e27; border: 1px solid rgba(255,255,255,0.05);
       padding: 9px 13px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px;
@@ -147,8 +148,16 @@
     .mod-toggle-btn { background: #7c3aed; border: none; color: #fff; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; justify-content: center; align-items: center; }
-    .modal-box { background: #1f2128; border-radius: 16px; width: 90%; max-width: 340px; padding: 20px; text-align: center; }
+    .modal-box { background: #1a1c24; border-radius: 18px; width: 90%; max-width: 360px; padding: 22px; text-align: left; color: #fff; border: 1px solid #2d303e; }
     .game-btn { background: #2563eb; color: white; border: none; padding: 11px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0; width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
+    
+    /* VIP പ്ലാൻ സ്ക്രീൻഷോട്ട് സ്റ്റൈൽ */
+    .vip-feature-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; }
+    .vip-plan-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; margin: 6px 0; background: #232632; border-radius: 10px; cursor: pointer; border: 1.5px solid transparent; }
+    .vip-plan-row input { accent-brim: #84cc16; transform: scale(1.2); cursor: pointer; }
+    .vip-plan-row.selected { border-color: #84cc16; background: #282c3a; }
+    .view-plans-btn { width: 100%; padding: 13px; border-radius: 10px; border: none; background: #84cc16; color: #111; font-weight: 800; font-size: 1rem; cursor: pointer; margin-top: 16px; }
+
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2500; }
   </style>
 </head>
@@ -253,96 +262,47 @@
     </div>
 
     <div class="drawer-menu-item" onclick="openModal('room-modal')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🏠</span>
-        <span>Room list</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">🏠</span><span>Room list</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="alert('Friends wall coming soon!')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">📡</span>
-        <span>Friends wall</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">📡</span><span>Friends wall</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="alert('Latest Kerala Updates')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">📰</span>
-        <span>News</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">📰</span><span>News</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="alert('Community Forum')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🌐</span>
-        <span>Chat Forum</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">🌐</span><span>Chat Forum</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="openModal('games-hub-modal')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🎲</span>
-        <span>Games</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">🎲</span><span>Games</span></div>
       <span class="arrow-icon">❯</span>
     </div>
-
-    <div class="drawer-menu-item" onclick="alert('Top players & active chatters')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🏅</span>
-        <span>Leaderboards</span>
-      </div>
+    <div class="drawer-menu-item" onclick="alert('Top players')">
+      <div class="drawer-menu-item-left"><span class="menu-icon">🏅</span><span>Leaderboards</span></div>
       <span class="arrow-icon">❯</span>
     </div>
-
     <div class="drawer-menu-item" onclick="alert('Public Wall Posts')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">📡</span>
-        <span>Public Wall</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">📡</span><span>Public Wall</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="editNamePrompt()">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">📝</span>
-        <span>Edit Name</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">📝</span><span>Edit Name</span></div>
     </div>
-
-    <div class="drawer-menu-item" onclick="openModal('vip-modal')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon" style="color:#00a8e8;">💎</span>
-        <span>Buy VIP</span>
-      </div>
+    <div class="drawer-menu-item" onclick="openModal('vip-features-modal')">
+      <div class="drawer-menu-item-left"><span class="menu-icon" style="color:#eab308;">💎</span><span>Buy VIP</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="alert('Live Poll Wall')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">📊</span>
-        <span>Poll Wall</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">📊</span><span>Poll Wall</span></div>
     </div>
-
     <div class="drawer-menu-item" onclick="openModal('spin-modal')">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🎁</span>
-        <span>Lucky Draw</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">🎁</span><span>Lucky Draw (Spin)</span></div>
     </div>
 
     <div id="owner-secret-staff-menu" class="drawer-menu-item" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🔐</span>
-        <span>Change Staff Password</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">🔐</span><span>Change Staff Password</span></div>
     </div>
 
     <div class="drawer-menu-item" onclick="window.location.reload()" style="color:#ef4444; border-top:1px solid #282a38; margin-top:12px;">
-      <div class="drawer-menu-item-left">
-        <span class="menu-icon">🚪</span>
-        <span>Logout</span>
-      </div>
+      <div class="drawer-menu-item-left"><span class="menu-icon">🚪</span><span>Logout</span></div>
     </div>
 
   </div>
@@ -356,11 +316,66 @@
     <ul id="user-rows" class="user-scroll-list"></ul>
   </div>
 
+  <!-- 1. VIP Features Modal (സ്ക്രീൻഷോട്ട് 1) -->
+  <div id="vip-features-modal" class="modal">
+    <div class="modal-box" style="text-align: center;">
+      <span style="position: absolute; right: 20px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('vip-features-modal')">✕</span>
+      <h3 style="margin: 0 0 8px 0; font-size: 1.3rem;">VIP features</h3>
+      <p style="font-size: 0.78rem; color: #9ca3af; line-height: 1.4; margin-bottom: 16px;">
+        Our VIP access award you feature that are not accessible to regular members. Here is a list of some advantages that you receive when you are VIP.
+      </p>
+
+      <div class="vip-feature-row"><span>VIP Rank Badge</span> <span style="color:#84cc16;">✔</span></div>
+      <div class="vip-feature-row"><span>Delete Option</span> <span style="color:#84cc16;">✔</span></div>
+      <div class="vip-feature-row"><span>Username Fonts</span> <span style="color:#84cc16;">✔</span></div>
+      <div class="vip-feature-row"><span>User Text Fonts</span> <span style="color:#84cc16;">✔</span></div>
+      <div class="vip-feature-row"><span>Access to all Features & More</span> <span style="color:#84cc16;">✔</span></div>
+
+      <button class="view-plans-btn" onclick="openVipPlansModal()">View plans</button>
+    </div>
+  </div>
+
+  <!-- 2. VIP Plans Modal (സ്ക്രീൻഷോട്ട് 2 - 15k, 45k, 135k, 500k, 1M) -->
+  <div id="vip-plans-modal" class="modal">
+    <div class="modal-box" style="position: relative;">
+      <span style="position: absolute; right: 20px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('vip-plans-modal')">✕</span>
+      <h3 style="margin: 0 0 6px 0; text-align: center;">Our VIP plans</h3>
+      <p style="font-size: 0.76rem; color: #9ca3af; text-align: center; margin-bottom: 14px;">Select one of the following plan to get instant VIP access and take advantage off our VIP features.</p>
+
+      <label class="vip-plan-row" onclick="selectVipPlan(this)">
+        <div><strong>7 Days VIP Membership</strong><br><small style="color:#9ca3af;">Access for 1 week</small></div>
+        <div style="display:flex; align-items:center; gap:10px;"><span style="color:#facc15; font-weight:bold;">15000</span> <input type="radio" name="vip_plan"></div>
+      </label>
+
+      <label class="vip-plan-row" onclick="selectVipPlan(this)">
+        <div><strong>1 Month VIP Membership</strong><br><small style="color:#9ca3af;">Access for 30 days</small></div>
+        <div style="display:flex; align-items:center; gap:10px;"><span style="color:#facc15; font-weight:bold;">45000</span> <input type="radio" name="vip_plan"></div>
+      </label>
+
+      <label class="vip-plan-row" onclick="selectVipPlan(this)">
+        <div><strong>3 Months VIP Membership</strong><br><small style="color:#9ca3af;">Access for 90 days</small></div>
+        <div style="display:flex; align-items:center; gap:10px;"><span style="color:#facc15; font-weight:bold;">135000</span> <input type="radio" name="vip_plan"></div>
+      </label>
+
+      <label class="vip-plan-row" onclick="selectVipPlan(this)">
+        <div><strong>1 Year VIP Membership</strong><br><small style="color:#9ca3af;">Access for 365 days</small></div>
+        <div style="display:flex; align-items:center; gap:10px;"><span style="color:#facc15; font-weight:bold;">500000</span> <input type="radio" name="vip_plan"></div>
+      </label>
+
+      <label class="vip-plan-row" onclick="selectVipPlan(this)">
+        <div><strong>Lifetime VIP Membership</strong><br><small style="color:#9ca3af;">Permanent access</small></div>
+        <div style="display:flex; align-items:center; gap:10px;"><span style="color:#facc15; font-weight:bold;">1000000</span> <input type="radio" name="vip_plan"></div>
+      </label>
+
+      <button class="view-plans-btn" onclick="purchaseSelectedVip()">Activate VIP Now</button>
+    </div>
+  </div>
+
   <div id="games-hub-modal" class="modal">
-    <div class="modal-box">
+    <div class="modal-box" style="text-align: center;">
       <h3 style="margin-top:0;">Select Game</h3>
       <button class="game-btn" style="background:#10b981;" onclick="closeModal('games-hub-modal'); openModal('spin-modal');">
-        <span>🎡 Daily Lucky Spin</span> <span>Play</span>
+        <span>🎡 Daily Lucky Spin (2 Times)</span> <span>Play</span>
       </button>
       <button class="game-btn" style="background:#8b5cf6;" onclick="closeModal('games-hub-modal'); openModal('dice-modal');">
         <span>🎲 Mini Ludo / Dice</span> <span>Play</span>
@@ -370,7 +385,7 @@
   </div>
 
   <div id="room-modal" class="modal">
-    <div class="modal-box">
+    <div class="modal-box" style="text-align: center;">
       <h3 style="margin-top:0;">Select Room</h3>
       <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Kerala Chat Room')"><span>💬 Kerala Chat Room</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#8b5cf6;" onclick="selectRoom('LoFi Room')"><span>🎶 LoFi Music Room</span> <span>Enter</span></button>
@@ -380,32 +395,24 @@
     </div>
   </div>
 
+  <!-- Spin Wheel Modal (Daily 2 times, Max 500 coins) -->
   <div id="spin-modal" class="modal">
-    <div class="modal-box">
-      <h3>🎁 Lucky Draw / Spin</h3>
+    <div class="modal-box" style="text-align: center;">
+      <h3>🎁 Lucky Draw (Spin)</h3>
       <div id="wheel" style="width:140px; height:140px; border-radius:50%; border:5px solid #eab308; margin:15px auto; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); transition:transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);">🎁</div>
-      <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">സ്പിൻ ചെയ്ത് സമ്മാനം നേടൂ!</p>
-      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW</button>
+      <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">ഇന്ന് ബാക്കിയുള്ള സ്പിൻ: <span id="spin-count-label">2</span>/2</p>
+      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW (Max 500 🪙)</button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('spin-modal')">Close</button>
     </div>
   </div>
 
   <div id="dice-modal" class="modal">
-    <div class="modal-box">
+    <div class="modal-box" style="text-align: center;">
       <h3>🎲 Dice & Mini Ludo</h3>
       <div id="dice-view" style="font-size:3.5rem; margin:15px 0;">🎲</div>
       <button class="game-btn" style="background:#8b5cf6; justify-content:center;" onclick="rollDiceOnly()">Roll Dice</button>
       <button class="game-btn" style="background:#ec4899; justify-content:center;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('dice-modal')">Close</button>
-    </div>
-  </div>
-
-  <div id="vip-modal" class="modal">
-    <div class="modal-box">
-      <h3 style="color:#facc15;">💎 Buy VIP</h3>
-      <p style="font-size:0.85rem; color:#9ca3af;">സ്വർണ്ണ നിറത്തിലുള്ള പേരും ബാഡ്ജും നേടാം (200 Coins)</p>
-      <button class="game-btn" style="background:#f59e0b; color:#000; justify-content:center;" onclick="purchaseVip()">Unlock VIP</button>
-      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('vip-modal')">Close</button>
     </div>
   </div>
 
@@ -416,12 +423,14 @@
     let authMode = 'login';
     let myName = "";
     let myAvatar = "";
-    let myCoins = 120;
+    let myCoins = 50000; // പുതിയ പ്ലാനുകൾക്കായി തുടക്കത്തിൽ കോയിൻ നൽകിയിരിക്കുന്നു
     let isVip = false;
     let currentRoom = "Kerala Chat Room";
     let myRole = 'Member';
     let isOwnerOrAdmin = false;
     let staffRoomPassword = "staff123";
+
+    let dailySpinCount = 0; // ദിവസേനയുള്ള സ്പിൻ കൗണ്ട് (പരമാവധി 2)
 
     socket.on('staff password updated', (pass) => {
       staffRoomPassword = pass;
@@ -435,19 +444,8 @@
     function openLoginModal(mode) {
       authMode = mode;
       document.getElementById('login-modal-overlay').style.display = 'flex';
-      const title = document.getElementById('card-mode-title');
-      const submitBtn = document.getElementById('auth-submit-btn');
-      const forgot = document.getElementById('forgot-pass-link');
-
-      if (mode === 'register') {
-        title.textContent = 'Register Now';
-        submitBtn.innerHTML = '<span>➔</span> Register';
-        forgot.style.display = 'none';
-      } else {
-        title.textContent = 'Login';
-        submitBtn.innerHTML = '<span>➔</span> Login';
-        forgot.style.display = 'block';
-      }
+      document.getElementById('card-mode-title').textContent = mode === 'register' ? 'Register Now' : 'Login';
+      document.getElementById('auth-submit-btn').innerHTML = mode === 'register' ? '<span>➔</span> Register' : '<span>➔</span> Login';
     }
 
     function closeLoginModal() {
@@ -457,9 +455,7 @@
     function submitAuthForm() {
       const u = document.getElementById('auth-username').value.trim();
       const p = document.getElementById('auth-password').value.trim();
-
       if (!u || !p) return alert("Username, Password നൽകുക!");
-
       if (authMode === 'register') {
         socket.emit('register user', { username: u, password: p });
       } else {
@@ -494,7 +490,6 @@
     function startChatApp() {
       document.getElementById('front-landing-screen').style.display = 'none';
       document.getElementById('app-layout').style.display = 'flex';
-
       document.getElementById('nav-user-dp').src = myAvatar;
       updateProfileUI();
       socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
@@ -507,14 +502,8 @@
       else staffOpt.style.display = 'none';
     }
 
-    function openLeftDrawer() {
-      document.getElementById('custom-side-drawer').classList.add('open');
-      document.getElementById('overlay').style.display = 'block';
-    }
-    function openRightUsers() {
-      document.getElementById('right-drawer').classList.add('open');
-      document.getElementById('overlay').style.display = 'block';
-    }
+    function openLeftDrawer() { document.getElementById('custom-side-drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; }
+    function openRightUsers() { document.getElementById('right-drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; }
     function closeAllDrawers() {
       document.getElementById('custom-side-drawer').classList.remove('open');
       document.getElementById('right-drawer').classList.remove('open');
@@ -522,6 +511,36 @@
     }
     function openModal(id) { closeAllDrawers(); document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function openVipPlansModal() {
+      closeModal('vip-features-modal');
+      openModal('vip-plans-modal');
+    }
+
+    function selectVipPlan(el) {
+      document.querySelectorAll('.vip-plan-row').forEach(r => r.classList.remove('selected'));
+      el.classList.add('selected');
+      const radio = el.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    }
+
+    function purchaseSelectedVip() {
+      const selected = document.querySelector('.vip-plan-row.selected');
+      if (!selected) return alert("ദയവായി ഏതെങ്കിലും ഒരു VIP പ്ലാൻ തിരഞ്ഞെടുക്കുക!");
+      
+      const costText = selected.querySelector('span').textContent;
+      const cost = parseInt(costText);
+
+      if (!isOwnerOrAdmin && myCoins < cost) {
+        return alert(`കോയിനുകൾ തികയില്ല! ഈ പ്ലാനിന് ${cost} കോയിനുകൾ വേണം (നിങ്ങളുടെ കയ്യിൽ ${myCoins} കോയിൻ ഉണ്ട്).`);
+      }
+
+      if (!isOwnerOrAdmin) myCoins -= cost;
+      isVip = true;
+      closeModal('vip-plans-modal');
+      alert("🎉 അഭിനന്ദനങ്ങൾ! താങ്കൾ വിജയകരമായി VIP ആക്ടിവേറ്റ് ചെയ്തു!");
+      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true, clientRole: myRole });
+    }
 
     function selectRoom(roomName) {
       if (roomName === 'Staff Room') {
@@ -580,9 +599,11 @@
       } else if (data.role === 'Admin') {
         nameColor = 'admin-name';
         badgeHtml = '<span class="role-badge admin">🛡️ ADMIN</span>';
+      } else if (data.isVip || isVip) {
+        badgeHtml = '<span class="role-badge vip">VIP</span>';
       }
 
-      const deleteBtnHtml = isOwnerOrAdmin 
+      const deleteBtnHtml = (isOwnerOrAdmin || isVip) 
         ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete">🗑️</button>` 
         : '';
 
@@ -598,13 +619,10 @@
       document.getElementById('messages').appendChild(li);
     }
 
-    // മുൻപത്തെ മെസ്സേജുകൾ ലോഡ് ചെയ്യുന്ന ലിസണർ
     socket.on('load room messages', (msgs) => {
       const msgList = document.getElementById('messages');
       msgList.innerHTML = '';
-      if (Array.isArray(msgs)) {
-        msgs.forEach(m => renderMessage(m));
-      }
+      if (Array.isArray(msgs)) msgs.forEach(m => renderMessage(m));
       const chatArea = document.getElementById('main-chat');
       chatArea.scrollTop = chatArea.scrollHeight;
     });
@@ -665,16 +683,21 @@
       alert("Radio streaming Malayalam Live...");
     }
 
-    let canSpin = true;
+    // സ്പിൻ വീൽ (ഒരു ദിവസം പരമാവധി 2 തവണ, പരമാവധി 500 കോയിൻ)
     function spinTheWheel() {
-      if (!isOwnerOrAdmin && !canSpin) return alert("ദിവസേനയുള്ള സ്പിൻ കഴിഞ്ഞു!");
-      if (!isOwnerOrAdmin) canSpin = false;
+      if (!isOwnerOrAdmin && dailySpinCount >= 2) {
+        return alert("❌ ഇന്നത്തെ സ്പിൻ പരിധി കഴിഞ്ഞു! (പരമാവധി 2 തവണ മാത്രം)");
+      }
+      dailySpinCount++;
+      document.getElementById('spin-count-label').textContent = 2 - dailySpinCount;
+
       const deg = 1800 + Math.floor(Math.random() * 360);
       document.getElementById('wheel').style.transform = `rotate(${deg}deg)`;
       setTimeout(() => {
-        const reward = [20, 40, 50, 100][Math.floor(Math.random() * 4)];
+        const reward = Math.floor(Math.random() * 451) + 50; // 50 മുതൽ 500 വരെ കോയിൻ
         if (!isOwnerOrAdmin) myCoins += reward;
         document.getElementById('spin-msg').textContent = `🎉 നിങ്ങൾക്ക് ${reward} കോയിനുകൾ ലഭിച്ചു!`;
+        socket.emit('game broadcast', `സ്പിൻ വീലിൽ നിന്ന് ${reward} കോയിനുകൾ നേടി! 🎡`);
       }, 3100);
     }
 
@@ -695,16 +718,6 @@
       } else {
         alert(`കിട്ടിയത് ${val}.`);
       }
-    }
-
-    function purchaseVip() {
-      if (isOwnerOrAdmin) return alert("താങ്കൾ ഇതിനകം VIP ആണ്! 👑");
-      if (isVip) return alert("താങ്കൾ ഇതിനകം VIP ആണ്!");
-      if (myCoins < 200) return alert("200 കോയിനുകൾ വേണം!");
-      myCoins -= 200;
-      isVip = true;
-      closeModal('vip-modal');
-      socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true, clientRole: myRole });
     }
   </script>
 </body>
