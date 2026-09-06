@@ -81,7 +81,6 @@
       </div>
     </div>
 
-    <!-- LoFi Room YouTube Player Bar -->
     <div id="lofi-player-bar">
       <div class="lofi-track-info">
         <span>🎧</span>
@@ -108,7 +107,6 @@
 
   <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-  <!-- ഇടത് മെനു (എല്ലാ ഗെയിമുകളും ഇവിടെയുണ്ട്) -->
   <div id="left-drawer">
     <div style="padding:16px; background:#222228; border-bottom:1px solid #2d2d35;">
       <small style="color:#9ca3af;">Profile</small>
@@ -124,7 +122,6 @@
     </ul>
   </div>
 
-  <!-- വലത് ആക്ടീവ് യൂസേഴ്സ് ലിസ്റ്റ് -->
   <div id="right-drawer">
     <div style="display:flex; justify-content:space-between; padding:12px; background:#18181c; border-bottom:1px solid #27272a;">
       <button class="icon-btn" onclick="closeAllDrawers()">✕</button>
@@ -138,19 +135,17 @@
     <ul id="user-rows" class="user-scroll-list"></ul>
   </div>
 
-  <!-- റൂം മോഡൽ -->
   <div id="room-modal" class="modal">
     <div class="modal-box">
       <h3>Select Room</h3>
       <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Normal Room')"><span>💬 Normal Room</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#8b5cf6;" onclick="selectRoom('LoFi Room')"><span>🎶 LoFi Room</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#ec4899;" onclick="selectRoom('Game Room')"><span>🎮 Game Room</span> <span>Enter</span></button>
-      <button class="game-btn" style="background:#10b981;" onclick="selectRoom('Staff Room')"><span>🛡️ Staff Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#10b981;" onclick="selectRoom('Staff Room')"><span>🛡️ Staff Room 🔒</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
     </div>
   </div>
 
-  <!-- സ്പിൻ വീൽ മോഡൽ -->
   <div id="spin-modal" class="modal">
     <div class="modal-box">
       <h3>🎡 Lucky Free Spin</h3>
@@ -161,7 +156,6 @@
     </div>
   </div>
 
-  <!-- ഡൈസ് & ലുഡോ മോഡൽ -->
   <div id="dice-modal" class="modal">
     <div class="modal-box">
       <h3>🎲 Dice & Mini Ludo</h3>
@@ -172,7 +166,6 @@
     </div>
   </div>
 
-  <!-- വിഐപി മോഡൽ -->
   <div id="vip-modal" class="modal">
     <div class="modal-box">
       <h3 style="color:#facc15;">💎 VIP Store</h3>
@@ -185,6 +178,9 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+
+    // സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് ഇവിടെ നൽകാം
+    const STAFF_ROOM_PASSWORD = "staff123";
 
     let myName = localStorage.getItem('kcr_name') || "User_" + Math.floor(Math.random()*1000);
     let myAvatar = localStorage.getItem('kcr_dp') || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
@@ -237,8 +233,11 @@
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function selectRoom(roomName) {
-      if (roomName === 'Staff Room' && !isOwnerOrAdmin && !isVip) {
-        return alert("Staff Room-ൽ പ്രവേശിക്കാൻ VIP അല്ലെങ്കിൽ Staff privilege ആവശ്യമാണ്!");
+      if (roomName === 'Staff Room') {
+        const enteredPass = prompt("🛡️ സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് നൽകുക:");
+        if (enteredPass !== STAFF_ROOM_PASSWORD) {
+          return alert("❌ തെറ്റായ പാസ്‌വേർഡ്! പ്രവേശനം അനുവദനീയമല്ല.");
+        }
       }
       currentRoom = roomName;
       document.getElementById('header-room-name').textContent = `🏠 ${roomName} ▼`;
@@ -382,7 +381,6 @@
       }
     }
 
-    // സ്പിൻ വീൽ ഫംഗ്ഷൻ
     let canSpin = true;
     function spinTheWheel() {
       if (!isOwnerOrAdmin && !canSpin) return alert("ദിവസേനയുള്ള സ്പിൻ കഴിഞ്ഞു!");
@@ -401,7 +399,6 @@
       }, 3100);
     }
 
-    // ഡൈസ് & ലുഡോ ഫംഗ്ഷൻ
     const diceIcons = ['⚀','⚁','⚂','⚃','⚄','⚅'];
     function rollDiceOnly() {
       const val = Math.floor(Math.random() * 6) + 1;
