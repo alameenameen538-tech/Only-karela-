@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>Kerala Chat Room</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; height: 100dvh; margin: 0; padding: 0; background: #0c0c0e; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+    
+    #app-layout { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
+
+    #header { background: #16161a; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #23232a; flex-shrink: 0; }
+    .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+    .icon-btn { background: none; border: none; color: #e4e4e7; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; }
+    .room-indicator { font-size: 0.75rem; background: #2563eb; color: #fff; padding: 2px 8px; border-radius: 12px; cursor: pointer; display: inline-block; margin-top: 2px; }
+
+    .coin-badge { background: #262618; border: 1.5px solid #eab308; color: #facc15; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.82rem; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+    #lofi-player-bar { display: none; background: #181528; border-bottom: 1px solid #3b2d54; padding: 8px 12px; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 10px; }
+    .lofi-track-info { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #d8b4fe; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .share-music-btn { background: #9333ea; border: none; color: #fff; padding: 5px 10px; border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+    #main-chat { flex: 1; overflow-y: auto; padding: 1rem; }
+    #messages { list-style: none; margin: 0; padding: 0; }
+    #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; position: relative; }
+    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00e5ff; flex-shrink: 0; }
+    .msg-avatar.owner-avatar { border: 2.5px solid #ef4444; box-shadow: 0 0 10px #ef4444; }
+    .msg-avatar.admin-avatar { border: 2.5px solid #3b82f6; box-shadow: 0 0 10px #3b82f6; }
+    .msg-avatar.vip-avatar { border: 2.5px solid #facc15; box-shadow: 0 0 8px #eab308; }
+    
+    .msg-body { display: flex; flex-direction: column; max-width: 80%; }
+    .sender-name { font-weight: 700; font-size: 0.85rem; color: #38bdf8; display: flex; align-items: center; gap: 5px; }
+    .sender-name.owner-name { color: #f87171 !important; }
+    .sender-name.admin-name { color: #60a5fa !important; }
+    .sender-name.vip-name { color: #facc15 !important; }
+    
+    .role-badge { font-size: 0.65rem; padding: 1px 6px; border-radius: 4px; font-weight: 800; }
+    .role-badge.owner { background: #dc2626; color: white; }
+    .role-badge.admin { background: #2563eb; color: white; }
+    .role-badge.vip { background: #d97706; color: white; }
+
+    .msg-content { background: #1a1a22; padding: 8px 14px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px; position: relative; }
+    
+    /* അഡ്മിന് മാത്രമുള്ള ഡിലീറ്റ് ബട്ടൺ */
+    .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; padding: 0; opacity: 0.7; }
+    .admin-del-btn:hover { opacity: 1; }
+
+    #input-bar { background: #16161a; padding: 10px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #23232a; flex-shrink: 0; }
+    #input { border: none; padding: 12px 16px; flex: 1; border-radius: 24px; background: #22222a; color: white; outline: none; font-size: 0.95rem; }
+    #send-btn { background: #00d2ff; border: none; width: 42px; height: 42px; border-radius: 50%; color: #000; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    #yt-frame-container { position: absolute; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; }
+
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; }
+    .modal-box { background: #1c1c24; border: 1px solid #2d2d3a; border-radius: 14px; width: 90%; max-width: 340px; padding: 20px; text-align: center; }
+    .game-btn { background: #2563eb; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0; width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
+
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1500; }
+    #left-drawer { position: fixed; top: 0; left: -280px; width: 260px; height: 100%; background: #18181c; z-index: 2000; transition: left 0.3s ease; display: flex; flex-direction: column; border-right: 1px solid #27272a; }
+    #left-drawer.open { left: 0; }
+    .menu-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #232329; cursor: pointer; color: #cbd5e1; }
+    
+    #right-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 360px; height: 100%; background: #121215; z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    #right-drawer.open { right: 0; }
+    .online-capsule-bar { margin: 14px; border: 2px solid #00b4d8; border-radius: 20px; padding: 5px 0; text-align: center; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
+    .u-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .u-dp { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00b4d8; }
+  </style>
+</head>
+<body>
+
+  <div id="app-layout">
+    <div id="header">
+      <div class="header-left">
+        <button class="icon-btn" onclick="openLeftMenu()">☰</button>
+        <div>
+          <strong style="font-size:1rem; display:block;">KeralaChat</strong>
+          <span id="header-room-name" class="room-indicator" onclick="openModal('room-modal')">🏠 Normal Room ▼</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="coin-badge" onclick="openModal('vip-modal')">🪙 <span id="coin-balance">120</span></div>
+        <button class="icon-btn" onclick="openActiveUsers()">👥</button>
+      </div>
+    </div>
+
+    <div id="lofi-player-bar">
+      <div class="lofi-track-info">
+        <span>🎧</span>
+        <span id="current-track-label">LoFi Music Streaming...</span>
+      </div>
+      <button class="share-music-btn" onclick="openShareMusicPrompt()">
+        <span>➕</span> Share Song
+      </button>
+    </div>
+
+    <div id="yt-frame-container">
+      <iframe id="yt-player" width="200" height="200" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+    </div>
+
+    <div id="main-chat">
+      <ul id="messages"></ul>
+    </div>
+
+    <form id="input-bar" action="javascript:void(0);" onsubmit="sendMessage()">
+      <input id="input" autocomplete="off" placeholder="Type a message..." required />
+      <button id="send-btn" type="submit">➤</button>
+    </form>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
+
+  <!-- ഇടത് മെനു -->
+  <div id="left-drawer">
+    <div style="padding:16px; background:#222228; border-bottom:1px solid #2d2d35;">
+      <small style="color:#9ca3af;">Profile</small>
+      <h3 id="drawer-user-name" style="margin:4px 0 6px 0; font-size:1.1rem; color:#00e5ff;">User</h3>
+      <span id="vip-status-badge" style="background:#2563eb; color:white; padding:2px 7px; border-radius:4px; font-size:0.72rem;">Member</span>
+    </div>
+    <ul style="list-style:none; padding:0; margin:0;">
+      <li class="menu-row" onclick="openModal('room-modal')"><span>🏠</span> Room list (റൂമുകൾ)</li>
+      <li class="menu-row" onclick="editNamePrompt()"><span>✏️</span> Edit Name</li>
+    </ul>
+  </div>
+
+  <!-- വലത് ആക്ടീവ് യൂസേഴ്സ് ലിസ്റ്റ് -->
+  <div id="right-drawer">
+    <div style="display:flex; justify-content:space-between; padding:12px; background:#18181c; border-bottom:1px solid #27272a;">
+      <button class="icon-btn" onclick="closeAllDrawers()">✕</button>
+      <strong>Online Users</strong>
+      <span></span>
+    </div>
+    <div class="online-capsule-bar">
+      <span>Active in Room</span>
+      <span id="active-count" style="background:#00b4d8; color:#000; padding:1px 8px; border-radius:10px; font-size:0.8rem;">1</span>
+    </div>
+    <ul id="user-rows" class="user-scroll-list"></ul>
+  </div>
+
+  <!-- റൂം മോഡൽ -->
+  <div id="room-modal" class="modal">
+    <div class="modal-box">
+      <h3>Select Room</h3>
+      <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Normal Room')"><span>💬 Normal Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#8b5cf6;" onclick="selectRoom('LoFi Room')"><span>🎶 LoFi Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#ec4899;" onclick="selectRoom('Game Room')"><span>🎮 Game Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#10b981;" onclick="selectRoom('Staff Room')"><span>🛡️ Staff Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    let myName = localStorage.getItem('kcr_name') || "User_" + Math.floor(Math.random()*1000);
+    let myAvatar = localStorage.getItem('kcr_dp') || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+    let currentRoom = "Normal Room";
+
+    function checkUserRole(name) {
+      const lower = (name || '').toLowerCase();
+      if (lower.includes('ameen') || lower.includes('owner')) return 'Owner';
+      if (lower.includes('admin') || lower.includes('mod')) return 'Admin';
+      return 'Member';
+    }
+
+    let myRole = checkUserRole(myName);
+    let isOwnerOrAdmin = myRole === 'Owner' || myRole === 'Admin';
+
+    function updateProfileUI() {
+      myRole = checkUserRole(myName);
+      isOwnerOrAdmin = myRole === 'Owner' || myRole === 'Admin';
+      document.getElementById('drawer-user-name').textContent = myName;
+
+      if (isOwnerOrAdmin) {
+        document.getElementById('coin-balance').innerHTML = '♾️ Unlimited';
+        document.getElementById('vip-status-badge').textContent = myRole === 'Owner' ? '👑 OWNER' : '🛡️ ADMIN';
+        document.getElementById('vip-status-badge').style.background = myRole === 'Owner' ? '#dc2626' : '#2563eb';
+      }
+    }
+    updateProfileUI();
+
+    socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom });
+
+    function openLeftMenu() { document.getElementById('left-drawer').classList.add('open'); document.getElementById('overlay').style.display='block'; }
+    function openActiveUsers() { document.getElementById('right-drawer').classList.add('open'); document.getElementById('overlay').style.display='block'; }
+    function closeAllDrawers() {
+      document.getElementById('left-drawer').classList.remove('open');
+      document.getElementById('right-drawer').classList.remove('open');
+      document.getElementById('overlay').style.display='none';
+    }
+    function openModal(id) { closeAllDrawers(); document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function selectRoom(roomName) {
+      currentRoom = roomName;
+      document.getElementById('header-room-name').textContent = `🏠 ${roomName} ▼`;
+      document.getElementById('messages').innerHTML = '';
+      
+      const lofiBar = document.getElementById('lofi-player-bar');
+      const ytPlayer = document.getElementById('yt-player');
+      
+      if(roomName === 'LoFi Room') lofiBar.style.display = 'flex';
+      else { lofiBar.style.display = 'none'; ytPlayer.src = ''; }
+
+      socket.emit('switch room', roomName);
+      closeModal('room-modal');
+    }
+
+    function sendMessage() {
+      const inp = document.getElementById('input');
+      const text = inp.value.trim();
+      if(text) {
+        socket.emit('chat message', text);
+        inp.value = '';
+      }
+    }
+
+    // മെസ്സേജ് ബോക്സ് സ്ക്രീനിൽ കാണിക്കാൻ
+    function renderMessage(data) {
+      const li = document.createElement('li');
+      li.id = data.id;
+
+      let avatarClass = '';
+      let nameClass = '';
+      let badgeHtml = '';
+
+      if (data.role === 'Owner') {
+        avatarClass = 'owner-avatar';
+        nameClass = 'owner-name';
+        badgeHtml = '<span class="role-badge owner">👑 OWNER</span>';
+      } else if (data.role === 'Admin') {
+        avatarClass = 'admin-avatar';
+        nameClass = 'admin-name';
+        badgeHtml = '<span class="role-badge admin">🛡️ ADMIN</span>';
+      } else if (data.isVip) {
+        avatarClass = 'vip-avatar';
+        nameClass = 'vip-name';
+        badgeHtml = '<span class="role-badge vip">VIP</span>';
+      }
+
+      // അഡ്മിൻ അല്ലെങ്കിൽ ഓണർ ആണെങ്കിൽ മാത്രം ഡിലീറ്റ് ബട്ടൺ ചേർക്കുന്നു
+      const deleteBtnHtml = isOwnerOrAdmin 
+        ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete Message">🗑️</button>` 
+        : '';
+
+      li.innerHTML = `
+        <img class="msg-avatar ${avatarClass}" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=guest'}">
+        <div class="msg-body">
+          <div class="sender-name ${nameClass}">
+            ${data.user} ${badgeHtml} ${deleteBtnHtml}
+          </div>
+          <div class="msg-content">${data.text}</div>
+        </div>
+      `;
+      document.getElementById('messages').appendChild(li);
+    }
+
+    // പഴയ മെസ്സേജുകൾ ലോഡ് ചെയ്യൽ
+    socket.on('load room messages', (msgs) => {
+      const msgList = document.getElementById('messages');
+      msgList.innerHTML = '';
+      msgs.forEach(m => renderMessage(m));
+      const chatArea = document.getElementById('main-chat');
+      chatArea.scrollTop = chatArea.scrollHeight;
+    });
+
+    // പുതിയ മെസ്സേജ് വരുമ്പോൾ
+    socket.on('chat message', data => {
+      renderMessage(data);
+      const chatArea = document.getElementById('main-chat');
+      chatArea.scrollTop = chatArea.scrollHeight;
+    });
+
+    // അഡ്മിൻ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യുമ്പോൾ
+    window.deleteMsg = function(id) {
+      if(confirm("ഈ മെസ്സേജ് നീക്കം ചെയ്യണോ?")) {
+        socket.emit('delete message', id);
+      }
+    };
+
+    socket.on('message deleted', (msgId) => {
+      const el = document.getElementById(msgId);
+      if(el) el.remove();
+    });
+
+    socket.on('update users', (users) => {
+      document.getElementById('active-count').textContent = users.length;
+      const list = document.getElementById('user-rows');
+      list.innerHTML = '';
+      users.forEach(u => {
+        list.innerHTML += `
+          <li class="u-row">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img class="u-dp" src="${u.avatar}">
+              <div>
+                <strong>${u.name}</strong>
+                <div style="font-size:0.7rem; color:#71717a;">${u.role || 'Member'}</div>
+              </div>
+            </div>
+            <span>${u.role === 'Owner' ? '👑' : (u.role === 'Admin' ? '🛡️' : '🇮🇳')}</span>
+          </li>
+        `;
+      });
+    });
+
+    function editNamePrompt() {
+      closeAllDrawers();
+      const n = prompt("പുതിയ പേര് നൽകുക:", myName);
+      if(n && n.trim()) {
+        myName = n.trim();
+        localStorage.setItem('kcr_name', myName);
+        updateProfileUI();
+        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom });
+      }
+    }
+  </script>
+</body>
+</html>
