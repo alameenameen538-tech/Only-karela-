@@ -21,17 +21,13 @@ let roomMessages = {
 if (fs.existsSync(MSG_FILE)) {
     try {
         roomMessages = JSON.parse(fs.readFileSync(MSG_FILE, 'utf8'));
-    } catch (e) {
-        console.log('Error reading messages file');
-    }
+    } catch (e) {}
 }
 
 function saveMessagesToFile() {
     try {
         fs.writeFileSync(MSG_FILE, JSON.stringify(roomMessages, null, 2));
-    } catch (e) {
-        console.log('Error saving messages');
-    }
+    } catch (e) {}
 }
 
 const registeredUsers = {
@@ -42,8 +38,23 @@ const registeredUsers = {
 const activeSessions = {};
 const users = {};
 const dynamicAdmins = new Set();
-const mutedUsers = {}; // username -> unmuted timestamp
+const mutedUsers = {};
+const kickedUsers = new Set();
 let staffRoomPassword = "staff123";
+
+function getModData() {
+    const mutedList = [];
+    const now = Date.now();
+    for (const [u, exp] of Object.entries(mutedUsers)) {
+        if (exp > now) {
+            mutedList.push({ username: u, timeLeft: Math.ceil((exp - now) / 1000) });
+        }
+    }
+    return {
+        muted: mutedList,
+        kicked: Array.from(kickedUsers)
+    };
+}
 
 io.on('connection', (socket) => {
     socket.emit('staff password updated', staffRoomPassword);
@@ -63,6 +74,10 @@ io.on('connection', (socket) => {
         const u = (data.username || '').toLowerCase().trim();
         const p = data.password || '';
 
+        if (kickedUsers.has(u)) {
+            return socket.emit('auth response', { success: false, msg: '⛔ നിങ്ങളെ ഓണർ കിക്ക്/ബാൻ ചെയ്തിരിക്കുന്നു!' });
+        }
+
         if (!registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'അക്കൗണ്ട് നിലവിലില്ല! Register ചെയ്യുക.' });
         if (registeredUsers[u] !== p) return socket.emit('auth response', { success: false, msg: '❌ തെറ്റായ പാസ്‌വേർഡ്!' });
 
@@ -76,12 +91,15 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join', (data) => {
+        const lower = (data.name || '').toLowerCase().trim();
+        if (kickedUsers.has(lower)) {
+            return socket.emit('force disconnect', '⛔ നിങ്ങളെ ഓണർ ചാറ്റിൽ നിന്നും പുറത്താക്കിയിരിക്കുകയാണ്.');
+        }
+
         socket.currentRoom = data.room || 'Kerala Chat Room';
         socket.join(socket.currentRoom);
         
         let role = data.clientRole || 'Member';
-        const lower = (data.name || '').toLowerCase().trim();
-
         if (lower === 'ameen' || lower === 'owner') role = 'Owner';
         else if (dynamicAdmins.has(lower)) role = 'Admin';
 
@@ -119,7 +137,6 @@ io.on('connection', (socket) => {
         const user = users[socket.id] || { name: 'Anonymous', avatar: '', isVip: false, role: 'Member' };
         const uLower = user.name.toLowerCase().trim();
 
-        // മ്യൂട്ട് പരിശോധന
         if (mutedUsers[uLower] && Date.now() < mutedUsers[uLower]) {
             const timeLeftSec = Math.ceil((mutedUsers[uLower] - Date.now()) / 1000);
             return socket.emit('mute warning', `നിങ്ങളെ മ്യൂട്ട് ചെയ്തിരിക്കുന്നു! ബാക്കി സമയം: ${timeLeftSec} സെക്കൻഡ്.`);
@@ -128,13 +145,18 @@ io.on('connection', (socket) => {
         const room = socket.currentRoom || 'Kerala Chat Room';
         let type = 'text';
         let content = '';
+        let replyTo = null;
 
         if (typeof msgData === 'object') {
             type = msgData.type || 'text';
             content = msgData.content || msgData.text || '';
+            replyTo = msgData.replyTo || null;
         } else {
             content = msgData;
         }
+
+        const now = new Date();
+        const timeFormatted = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
         const messageData = {
             id: 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
@@ -142,6 +164,8 @@ io.on('connection', (socket) => {
             type: type,
             content: content,
             text: content,
+            replyTo: replyTo,
+            time: timeFormatted,
             avatar: user.avatar,
             role: user.role,
             isVip: user.isVip,
@@ -157,7 +181,6 @@ io.on('connection', (socket) => {
         io.to(room).emit('chat message', messageData);
     });
 
-    // ഓണർ: അഡ്മിൻ ആക്കാനും മാറ്റാനും
     socket.on('toggle admin role', (targetSocketId) => {
         const currentUser = users[socket.id];
         if (currentUser && currentUser.role === 'Owner') {
@@ -178,18 +201,18 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ഓണർ: കിക്ക് ചെയ്യൽ
     socket.on('kick user', (targetSocketId) => {
         const currentUser = users[socket.id];
         if (currentUser && currentUser.role === 'Owner') {
             const target = users[targetSocketId];
             if (target && target.role !== 'Owner') {
-                io.to(targetSocketId).emit('force disconnect', 'നിങ്ങളെ ഓണർ റൂമിൽ നിന്ന് Kick ചെയ്തു!');
+                const lower = target.name.toLowerCase().trim();
+                kickedUsers.add(lower);
+                io.to(targetSocketId).emit('force disconnect', '⛔ നിങ്ങളെ ഓണർ റൂമിൽ നിന്ന് Kick / Ban ചെയ്തിരിക്കുന്നു!');
             }
         }
     });
 
-    // ഓണർ: മ്യൂട്ട് ചെയ്യൽ (1 min to 1 year)
     socket.on('mute user', ({ targetSocketId, durationMinutes }) => {
         const currentUser = users[socket.id];
         if (currentUser && currentUser.role === 'Owner') {
@@ -200,6 +223,31 @@ io.on('connection', (socket) => {
                 mutedUsers[targetLower] = unmuteAt;
                 io.to(targetSocketId).emit('mute warning', `നിങ്ങളെ ${durationMinutes} മിനിറ്റിലേക്ക് ഓണർ Mute ചെയ്തിരിക്കുന്നു.`);
             }
+        }
+    });
+
+    socket.on('unmute user', (username) => {
+        const currentUser = users[socket.id];
+        if (currentUser && currentUser.role === 'Owner') {
+            const u = (username || '').toLowerCase().trim();
+            delete mutedUsers[u];
+            socket.emit('mod data update', getModData());
+        }
+    });
+
+    socket.on('unkick user', (username) => {
+        const currentUser = users[socket.id];
+        if (currentUser && currentUser.role === 'Owner') {
+            const u = (username || '').toLowerCase().trim();
+            kickedUsers.delete(u);
+            socket.emit('mod data update', getModData());
+        }
+    });
+
+    socket.on('get mod data', () => {
+        const currentUser = users[socket.id];
+        if (currentUser && currentUser.role === 'Owner') {
+            socket.emit('mod data update', getModData());
         }
     });
 

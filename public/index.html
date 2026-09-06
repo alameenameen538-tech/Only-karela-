@@ -9,10 +9,9 @@
     html, body {
       height: 100%; height: 100dvh; margin: 0; padding: 0;
       color: #e5e7eb; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden; background: #13151b;
+      overflow: hidden; background: #0f1015;
     }
 
-    /* keralachatroom.com ലാൻഡിംഗ് പേജ് */
     #front-landing-screen {
       position: fixed; inset: 0; z-index: 4000;
       background-color: #07080b;
@@ -50,21 +49,19 @@
     .card-text-input { width: 100%; padding: 13px 14px; border-radius: 8px; background: #f9fafb; border: 1.5px solid #e5e7eb; color: #111827; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
     .card-submit-blue-btn { width: 100%; padding: 13px; border: none; border-radius: 8px; background: #00a8e8; color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
 
-    /* keralachatroom ചാറ്റ് ആപ്പ് ലേഔട്ട് */
-    #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; position: relative; background: #13151b; }
+    #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; position: relative; background: #0e0f14; }
 
-    /* ടോപ്പ് ബാർ */
     #top-nav-bar {
-      background: #171922; height: 52px; padding: 0 12px;
+      background: #15171e; height: 52px; padding: 0 12px;
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid #232634; flex-shrink: 0;
+      border-bottom: 1px solid #202330; flex-shrink: 0;
     }
     .nav-icons-group { display: flex; align-items: center; gap: 14px; }
     .nav-icon { background: none; border: none; color: #9ca3af; font-size: 1.3rem; cursor: pointer; padding: 4px; }
     .nav-icon:hover { color: #fff; }
 
     .wallet-chip {
-      background: #202330; border: 1.5px solid #eab308; color: #facc15;
+      background: #1e212c; border: 1.5px solid #eab308; color: #facc15;
       padding: 3px 9px; border-radius: 14px; font-size: 0.78rem; font-weight: 800;
       cursor: pointer; display: flex; align-items: center; gap: 4px;
     }
@@ -73,19 +70,18 @@
     .header-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1.5px solid #00a8e8; }
     .online-green-badge {
       position: absolute; bottom: -2px; left: -2px; width: 11px; height: 11px;
-      background: #22c55e; border-radius: 50%; border: 2px solid #171922;
+      background: #22c55e; border-radius: 50%; border: 2px solid #15171e;
     }
 
-    /* സൈഡ് ഡ്രോയർ */
     #custom-side-drawer {
       position: fixed; top: 0; left: -320px; width: 285px; height: 100%;
-      background: #181a24; z-index: 3000; transition: left 0.25s ease;
+      background: #15171e; z-index: 3000; transition: left 0.25s ease;
       display: flex; flex-direction: column; box-shadow: 6px 0 25px rgba(0,0,0,0.65);
       overflow-y: auto;
     }
     #custom-side-drawer.open { left: 0; }
     .drawer-header-card {
-      background: #232634; margin: 12px; border-radius: 10px; padding: 12px;
+      background: #1f222d; margin: 12px; border-radius: 10px; padding: 12px;
       display: flex; align-items: center; gap: 12px;
     }
     .room-badge-art {
@@ -98,17 +94,15 @@
       padding: 13px 18px; color: #e5e7eb; font-size: 0.95rem; font-weight: 500;
       cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03);
     }
-    .drawer-menu-item:hover { background: #202330; }
+    .drawer-menu-item:hover { background: #1b1e27; }
     .drawer-menu-item-left { display: flex; align-items: center; gap: 14px; }
     .menu-icon { font-size: 1.15rem; width: 22px; text-align: center; color: #00a8e8; }
 
-    /* ചാറ്റ് ഏരിയ */
     #main-chat {
       flex: 1; overflow-y: auto; padding: 12px 14px;
-      background-color: #13151b; transition: background 0.4s ease;
+      background-color: #0e0f14; transition: background 0.4s ease;
     }
 
-    /* hanu ameen secret room റൊമാന്റിക് തീം ബാക്ക്ഗ്രൗണ്ട് */
     #main-chat.hanu-secret-bg {
       background-color: #1a0b22 !important;
       background-image: 
@@ -120,24 +114,35 @@
     }
 
     #messages { list-style: none; margin: 0; padding: 0; }
-    #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; }
-    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-    .msg-body { display: flex; flex-direction: column; max-width: 82%; }
+    #messages > li { display: flex; gap: 10px; margin-bottom: 0.95rem; align-items: flex-start; }
+    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1.5px solid #2a2d3d; }
+    .msg-body { display: flex; flex-direction: column; flex: 1; max-width: 86%; }
     
-    .sender-name { font-weight: 700; font-size: 0.85rem; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
+    .msg-meta-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+    .sender-name { font-weight: 700; font-size: 0.88rem; color: #ff6b81; display: flex; align-items: center; gap: 6px; }
     .sender-name.owner-name { color: #f87171 !important; }
     .sender-name.admin-name { color: #60a5fa !important; }
+    .msg-time { font-size: 0.72rem; color: #6b7280; font-weight: 500; }
     
     .role-badge { font-size: 0.62rem; padding: 1px 5px; border-radius: 3px; font-weight: 800; }
     .role-badge.owner { background: #dc2626; color: white; }
     .role-badge.admin { background: #2563eb; color: white; }
     .role-badge.vip { background: #eab308; color: #000; }
 
-    /* keralachatroom ഒറിജിനൽ ചാറ്റ് ബബിൾ സ്റ്റൈൽ */
+    /* സ്ക്രീൻഷോട്ടിലെ അതേ ക്വോട്ട് / റിപ്ലൈ ബോക്സ് */
+    .quoted-box {
+      background: rgba(30, 33, 44, 0.9);
+      border-left: 3.5px solid #00a8e8;
+      border-radius: 6px; padding: 5px 8px; margin-bottom: 4px;
+      font-size: 0.78rem; color: #9ca3af; display: flex; flex-direction: column;
+    }
+    .quoted-user { font-weight: bold; color: #e5e7eb; font-size: 0.75rem; }
+
+    /* keralachatroom ചാറ്റ് ബോക്സ് ഡിസൈൻ */
     .msg-content {
-      background: #1e212c; border: 1px solid rgba(255,255,255,0.05);
-      padding: 9px 14px; border-radius: 12px; word-break: break-word;
-      font-size: 0.92rem; margin-top: 3px; color: #f3f4f6;
+      background: #171922; border: 1px solid rgba(255,255,255,0.04);
+      padding: 8px 12px; border-radius: 12px; word-break: break-word;
+      font-size: 0.94rem; color: #f3f4f6; cursor: pointer;
     }
     .hanu-secret-bg .msg-content {
       background: rgba(43, 17, 56, 0.82) !important;
@@ -145,43 +150,46 @@
     }
     .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
 
-    /* ഇൻപുട്ട് ബാർ */
+    /* റിപ്ലൈ പ്രിവ്യൂ ബാർ */
+    #reply-preview-bar {
+      display: none; background: #13151b; padding: 6px 14px;
+      border-top: 1px solid #202330; justify-content: space-between; align-items: center;
+      font-size: 0.82rem; color: #00a8e8;
+    }
+
     #bottom-input-bar {
-      background: #171922; padding: 8px 12px; display: flex;
-      align-items: center; gap: 8px; border-top: 1px solid #232634; flex-shrink: 0;
+      background: #15171e; padding: 8px 12px; display: flex;
+      align-items: center; gap: 8px; border-top: 1px solid #202330; flex-shrink: 0;
     }
     .input-action-btn { background: none; border: none; color: #9ca3af; font-size: 1.35rem; cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
     .input-action-btn:hover { color: #fff; }
     #input {
-      border: 1px solid #2a2d3b; padding: 10px 14px; flex: 1;
-      border-radius: 20px; background: #202330; color: white; outline: none; font-size: 0.95rem;
+      border: 1px solid #242735; padding: 10px 14px; flex: 1;
+      border-radius: 20px; background: #1b1e27; color: white; outline: none; font-size: 0.95rem;
     }
     #mic-btn.recording { color: #ef4444; animation: pulse 1s infinite; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     #send-btn { background: none; border: none; color: #00a8e8; font-size: 1.3rem; cursor: pointer; }
 
-    /* ഇമോജി & സ്റ്റിക്കർ ട്രേ */
-    #emoji-sticker-tray { display: none; height: 260px; background: #171922; border-top: 1px solid #232634; flex-direction: column; flex-shrink: 0; }
-    .tray-nav-tabs { display: flex; align-items: center; justify-content: space-around; background: #13151b; padding: 6px 8px; border-bottom: 1px solid #232634; }
+    #emoji-sticker-tray { display: none; height: 260px; background: #15171e; border-top: 1px solid #202330; flex-direction: column; flex-shrink: 0; }
+    .tray-nav-tabs { display: flex; align-items: center; justify-content: space-around; background: #111218; padding: 6px 8px; border-bottom: 1px solid #202330; }
     .tray-tab-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; opacity: 0.6; padding: 4px 10px; border-radius: 8px; }
-    .tray-tab-btn.active { opacity: 1; background: #262938; }
+    .tray-tab-btn.active { opacity: 1; background: #222532; }
     .tray-scroll-content { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; text-align: center; }
     .sticker-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 12px !important; }
     .emoji-item { font-size: 1.45rem; cursor: pointer; }
     .sticker-item { width: 58px; height: 58px; object-fit: contain; cursor: pointer; }
 
-    /* റേഡിയോ പ്ലെയർ ബാർ */
     #bottom-media-bar {
-      height: 38px; background: #101217; border-top: 1px solid #1c1e27;
+      height: 38px; background: #0c0d12; border-top: 1px solid #1a1c24;
       display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
       flex-shrink: 0; color: #9ca3af;
     }
     .media-btn { background: none; border: none; color: #e5e7eb; font-size: 1.1rem; cursor: pointer; }
 
-    /* യൂസർ ലിസ്റ്റ് ഡ്രോയർ */
     #right-drawer {
       position: fixed; top: 0; right: -100%; width: 100%; max-width: 340px; height: 100%;
-      background: #171922; z-index: 3000; transition: right 0.25s ease; display: flex; flex-direction: column;
+      background: #15171e; z-index: 3000; transition: right 0.25s ease; display: flex; flex-direction: column;
     }
     #right-drawer.open { right: 0; }
     .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
@@ -194,13 +202,13 @@
     .btn-kick { background: #dc2626; color: #fff; }
 
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; justify-content: center; align-items: center; }
-    .modal-box { background: #181a24; border-radius: 18px; width: 90%; max-width: 360px; padding: 22px; text-align: left; color: #fff; border: 1px solid #282b3a; }
+    .modal-box { background: #161821; border-radius: 18px; width: 90%; max-width: 360px; padding: 22px; text-align: left; color: #fff; border: 1px solid #252836; }
     .game-btn { background: #2563eb; color: white; border: none; padding: 11px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0; width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
     
     .vip-feature-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; }
-    .vip-plan-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; margin: 6px 0; background: #202330; border-radius: 10px; cursor: pointer; border: 1.5px solid transparent; }
+    .vip-plan-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; margin: 6px 0; background: #1e212c; border-radius: 10px; cursor: pointer; border: 1.5px solid transparent; }
     .vip-plan-row input { transform: scale(1.2); cursor: pointer; }
-    .vip-plan-row.selected { border-color: #84cc16; background: #262a3a; }
+    .vip-plan-row.selected { border-color: #84cc16; background: #242735; }
     .view-plans-btn { width: 100%; padding: 13px; border-radius: 10px; border: none; background: #84cc16; color: #111; font-weight: 800; font-size: 1rem; cursor: pointer; margin-top: 16px; }
 
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2500; }
@@ -268,6 +276,12 @@
 
     <div id="main-chat">
       <ul id="messages"></ul>
+    </div>
+
+    <!-- റിപ്ലൈ പ്രിവ്യൂ ബാർ -->
+    <div id="reply-preview-bar">
+      <span>Replying to <b id="reply-user-name">User</b></span>
+      <button style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;" onclick="cancelReply()">✕</button>
     </div>
 
     <input type="file" id="media-file-input" accept="image/*,video/*" style="display:none;" onchange="handleMediaUpload(this)">
@@ -441,8 +455,8 @@
     <div class="modal-box" style="text-align: center;">
       <h3>🎲 Dice & Mini Ludo</h3>
       <div id="dice-view" style="font-size:3.5rem; margin:15px 0;">🎲</div>
-      <button class="game-btn" style="background:#8b5cf6;" onclick="rollDiceOnly()">Roll Dice</button>
-      <button class="game-btn" style="background:#ec4899;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
+      <button class="game-btn" style="background:#8b5cf6; justify-content:center;" onclick="rollDiceOnly()">Roll Dice</button>
+      <button class="game-btn" style="background:#ec4899; justify-content:center;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('dice-modal')">Close</button>
     </div>
   </div>
@@ -461,6 +475,8 @@
     let isOwnerOrAdmin = false;
     let staffRoomPassword = "staff123";
     let dailySpinCount = 0;
+
+    let activeReply = null; // റിപ്ലൈ ഒബ്ജക്റ്റ്
 
     socket.on('staff password updated', (pass) => staffRoomPassword = pass);
     socket.on('force disconnect', (msg) => { alert(msg); logoutApp(); });
@@ -618,15 +634,34 @@
       window.location.reload();
     }
 
+    // റിപ്ലൈ ആരംഭിക്കുന്നു
+    function triggerReply(sender, text) {
+      activeReply = { sender: sender, text: text.substring(0, 45) + (text.length > 45 ? '...' : '') };
+      document.getElementById('reply-user-name').textContent = sender;
+      document.getElementById('reply-preview-bar').style.display = 'flex';
+      document.getElementById('input').focus();
+    }
+
+    function cancelReply() {
+      activeReply = null;
+      document.getElementById('reply-preview-bar').style.display = 'none';
+    }
+
     function sendMessage() {
       const inp = document.getElementById('input');
       const text = inp.value.trim();
       if(text) {
-        socket.emit('chat message', { type: 'text', content: text });
+        socket.emit('chat message', {
+          type: 'text',
+          content: text,
+          replyTo: activeReply
+        });
         inp.value = '';
+        cancelReply();
       }
     }
 
+    // keralachatroom അനുസരിച്ചുള്ള മെസ്സേജ് കാർഡ് റെൻഡറിംഗ്
     function renderMessage(data) {
       const li = document.createElement('li');
       li.id = data.id;
@@ -648,22 +683,38 @@
         ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete">🗑️</button>` 
         : '';
 
+      // റിപ്ലൈ ബോക്സ് (സ്ക്രീൻഷോട്ടിൽ ഉള്ളതുപോലെ)
+      let replyHtml = '';
+      if (data.replyTo) {
+        replyHtml = `
+          <div class="quoted-box">
+            <span class="quoted-user">${data.replyTo.sender}</span>
+            <span>${data.replyTo.text}</span>
+          </div>
+        `;
+      }
+
       let contentHtml = '';
       const type = data.type || 'text';
+      const textBody = data.text || data.content;
 
-      if (type === 'text') contentHtml = `<div>${data.text || data.content}</div>`;
+      if (type === 'text') contentHtml = `<div>${textBody}</div>`;
       else if (type === 'image') contentHtml = `<img src="${data.content}" style="max-width:220px; max-height:220px; border-radius:10px; display:block;">`;
       else if (type === 'video') contentHtml = `<video controls src="${data.content}" style="max-width:220px; max-height:220px; border-radius:10px; display:block;"></video>`;
       else if (type === 'audio') contentHtml = `<audio controls src="${data.content}" style="max-width:230px; height:38px;"></audio>`;
       else if (type === 'sticker') contentHtml = `<img src="${data.content}" style="width:100px; height:100px; object-fit:contain; display:block;">`;
 
       li.innerHTML = `
-        <img class="msg-avatar" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=guest'}">
+        <img class="msg-avatar" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=guest'}" onclick="triggerReply('${data.user}', '${textBody.replace(/'/g, "\\'")}')">
         <div class="msg-body">
-          <div class="sender-name ${nameColor}">
-            ${data.user} ${badgeHtml} ${deleteBtnHtml}
+          <div class="msg-meta-row">
+            <div class="sender-name ${nameColor}">
+              ★ ${data.user} ${badgeHtml} ${deleteBtnHtml}
+            </div>
+            <span class="msg-time">${data.time || ''}</span>
           </div>
-          <div class="msg-content">${contentHtml}</div>
+          ${replyHtml}
+          <div class="msg-content" onclick="triggerReply('${data.user}', '${textBody.replace(/'/g, "\\'")}')">${contentHtml}</div>
         </div>
       `;
       document.getElementById('messages').appendChild(li);
@@ -836,9 +887,10 @@
       if (!file) return;
       if (file.size > 8 * 1024 * 1024) return alert("ഫയൽ 8MB-ൽ കുറവായിരിക്കണം!");
       const reader = new FileReader();
-      reader.onload = e => socket.emit('chat message', { type: file.type.startsWith('video') ? 'video' : 'image', content: e.target.result });
+      reader.onload = e => socket.emit('chat message', { type: file.type.startsWith('video') ? 'video' : 'image', content: e.target.result, replyTo: activeReply });
       reader.readAsDataURL(file);
       el.value = '';
+      cancelReply();
     }
 
     let mediaRecorder, audioChunks = [], isRecording = false;
@@ -853,9 +905,10 @@
           mediaRecorder.onstop = () => {
             const blob = new Blob(audioChunks, { type: 'audio/webm' });
             const reader = new FileReader();
-            reader.onload = e => socket.emit('chat message', { type: 'audio', content: e.target.result });
+            reader.onload = e => socket.emit('chat message', { type: 'audio', content: e.target.result, replyTo: activeReply });
             reader.readAsDataURL(blob);
             stream.getTracks().forEach(t => t.stop());
+            cancelReply();
           };
           mediaRecorder.start();
           isRecording = true;
@@ -896,8 +949,9 @@
     }
     function insertEmoji(em) { document.getElementById('input').value += em; }
     function sendSticker(url) {
-      socket.emit('chat message', { type: 'sticker', content: url });
+      socket.emit('chat message', { type: 'sticker', content: url, replyTo: activeReply });
       document.getElementById('emoji-sticker-tray').style.display = 'none';
+      cancelReply();
     }
   </script>
 </body>
