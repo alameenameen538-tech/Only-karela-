@@ -6,7 +6,7 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { maxHttpBufferSize: 1e8 }); // വലിയ ഓഡിയോ/ഫോട്ടോ സപ്പോർട്ട്
+const io = new Server(server, { maxHttpBufferSize: 1e8 });
 
 app.use(express.static('public'));
 
@@ -42,6 +42,7 @@ const registeredUsers = {
 const activeSessions = {};
 const users = {};
 const dynamicAdmins = new Set();
+const mutedUsers = {}; // username -> unmuted timestamp
 let staffRoomPassword = "staff123";
 
 io.on('connection', (socket) => {
@@ -52,7 +53,7 @@ io.on('connection', (socket) => {
         const p = data.password || '';
 
         if (!u || !p) return socket.emit('auth response', { success: false, msg: 'Username, Password നൽകണം!' });
-        if (registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'ഈ പേര് നിലവിൽ മറ്റൊരാൾ രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്!' });
+        if (registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'ഈ പേര് നിലവിൽ രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്!' });
 
         registeredUsers[u] = p;
         socket.emit('auth response', { success: true, msg: 'രജിസ്ട്രേഷൻ വിജയകരം! ഇനി ലോഗിൻ ചെയ്യുക.' });
@@ -62,7 +63,7 @@ io.on('connection', (socket) => {
         const u = (data.username || '').toLowerCase().trim();
         const p = data.password || '';
 
-        if (!registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'അക്കൗണ്ട് നിലവിലില്ല! Register now വഴി അക്കൗണ്ട് ഉണ്ടാക്കുക.' });
+        if (!registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'അക്കൗണ്ട് നിലവിലില്ല! Register ചെയ്യുക.' });
         if (registeredUsers[u] !== p) return socket.emit('auth response', { success: false, msg: '❌ തെറ്റായ പാസ്‌വേർഡ്!' });
 
         if (activeSessions[u] && activeSessions[u] !== socket.id) {
@@ -116,8 +117,15 @@ io.on('connection', (socket) => {
 
     socket.on('chat message', (msgData) => {
         const user = users[socket.id] || { name: 'Anonymous', avatar: '', isVip: false, role: 'Member' };
-        const room = socket.currentRoom || 'Kerala Chat Room';
+        const uLower = user.name.toLowerCase().trim();
 
+        // മ്യൂട്ട് പരിശോധന
+        if (mutedUsers[uLower] && Date.now() < mutedUsers[uLower]) {
+            const timeLeftSec = Math.ceil((mutedUsers[uLower] - Date.now()) / 1000);
+            return socket.emit('mute warning', `നിങ്ങളെ മ്യൂട്ട് ചെയ്തിരിക്കുന്നു! ബാക്കി സമയം: ${timeLeftSec} സെക്കൻഡ്.`);
+        }
+
+        const room = socket.currentRoom || 'Kerala Chat Room';
         let type = 'text';
         let content = '';
 
@@ -149,17 +157,8 @@ io.on('connection', (socket) => {
         io.to(room).emit('chat message', messageData);
     });
 
-    socket.on('change staff password', (newPass) => {
-        const user = users[socket.id];
-        if (user && user.role === 'Owner') {
-            if (newPass && newPass.trim().length >= 3) {
-                staffRoomPassword = newPass.trim();
-                io.emit('staff password updated', staffRoomPassword);
-            }
-        }
-    });
-
-    socket.on('toggle moderator', (targetSocketId) => {
+    // ഓണർ: അഡ്മിൻ ആക്കാനും മാറ്റാനും
+    socket.on('toggle admin role', (targetSocketId) => {
         const currentUser = users[socket.id];
         if (currentUser && currentUser.role === 'Owner') {
             const target = users[targetSocketId];
@@ -175,6 +174,41 @@ io.on('connection', (socket) => {
                 }
                 io.to(targetSocketId).emit('role updated', { role: target.role, isVip: target.isVip });
                 io.to(target.room).emit('update users', Object.values(users).filter(u => u.room === target.room));
+            }
+        }
+    });
+
+    // ഓണർ: കിക്ക് ചെയ്യൽ
+    socket.on('kick user', (targetSocketId) => {
+        const currentUser = users[socket.id];
+        if (currentUser && currentUser.role === 'Owner') {
+            const target = users[targetSocketId];
+            if (target && target.role !== 'Owner') {
+                io.to(targetSocketId).emit('force disconnect', 'നിങ്ങളെ ഓണർ റൂമിൽ നിന്ന് Kick ചെയ്തു!');
+            }
+        }
+    });
+
+    // ഓണർ: മ്യൂട്ട് ചെയ്യൽ (1 min to 1 year)
+    socket.on('mute user', ({ targetSocketId, durationMinutes }) => {
+        const currentUser = users[socket.id];
+        if (currentUser && currentUser.role === 'Owner') {
+            const target = users[targetSocketId];
+            if (target && target.role !== 'Owner') {
+                const targetLower = target.name.toLowerCase().trim();
+                const unmuteAt = Date.now() + (durationMinutes * 60 * 1000);
+                mutedUsers[targetLower] = unmuteAt;
+                io.to(targetSocketId).emit('mute warning', `നിങ്ങളെ ${durationMinutes} മിനിറ്റിലേക്ക് ഓണർ Mute ചെയ്തിരിക്കുന്നു.`);
+            }
+        }
+    });
+
+    socket.on('change staff password', (newPass) => {
+        const user = users[socket.id];
+        if (user && user.role === 'Owner') {
+            if (newPass && newPass.trim().length >= 3) {
+                staffRoomPassword = newPass.trim();
+                io.emit('staff password updated', staffRoomPassword);
             }
         }
     });
