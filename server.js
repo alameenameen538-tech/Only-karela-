@@ -6,7 +6,7 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { maxHttpBufferSize: 1e7 });
+const io = new Server(server, { maxHttpBufferSize: 1e8 }); // വലിയ ഓഡിയോ/ഫോട്ടോ സപ്പോർട്ട്
 
 app.use(express.static('public'));
 
@@ -21,9 +21,6 @@ let roomMessages = {
 if (fs.existsSync(MSG_FILE)) {
     try {
         roomMessages = JSON.parse(fs.readFileSync(MSG_FILE, 'utf8'));
-        if (!roomMessages['hanu ameen secret room 💗']) {
-            roomMessages['hanu ameen secret room 💗'] = roomMessages['Staff Room'] || [];
-        }
     } catch (e) {
         console.log('Error reading messages file');
     }
@@ -54,12 +51,8 @@ io.on('connection', (socket) => {
         const u = (data.username || '').toLowerCase().trim();
         const p = data.password || '';
 
-        if (!u || !p) {
-            return socket.emit('auth response', { success: false, msg: 'Username, Password നൽകണം!' });
-        }
-        if (registeredUsers[u]) {
-            return socket.emit('auth response', { success: false, msg: 'ഈ പേര് നിലവിൽ മറ്റൊരാൾ രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്!' });
-        }
+        if (!u || !p) return socket.emit('auth response', { success: false, msg: 'Username, Password നൽകണം!' });
+        if (registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'ഈ പേര് നിലവിൽ മറ്റൊരാൾ രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്!' });
 
         registeredUsers[u] = p;
         socket.emit('auth response', { success: true, msg: 'രജിസ്ട്രേഷൻ വിജയകരം! ഇനി ലോഗിൻ ചെയ്യുക.' });
@@ -69,13 +62,8 @@ io.on('connection', (socket) => {
         const u = (data.username || '').toLowerCase().trim();
         const p = data.password || '';
 
-        if (!registeredUsers[u]) {
-            return socket.emit('auth response', { success: false, msg: 'അക്കൗണ്ട് നിലവിലില്ല! Register now വഴി അക്കൗണ്ട് ഉണ്ടാക്കുക.' });
-        }
-
-        if (registeredUsers[u] !== p) {
-            return socket.emit('auth response', { success: false, msg: '❌ തെറ്റായ പാസ്‌വേർഡ്!' });
-        }
+        if (!registeredUsers[u]) return socket.emit('auth response', { success: false, msg: 'അക്കൗണ്ട് നിലവിലില്ല! Register now വഴി അക്കൗണ്ട് ഉണ്ടാക്കുക.' });
+        if (registeredUsers[u] !== p) return socket.emit('auth response', { success: false, msg: '❌ തെറ്റായ പാസ്‌വേർഡ്!' });
 
         if (activeSessions[u] && activeSessions[u] !== socket.id) {
             io.to(activeSessions[u]).emit('force disconnect', 'മറ്റൊരു ഡിവൈസിൽ ഈ അക്കൗണ്ട് ലോഗിൻ ചെയ്യപ്പെട്ടു!');
@@ -126,15 +114,26 @@ io.on('connection', (socket) => {
         socket.emit('load room messages', roomMessages[newRoom]);
     });
 
-    socket.on('chat message', (msgText) => {
+    socket.on('chat message', (msgData) => {
         const user = users[socket.id] || { name: 'Anonymous', avatar: '', isVip: false, role: 'Member' };
-        const text = typeof msgText === 'object' ? msgText.text : msgText;
         const room = socket.currentRoom || 'Kerala Chat Room';
+
+        let type = 'text';
+        let content = '';
+
+        if (typeof msgData === 'object') {
+            type = msgData.type || 'text';
+            content = msgData.content || msgData.text || '';
+        } else {
+            content = msgData;
+        }
 
         const messageData = {
             id: 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
             user: user.name,
-            text: text,
+            type: type,
+            content: content,
+            text: content,
             avatar: user.avatar,
             role: user.role,
             isVip: user.isVip,
@@ -196,9 +195,7 @@ io.on('connection', (socket) => {
         if (users[socket.id]) {
             const r = users[socket.id].room;
             const uName = (users[socket.id].name || '').toLowerCase().trim();
-            if (activeSessions[uName] === socket.id) {
-                delete activeSessions[uName];
-            }
+            if (activeSessions[uName] === socket.id) delete activeSessions[uName];
             delete users[socket.id];
             io.to(r).emit('update users', Object.values(users).filter(u => u.room === r));
         }

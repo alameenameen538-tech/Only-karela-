@@ -52,7 +52,7 @@
     .card-text-input:focus { border-color: #00a8e8; background: #fff; }
     .card-submit-blue-btn { width: 100%; padding: 13px; border: none; border-radius: 8px; background: #00a8e8; color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
 
-    #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; }
+    #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; position: relative; }
 
     #top-nav-bar {
       background: #1a1c23; height: 54px; padding: 0 14px;
@@ -98,14 +98,12 @@
     .menu-icon { font-size: 1.15rem; width: 22px; text-align: center; color: #38bdf8; }
     .arrow-icon { color: #6b7280; font-size: 0.9rem; }
 
-    /* സാധാരണ ചാറ്റ് ഏരിയ ബാക്ക്ഗ്രൗണ്ട് */
     #main-chat {
       flex: 1; overflow-y: auto; padding: 12px;
       background-color: #121316;
       transition: background 0.4s ease;
     }
 
-    /* സ്ക്രീൻഷോട്ടിലുള്ള Hanu Ameen Secret Room റൊമാന്റിക് തീം ബാക്ക്ഗ്രൗണ്ട് */
     #main-chat.hanu-secret-bg {
       background-color: #1a0b22 !important;
       background-image: 
@@ -113,9 +111,8 @@
         radial-gradient(circle at 80% 65%, rgba(130, 15, 115, 0.5) 0%, transparent 50%),
         radial-gradient(circle at 45% 85%, rgba(200, 25, 100, 0.4) 0%, transparent 45%),
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 700'%3E%3Cdefs%3E%3ClinearGradient id='pink1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23d81b60'/%3E%3Cstop offset='100%25' stop-color='%23880e4f'/%3E%3C/linearGradient%3E%3ClinearGradient id='purp1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ab47bc'/%3E%3Cstop offset='100%25' stop-color='%234a148c'/%3E%3C/linearGradient%3E%3ClinearGradient id='rose1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ad1457'/%3E%3Cstop offset='100%25' stop-color='%23560027'/%3E%3C/linearGradient%3E%3Cfilter id='glow' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='8' result='blur'/%3E%3CfeMerge%3E%3CfeMergeNode in='blur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23glow)'%3E%3Cpath d='M95,140 C60,90 10,130 40,180 L95,235 L150,180 C180,130 130,90 95,140 Z' fill='url(%23purp1)' opacity='0.78' transform='rotate(-18 95 140)'/%3E%3Cpath d='M230,370 C145,270 50,330 100,430 L230,555 L360,430 C410,330 315,270 230,370 Z' fill='url(%23pink1)' opacity='0.88' transform='rotate(12 230 370)'/%3E%3Cpath d='M315,580 C265,520 195,560 225,620 L315,705 L405,620 C435,560 365,520 315,580 Z' fill='url(%23purp1)' opacity='0.82' transform='rotate(-10 315 580)'/%3E%3Cpath d='M320,170 C280,130 220,160 250,210 L320,275 L390,210 C420,160 360,130 320,170 Z' fill='url(%23rose1)' opacity='0.65' transform='rotate(22 320 170)'/%3E%3C/g%3E%3C/svg%3E") !important;
-      background-size: cover, cover, cover, cover !important;
+      background-size: cover !important;
       background-position: center !important;
-      background-repeat: no-repeat !important;
       background-attachment: fixed !important;
     }
 
@@ -135,25 +132,57 @@
       padding: 9px 13px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px;
     }
     .hanu-secret-bg .msg-content {
-      background: rgba(43, 17, 56, 0.75) !important;
-      border: 1px solid rgba(236, 72, 153, 0.3) !important;
+      background: rgba(43, 17, 56, 0.82) !important;
+      border: 1px solid rgba(236, 72, 153, 0.35) !important;
       backdrop-filter: blur(6px);
     }
     .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
 
+    /* സ്ക്രീൻഷോട്ടിലെ പുതിയ ഇൻപുട്ട് ബാർ (+, emoji, input, mic, send) */
     #bottom-input-bar {
-      background: #1a1c23; padding: 8px 12px; display: flex;
-      align-items: center; gap: 8px; border-top: 1px solid #262833; flex-shrink: 0;
+      background: #181920; padding: 8px 12px; display: flex;
+      align-items: center; gap: 8px; border-top: 1px solid #282a34; flex-shrink: 0;
     }
+    .input-action-btn {
+      background: none; border: none; color: #9ca3af; font-size: 1.35rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; padding: 0;
+    }
+    .input-action-btn:hover { color: #fff; }
     #input {
-      border: 1px solid #2d303e; padding: 11px 16px; flex: 1;
-      border-radius: 20px; background: #232632; color: white; outline: none; font-size: 0.95rem;
+      border: 1px solid #2a2d3b; padding: 10px 14px; flex: 1;
+      border-radius: 20px; background: #212430; color: white; outline: none; font-size: 0.95rem;
     }
+    #mic-btn.recording { color: #ef4444; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     #send-btn {
-      background: #00a8e8; border: none; width: 40px; height: 40px;
-      border-radius: 50%; color: #fff; font-size: 1.15rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; color: #00a8e8; font-size: 1.3rem; cursor: pointer;
     }
+
+    /* സ്ക്രീൻഷോട്ടിലെ അതേ ഇമോജി & ആനിമേറ്റഡ് സ്റ്റിക്കർ ട്രേ */
+    #emoji-sticker-tray {
+      display: none; height: 260px; background: #181920;
+      border-top: 1px solid #282a34; flex-direction: column; flex-shrink: 0;
+    }
+    .tray-nav-tabs {
+      display: flex; align-items: center; justify-content: space-around;
+      background: #14151b; padding: 6px 8px; border-bottom: 1px solid #22242e;
+    }
+    .tray-tab-btn {
+      background: none; border: none; font-size: 1.3rem; cursor: pointer;
+      opacity: 0.6; padding: 4px 10px; border-radius: 8px;
+    }
+    .tray-tab-btn.active { opacity: 1; background: #262936; }
+    .tray-scroll-content {
+      flex: 1; overflow-y: auto; padding: 12px; display: grid;
+      grid-template-columns: repeat(8, 1fr); gap: 10px; text-align: center;
+    }
+    .sticker-grid {
+      grid-template-columns: repeat(4, 1fr) !important; gap: 12px !important;
+    }
+    .emoji-item { font-size: 1.45rem; cursor: pointer; transition: transform 0.15s; }
+    .emoji-item:hover { transform: scale(1.2); }
+    .sticker-item { width: 58px; height: 58px; object-fit: contain; cursor: pointer; }
 
     #bottom-media-bar {
       height: 38px; background: #121317; border-top: 1px solid #1f2129;
@@ -175,7 +204,7 @@
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; justify-content: center; align-items: center; }
     .modal-box { background: #1a1c24; border-radius: 18px; width: 90%; max-width: 360px; padding: 22px; text-align: left; color: #fff; border: 1px solid #2d303e; }
     .game-btn { background: #2563eb; color: white; border: none; padding: 11px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0; width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
-    
+
     .vip-feature-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; }
     .vip-plan-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; margin: 6px 0; background: #232632; border-radius: 10px; cursor: pointer; border: 1.5px solid transparent; }
     .vip-plan-row input { transform: scale(1.2); cursor: pointer; }
@@ -260,10 +289,29 @@
       <ul id="messages"></ul>
     </div>
 
+    <!-- മീഡിയ അപ്‌ലോഡ് ഹിഡൻ ഇൻപുട്ട് -->
+    <input type="file" id="media-file-input" accept="image/*,video/*" style="display:none;" onchange="handleMediaUpload(this)">
+
+    <!-- ചാറ്റ് ഇൻപുട്ട് ബാർ (+, 😊, input, 🎤, ✈) -->
     <form id="bottom-input-bar" action="javascript:void(0);" onsubmit="sendMessage()">
-      <input id="input" autocomplete="off" placeholder="Type a message..." required />
+      <button type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
+      <button type="button" class="input-action-btn" onclick="toggleEmojiTray()">😊</button>
+      <input id="input" autocomplete="off" placeholder="Type here..." required />
+      <button type="button" id="mic-btn" class="input-action-btn" onclick="toggleVoiceRecord()">🎤</button>
       <button id="send-btn" type="submit">✈</button>
     </form>
+
+    <!-- ഇമോജി & സ്റ്റിക്കർ ട്രേ -->
+    <div id="emoji-sticker-tray">
+      <div class="tray-nav-tabs">
+        <button class="tray-tab-btn active" onclick="switchTrayTab('emoji')">😀</button>
+        <button class="tray-tab-btn" onclick="switchTrayTab('animated')">✨</button>
+        <button class="tray-tab-btn" onclick="switchTrayTab('cat')">🐱</button>
+        <button class="tray-tab-btn" onclick="switchTrayTab('bunny')">🐰</button>
+        <button class="tray-tab-btn" style="margin-left:auto;" onclick="toggleEmojiTray()">✕</button>
+      </div>
+      <div id="tray-content" class="tray-scroll-content"></div>
+    </div>
 
     <div id="bottom-media-bar">
       <button class="media-btn" onclick="togglePlayMusic()">▶</button>
@@ -403,7 +451,6 @@
     </div>
   </div>
 
-  <!-- റൂം സെലക്ഷൻ മോഡൽ -->
   <div id="room-modal" class="modal">
     <div class="modal-box" style="text-align: center;">
       <h3 style="margin-top:0;">Select Room</h3>
@@ -415,7 +462,6 @@
     </div>
   </div>
 
-  <!-- Spin Wheel Modal -->
   <div id="spin-modal" class="modal">
     <div class="modal-box" style="text-align: center;">
       <h3>🎁 Lucky Draw (Spin)</h3>
@@ -449,7 +495,6 @@
     let myRole = 'Member';
     let isOwnerOrAdmin = false;
     let staffRoomPassword = "staff123";
-
     let dailySpinCount = 0;
 
     socket.on('staff password updated', (pass) => {
@@ -562,7 +607,6 @@
       socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true, clientRole: myRole });
     }
 
-    // റൂം മാറുമ്പോൾ Hanu Ameen Secret Room ആണെങ്കിൽ റൊമാന്റിക് ബാക്ക്ഗ്രൗണ്ട് ആക്ടിവേറ്റ് ചെയ്യുന്നു
     function selectRoom(roomName) {
       if (roomName === 'hanu ameen secret room 💗') {
         const enteredPass = prompt("💗 hanu ameen secret room പാസ്‌വേർഡ് നൽകുക:");
@@ -610,11 +654,151 @@
       const inp = document.getElementById('input');
       const text = inp.value.trim();
       if(text) {
-        socket.emit('chat message', text);
+        socket.emit('chat message', { type: 'text', content: text });
         inp.value = '';
       }
     }
 
+    // ഫോട്ടോ & വീഡിയോ അപ്‌ലോഡ്
+    function handleMediaUpload(el) {
+      const file = el.files[0];
+      if (!file) return;
+      if (file.size > 8 * 1024 * 1024) return alert("ഫയൽ സൈസ് 8MB-ൽ കുറവായിരിക്കണം!");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const isVideo = file.type.startsWith('video');
+        socket.emit('chat message', {
+          type: isVideo ? 'video' : 'image',
+          content: e.target.result
+        });
+      };
+      reader.readAsDataURL(file);
+      el.value = '';
+    }
+
+    // വോയ്‌സ് റെക്കോർഡിംഗ്
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+
+    async function toggleVoiceRecord() {
+      const micBtn = document.getElementById('mic-btn');
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+          mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+          mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              socket.emit('chat message', { type: 'audio', content: e.target.result });
+            };
+            reader.readAsDataURL(audioBlob);
+            stream.getTracks().forEach(track => track.stop());
+          };
+          mediaRecorder.start();
+          isRecording = true;
+          micBtn.classList.add('recording');
+        } catch (err) {
+          alert("മൈക്രോഫോൺ പെർമിഷൻ ലഭ്യമായില്ല!");
+        }
+      } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        micBtn.classList.remove('recording');
+      }
+    }
+
+    // ഇമോജി & സ്റ്റിക്കർ ശേഖരം
+    const regularEmojis = [
+      "😀","😃","😄","😁","😆","😅","😂","🤣","🥲","🥹","😊","😇","🙂","🙃","😉","😌",
+      "😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🥸",
+      "🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️","😣","😖","😫","😩","🥺","😢",
+      "😭","😮‍💨","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗",
+      "🤔","🫣","🤫","🤐","🫡","🥱","😴","🤤","😷","🤒","🤕","🤢","🤮","🥴","😵","😵‍💫",
+      "😈","👿","👹","👺","💀","☠️","👻","👽","🤖","💩","❤️","🧡","💛","💚","💙","💜"
+    ];
+
+    const animatedStickers = [
+      "https://media.tenor.com/2lFhF228p3kAAAAj/dance-dancing.gif",
+      "https://media.tenor.com/97y61fO12iUAAAAj/tkthao219-bubududu.gif",
+      "https://media.tenor.com/x881k5WNO48AAAAj/cute-cat.gif",
+      "https://media.tenor.com/O613xVp6G-UAAAAj/love-you.gif",
+      "https://media.tenor.com/f7jYy104h5kAAAAj/kiss.gif",
+      "https://media.tenor.com/n67hX0U0W4MAAAAj/peach-goma.gif",
+      "https://media.tenor.com/z8L1HwE7z9gAAAAj/hug.gif",
+      "https://media.tenor.com/Ue14VpY2FesAAAAj/mochi-cat.gif"
+    ];
+
+    const catStickers = [
+      "https://api.dicebear.com/7.x/bottts/svg?seed=cat1",
+      "https://api.dicebear.com/7.x/bottts/svg?seed=cat2",
+      "https://api.dicebear.com/7.x/bottts/svg?seed=cat3",
+      "https://api.dicebear.com/7.x/bottts/svg?seed=cat4"
+    ];
+
+    const bunnyStickers = [
+      "https://api.dicebear.com/7.x/bottts/svg?seed=bunny1",
+      "https://api.dicebear.com/7.x/bottts/svg?seed=bunny2",
+      "https://api.dicebear.com/7.x/bottts/svg?seed=bunny3",
+      "https://api.dicebear.com/7.x/bottts/svg?seed=bunny4"
+    ];
+
+    function toggleEmojiTray() {
+      const tray = document.getElementById('emoji-sticker-tray');
+      if (tray.style.display === 'flex') {
+        tray.style.display = 'none';
+      } else {
+        tray.style.display = 'flex';
+        switchTrayTab('emoji');
+      }
+    }
+
+    function switchTrayTab(tab) {
+      document.querySelectorAll('.tray-tab-btn').forEach(b => b.classList.remove('active'));
+      const content = document.getElementById('tray-content');
+      content.innerHTML = '';
+
+      if (tab === 'emoji') {
+        event.target.classList.add('active');
+        content.className = 'tray-scroll-content';
+        regularEmojis.forEach(em => {
+          content.innerHTML += `<span class="emoji-item" onclick="insertEmoji('${em}')">${em}</span>`;
+        });
+      } else if (tab === 'animated') {
+        event.target.classList.add('active');
+        content.className = 'tray-scroll-content sticker-grid';
+        animatedStickers.forEach(st => {
+          content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`;
+        });
+      } else if (tab === 'cat') {
+        event.target.classList.add('active');
+        content.className = 'tray-scroll-content sticker-grid';
+        catStickers.forEach(st => {
+          content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`;
+        });
+      } else if (tab === 'bunny') {
+        event.target.classList.add('active');
+        content.className = 'tray-scroll-content sticker-grid';
+        bunnyStickers.forEach(st => {
+          content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`;
+        });
+      }
+    }
+
+    function insertEmoji(em) {
+      document.getElementById('input').value += em;
+    }
+
+    function sendSticker(url) {
+      socket.emit('chat message', { type: 'sticker', content: url });
+      document.getElementById('emoji-sticker-tray').style.display = 'none';
+    }
+
+    // മെസ്സേജ് റെൻഡർ ചെയ്യുമ്പോൾ Text, Image, Video, Audio, Sticker എന്നിവ കൃത്യമായി കാണിക്കുന്നു
     function renderMessage(data) {
       const li = document.createElement('li');
       li.id = data.id;
@@ -636,13 +820,28 @@
         ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete">🗑️</button>` 
         : '';
 
+      let contentHtml = '';
+      const type = data.type || 'text';
+
+      if (type === 'text') {
+        contentHtml = `<div>${data.text || data.content}</div>`;
+      } else if (type === 'image') {
+        contentHtml = `<img src="${data.content}" style="max-width:220px; max-height:220px; border-radius:10px; display:block; margin-top:4px;">`;
+      } else if (type === 'video') {
+        contentHtml = `<video controls src="${data.content}" style="max-width:220px; max-height:220px; border-radius:10px; display:block; margin-top:4px;"></video>`;
+      } else if (type === 'audio') {
+        contentHtml = `<audio controls src="${data.content}" style="max-width:230px; height:38px; margin-top:4px;"></audio>`;
+      } else if (type === 'sticker') {
+        contentHtml = `<img src="${data.content}" style="width:100px; height:100px; object-fit:contain; display:block;">`;
+      }
+
       li.innerHTML = `
         <img class="msg-avatar" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=guest'}">
         <div class="msg-body">
           <div class="sender-name ${nameColor}">
             ${data.user} ${badgeHtml} ${deleteBtnHtml}
           </div>
-          <div class="msg-content">${data.text}</div>
+          <div class="msg-content">${contentHtml}</div>
         </div>
       `;
       document.getElementById('messages').appendChild(li);
