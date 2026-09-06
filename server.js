@@ -1,6 +1,8 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -8,40 +10,50 @@ const io = new Server(server, { maxHttpBufferSize: 1e7 });
 
 app.use(express.static('public'));
 
-// രജിസ്റ്റർ ചെയ്ത അക്കൗണ്ടുകൾ (Username -> Password)
-const registeredUsers = {
-    'ameen': 'kl133250',
-    'owner': 'kl133250'
-};
-
-const activeSessions = {}; // username -> socketId (ഒരേസമയം രണ്ട് പേർ കയറുന്നത് തടയാൻ)
-const users = {};
-const stories = [];
-const dynamicAdmins = new Set();
-
-let staffRoomPassword = "staff123";
-
-const roomCurrentTrack = {
-    'LoFi Room': 'jfKfPfyJRdk'
-};
-
-const roomMessages = {
-    'Normal Room': [],
+const MSG_FILE = path.join(__dirname, 'messages.json');
+let roomMessages = {
+    'Kerala Chat Room': [],
     'LoFi Room': [],
     'Game Room': [],
     'Staff Room': []
 };
 
+// പഴയ മെസ്സേജുകൾ ഫയലിൽ നിന്നെടുക്കുന്നു
+if (fs.existsSync(MSG_FILE)) {
+    try {
+        roomMessages = JSON.parse(fs.readFileSync(MSG_FILE, 'utf8'));
+    } catch (e) {
+        console.log('Error reading messages file');
+    }
+}
+
+function saveMessagesToFile() {
+    try {
+        fs.writeFileSync(MSG_FILE, JSON.stringify(roomMessages, null, 2));
+    } catch (e) {
+        console.log('Error saving messages');
+    }
+}
+
+const registeredUsers = {
+    'ameen': 'kl133250',
+    'owner': 'kl133250'
+};
+
+const activeSessions = {};
+const users = {};
+const dynamicAdmins = new Set();
+let staffRoomPassword = "staff123";
+
 io.on('connection', (socket) => {
     socket.emit('staff password updated', staffRoomPassword);
 
-    // രജിസ്ട്രേഷൻ പരിശോധന
     socket.on('register user', (data) => {
         const u = (data.username || '').toLowerCase().trim();
         const p = data.password || '';
 
         if (!u || !p) {
-            return socket.emit('auth response', { success: false, msg: 'Username, Password എന്നിവ നൽകണം!' });
+            return socket.emit('auth response', { success: false, msg: 'Username, Password നൽകണം!' });
         }
         if (registeredUsers[u]) {
             return socket.emit('auth response', { success: false, msg: 'ഈ പേര് നിലവിൽ മറ്റൊരാൾ രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്!' });
@@ -51,26 +63,18 @@ io.on('connection', (socket) => {
         socket.emit('auth response', { success: true, msg: 'രജിസ്ട്രേഷൻ വിജയകരം! ഇനി ലോഗിൻ ചെയ്യുക.' });
     });
 
-    // കർശനമായ ലോഗിൻ പരിശോധന (Strict Auth)
     socket.on('authenticate user', (data) => {
         const u = (data.username || '').toLowerCase().trim();
         const p = data.password || '';
 
         if (!registeredUsers[u]) {
-            return socket.emit('auth response', { 
-                success: false, 
-                msg: 'ഈ അക്കൗണ്ട് നിലവിലില്ല! Register now വഴി പുതിയതായി അക്കൗണ്ട് ഉണ്ടാക്കുക.' 
-            });
+            return socket.emit('auth response', { success: false, msg: 'അക്കൗണ്ട് നിലവിലില്ല! Register now വഴി അക്കൗണ്ട് ഉണ്ടാക്കുക.' });
         }
 
         if (registeredUsers[u] !== p) {
-            return socket.emit('auth response', { 
-                success: false, 
-                msg: '❌ തെറ്റായ പാസ്‌വേർഡ്! ഈ അക്കൗണ്ടിൽ കയറാൻ സാധ്യമല്ല.' 
-            });
+            return socket.emit('auth response', { success: false, msg: '❌ തെറ്റായ പാസ്‌വേർഡ്!' });
         }
 
-        // നിലവിൽ വേറെ ഡിവൈസിൽ ഇതേ അക്കൗണ്ട് ഓപ്പൺ ആണെങ്കിൽ പഴയത് ഡിസ്കണക്റ്റ് ചെയ്യുക
         if (activeSessions[u] && activeSessions[u] !== socket.id) {
             io.to(activeSessions[u]).emit('force disconnect', 'മറ്റൊരു ഡിവൈസിൽ ഈ അക്കൗണ്ട് ലോഗിൻ ചെയ്യപ്പെട്ടു!');
         }
@@ -81,7 +85,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join', (data) => {
-        socket.currentRoom = data.room || 'Normal Room';
+        socket.currentRoom = data.room || 'Kerala Chat Room';
         socket.join(socket.currentRoom);
         
         let role = data.clientRole || 'Member';
@@ -102,11 +106,9 @@ io.on('connection', (socket) => {
         };
 
         io.to(socket.currentRoom).emit('update users', Object.values(users).filter(u => u.room === socket.currentRoom));
+        
+        // നിലവിലെ റൂമിലെ പഴയ മെസ്സേജുകൾ അയച്ചുകൊടുക്കുന്നു
         socket.emit('load room messages', roomMessages[socket.currentRoom] || []);
-
-        if (socket.currentRoom === 'LoFi Room' && roomCurrentTrack['LoFi Room']) {
-            socket.emit('play yt track', { videoId: roomCurrentTrack['LoFi Room'], sharedBy: 'LoFi Auto DJ' });
-        }
     });
 
     socket.on('switch room', (newRoom) => {
@@ -121,13 +123,15 @@ io.on('connection', (socket) => {
 
         io.to(prevRoom).emit('update users', Object.values(users).filter(u => u.room === prevRoom));
         io.to(newRoom).emit('update users', Object.values(users).filter(u => u.room === newRoom));
+        
+        // റൂം മാറുമ്പോൾ ആ റൂമിലെ മുൻപത്തെ മെസ്സേജുകൾ അയച്ചുകൊടുക്കുന്നു
         socket.emit('load room messages', roomMessages[newRoom]);
     });
 
     socket.on('chat message', (msgText) => {
         const user = users[socket.id] || { name: 'Anonymous', avatar: '', isVip: false, role: 'Member' };
         const text = typeof msgText === 'object' ? msgText.text : msgText;
-        const room = socket.currentRoom;
+        const room = socket.currentRoom || 'Kerala Chat Room';
 
         const messageData = {
             id: 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
@@ -142,24 +146,11 @@ io.on('connection', (socket) => {
         if (!roomMessages[room]) roomMessages[room] = [];
         roomMessages[room].push(messageData);
 
-        io.to(room).emit('chat message', messageData);
-    });
+        // പരമാവധി 200 മെസ്സേജുകൾ വരെ സൂക്ഷിക്കുന്നു
+        if (roomMessages[room].length > 200) roomMessages[room].shift();
+        saveMessagesToFile();
 
-    socket.on('game broadcast', (msg) => {
-        const user = users[socket.id] || { name: 'Player' };
-        const room = socket.currentRoom;
-        const botMsg = {
-            id: 'bot_' + Date.now(),
-            user: '🎲 Game Bot',
-            text: `<strong>${user.name}</strong> ${msg}`,
-            avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=gamebot',
-            role: 'Bot',
-            isVip: false,
-            room: room
-        };
-        if (!roomMessages[room]) roomMessages[room] = [];
-        roomMessages[room].push(botMsg);
-        io.to(room).emit('chat message', botMsg);
+        io.to(room).emit('chat message', messageData);
     });
 
     socket.on('change staff password', (newPass) => {
@@ -198,6 +189,7 @@ io.on('connection', (socket) => {
             const room = socket.currentRoom;
             if (roomMessages[room]) {
                 roomMessages[room] = roomMessages[room].filter(m => m.id !== msgId);
+                saveMessagesToFile();
                 io.to(room).emit('message deleted', msgId);
             }
         }
