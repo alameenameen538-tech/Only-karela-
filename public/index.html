@@ -3,103 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-  <title>Kerala Chat Room</title>
+  <title>കേരള Chat Room</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
       height: 100%; height: 100dvh; margin: 0; padding: 0;
       color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      background: #0d0e12;
+      background: #08090d;
     }
 
-    /* സ്ക്രീൻഷോട്ടിലെ ഡൂഡിൽ പാറ്റേൺ ലോഗിൻ പേജ് */
-    #login-screen {
-      position: fixed; inset: 0; z-index: 5000;
-      background-color: #0b0c10;
-      background-image: radial-gradient(#1f222e 15%, transparent 16%), radial-gradient(#1a1d27 15%, transparent 16%);
-      background-size: 60px 60px;
-      background-position: 0 0, 30px 30px;
+    /* സ്ക്രീൻഷോട്ടിലെ ഫ്രണ്ട് പേജ് ഡിസൈൻ */
+    #front-landing-screen {
+      position: fixed; inset: 0; z-index: 4000;
+      background-color: #07080b;
+      background-image: radial-gradient(#1a1c24 16%, transparent 16%), radial-gradient(#14161f 16%, transparent 16%);
+      background-size: 55px 55px;
+      background-position: 0 0, 28px 28px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 16px;
+      padding: 24px; text-align: center;
     }
 
+    .top-flag-bar {
+      position: absolute; top: 18px; right: 20px; font-size: 1.5rem;
+    }
+
+    .brand-header-area {
+      display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px;
+    }
+    .brand-custom-logo {
+      width: 48px; height: 48px;
+    }
+    .brand-text-wrap {
+      text-align: left; line-height: 1.15;
+    }
+    .brand-text-malayalam {
+      font-size: 1.7rem; font-weight: 900; color: #ffffff; margin: 0;
+    }
+    .brand-text-english {
+      font-size: 1.15rem; font-weight: 700; color: #58a6ff; margin: 0; letter-spacing: 0.5px;
+    }
+
+    .welcome-main-title {
+      font-size: 1.6rem; font-weight: 800; margin: 0 0 14px 0; color: #fff;
+    }
+    .welcome-description {
+      font-size: 0.95rem; color: #9ca3af; line-height: 1.45; max-width: 320px; margin: 0 auto 30px auto;
+    }
+
+    .auth-action-buttons {
+      width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .tg-login-btn {
+      width: 100%; padding: 14px; border-radius: 28px; border: none;
+      background: #5b8719; color: #fff; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .guest-login-btn {
+      width: 100%; padding: 14px; border-radius: 28px; border: none;
+      background: #191b22; color: #e5e7eb; font-size: 1.05rem; font-weight: 600; cursor: pointer;
+    }
+    .register-footer-text {
+      margin-top: 20px; font-size: 0.82rem; color: #9ca3af;
+    }
+    .register-trigger-btn {
+      display: block; font-size: 1.05rem; font-weight: 800; color: #fff; margin-top: 4px; cursor: pointer;
+    }
+
+    /* വെളുത്ത ലോഗിൻ പോപ്പ്-അപ്പ് കാർഡ് */
+    #login-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 5000;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 20px;
+    }
     .modal-login-card {
-      background: #ffffff;
-      color: #1f2937;
-      border-radius: 20px;
-      padding: 24px 20px 20px;
-      width: 100%; max-width: 360px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      position: relative;
-      margin-bottom: 24px;
+      background: #ffffff; color: #111827; border-radius: 22px;
+      padding: 24px 22px; width: 100%; max-width: 340px; position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.7); text-align: left;
     }
-
-    .card-close-x {
-      position: absolute; right: 16px; top: 16px;
-      font-size: 1.3rem; font-weight: bold; color: #4b5563;
-      cursor: pointer; line-height: 1;
+    .modal-close-x {
+      position: absolute; right: 18px; top: 18px; font-size: 1.25rem;
+      font-weight: bold; color: #6b7280; cursor: pointer;
     }
-
-    .card-heading {
-      font-size: 1.25rem; font-weight: 700; margin: 0 0 16px 0;
-      color: #111827; text-align: left;
+    .modal-title-text {
+      font-size: 1.3rem; font-weight: 800; margin: 0 0 16px 0; color: #111827;
     }
-
-    .classic-input {
+    .card-text-input {
       width: 100%; padding: 13px 14px; border-radius: 8px;
       background: #f9fafb; border: 1.5px solid #e5e7eb;
       color: #111827; font-size: 0.95rem; margin-bottom: 12px; outline: none;
     }
-    .classic-input:focus { border-color: #00a8e8; background: #fff; }
-
-    .blue-login-btn {
+    .card-text-input:focus { border-color: #00a8e8; background: #fff; }
+    .card-submit-blue-btn {
       width: 100%; padding: 13px; border: none; border-radius: 8px;
-      background: #00a8e8; color: #ffffff; font-size: 1.05rem;
-      font-weight: 700; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; gap: 6px;
-      margin-top: 4px;
+      background: #00a8e8; color: #fff; font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px;
     }
 
-    .forgot-link {
-      display: block; text-align: left; color: #6b7280;
-      font-size: 0.85rem; text-decoration: none; margin-top: 14px;
-    }
-
-    /* താഴെയുള്ള ബട്ടണുകൾ */
-    .external-auth-group {
-      width: 100%; max-width: 360px; display: flex;
-      flex-direction: column; gap: 10px; align-items: center;
-    }
-
-    .telegram-btn {
-      width: 100%; padding: 14px; border-radius: 26px; border: none;
-      background: #5b8719; color: #ffffff; font-size: 1rem;
-      font-weight: 700; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; gap: 8px;
-    }
-
-    .guest-btn {
-      width: 100%; padding: 14px; border-radius: 26px; border: none;
-      background: #1f242d; color: #d1d5db; font-size: 1rem;
-      font-weight: 600; cursor: pointer;
-    }
-
-    .register-footer {
-      margin-top: 14px; text-align: center; font-size: 0.82rem; color: #9ca3af;
-    }
-    .register-footer a {
-      display: block; color: #ffffff; font-size: 1rem;
-      font-weight: 700; text-decoration: none; margin-top: 4px;
-    }
-
-    /* മെയിൻ ചാറ്റ് റൂം ലേഔട്ട് */
+    /* ചാറ്റ് റൂം ലേഔട്ട് */
     #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; }
 
     #header {
-      background: #16161c; padding: 10px 14px; display: flex;
-      justify-content: space-between; align-items: center;
-      border-bottom: 1px solid #23232a; flex-shrink: 0;
+      background: #14151c; padding: 10px 14px; display: flex;
+      justify-content: space-between; align-items: center; border-bottom: 1px solid #23242e; flex-shrink: 0;
     }
     .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
     .icon-btn { background: none; border: none; color: #e4e4e7; font-size: 1.25rem; cursor: pointer; }
@@ -107,21 +113,10 @@
       font-size: 0.75rem; background: #2563eb; color: #fff;
       padding: 3px 10px; border-radius: 12px; cursor: pointer; display: inline-block; margin-top: 2px;
     }
-
     .coin-badge {
       background: #23231a; border: 1.5px solid #eab308;
       color: #facc15; padding: 4px 10px; border-radius: 20px;
       font-weight: bold; font-size: 0.82rem; display: flex; align-items: center; gap: 5px; cursor: pointer;
-    }
-
-    #lofi-player-bar {
-      display: none; background: #1b162a; border-bottom: 1px solid #3d2f57;
-      padding: 8px 12px; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 10px;
-    }
-    .lofi-track-info { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #d8b4fe; overflow: hidden; white-space: nowrap; }
-    .share-music-btn {
-      background: #8b5cf6; border: none; color: #fff; padding: 5px 10px;
-      border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer;
     }
 
     #main-chat { flex: 1; overflow-y: auto; padding: 1rem; background: #0c0d12; }
@@ -144,7 +139,7 @@
     .role-badge.vip { background: #d97706; color: white; }
 
     .msg-content {
-      background: #191b24; border: 1px solid rgba(255,255,255,0.06);
+      background: #181922; border: 1px solid rgba(255,255,255,0.06);
       padding: 9px 14px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px;
     }
     .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
@@ -161,8 +156,6 @@
       background: #00a8e8; border: none; width: 44px; height: 44px;
       border-radius: 50%; color: #fff; font-size: 1.2rem; cursor: pointer;
     }
-
-    #yt-frame-container { position: absolute; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; }
 
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; }
     .modal-box { background: #1a1b24; border-radius: 16px; width: 90%; max-width: 340px; padding: 20px; text-align: center; }
@@ -204,40 +197,60 @@
 </head>
 <body>
 
-  <!-- സ്ക്രീൻഷോട്ട് അനുസരിച്ചുള്ള കൃത്യമായ ലോഗിൻ കാർഡ് -->
-  <div id="login-screen">
-    
-    <div class="modal-login-card">
-      <span class="card-close-x" onclick="handleGuestLogin()">✕</span>
-      <h3 class="card-heading">Login</h3>
+  <!-- ഫ്രണ്ട് ലാൻഡിംഗ് സ്ക്രീൻ -->
+  <div id="front-landing-screen">
+    <div class="top-flag-bar">🇺🇸</div>
 
-      <input type="text" id="login-username" class="classic-input" placeholder="Username/Email" autocomplete="off">
-      <input type="password" id="login-password" class="classic-input" placeholder="Password">
-
-      <button class="blue-login-btn" onclick="handleFormLogin()">
-        <span>➔</span> Login
-      </button>
-
-      <a href="javascript:void(0);" class="forgot-link" onclick="alert('പാസ്‌വേർഡ് റീസെറ്റ് ചെയ്യാൻ അഡ്മിനുമായി ബന്ധപ്പെടുക.')">Forgot password?</a>
-    </div>
-
-    <div class="external-auth-group">
-      <button class="telegram-btn" onclick="handleTelegramLogin()">
-        <span>✈</span> Login
-      </button>
-
-      <button class="guest-btn" onclick="handleGuestLogin()">
-        Guest login
-      </button>
-
-      <div class="register-footer">
-        New here?
-        <a href="javascript:void(0);" onclick="handleRegisterPrompt()">Register now</a>
+    <div class="brand-header-area">
+      <svg class="brand-custom-logo" viewBox="0 0 100 100">
+        <path d="M25,15 L45,35 L45,65 L25,85 Z" fill="#58a6ff"/>
+        <path d="M50,15 L75,40 L55,50 L75,85 Z" fill="#a855f7"/>
+      </svg>
+      <div class="brand-text-wrap">
+        <h1 class="brand-text-malayalam">കേരള</h1>
+        <div class="brand-text-english">Chat Room</div>
       </div>
     </div>
 
+    <h2 class="welcome-main-title">Welcome To The Chat</h2>
+    <p class="welcome-description">
+      Our chat community gives you the opportunity of making new friends and sharing fun moments with other people.
+    </p>
+
+    <div class="auth-action-buttons">
+      <button class="tg-login-btn" onclick="openLoginModal('login')">
+        <span>✈</span> Login
+      </button>
+
+      <button class="guest-login-btn" onclick="openGuestPrompt()">
+        Guest login
+      </button>
+
+      <div class="register-footer-text">
+        New here?
+        <span class="register-trigger-btn" onclick="openLoginModal('register')">Register now</span>
+      </div>
+    </div>
   </div>
 
+  <!-- വെളുത്ത പോപ്പ്-അപ്പ് ലോഗിൻ / രജിസ്റ്റർ കാർഡ് -->
+  <div id="login-modal-overlay">
+    <div class="modal-login-card">
+      <span class="modal-close-x" onclick="closeLoginModal()">✕</span>
+      <h3 id="card-mode-title" class="modal-title-text">Login</h3>
+
+      <input type="text" id="auth-username" class="card-text-input" placeholder="Username/Email" autocomplete="off">
+      <input type="password" id="auth-password" class="card-text-input" placeholder="Password">
+
+      <button id="auth-submit-btn" class="card-submit-blue-btn" onclick="submitAuthForm()">
+        <span>➔</span> Login
+      </button>
+
+      <a href="javascript:void(0);" id="forgot-pass-link" style="display:block; margin-top:14px; color:#6b7280; font-size:0.85rem; text-decoration:none;" onclick="alert('പാസ്‌വേർഡ് റീസെറ്റ് ചെയ്യാൻ അഡ്മിനുമായി ബന്ധപ്പെടുക.')">Forgot password?</a>
+    </div>
+  </div>
+
+  <!-- മെയിൻ ചാറ്റ് റൂം ആപ്പ് ലേഔട്ട് -->
   <div id="app-layout">
     <div id="header">
       <div class="header-left">
@@ -251,20 +264,6 @@
         <div class="coin-badge" onclick="openModal('vip-modal')">🪙 <span id="coin-balance">120</span></div>
         <button class="icon-btn" onclick="openActiveUsers()">👥</button>
       </div>
-    </div>
-
-    <div id="lofi-player-bar">
-      <div class="lofi-track-info">
-        <span>🎧</span>
-        <span id="current-track-label">LoFi Music Streaming...</span>
-      </div>
-      <button class="share-music-btn" onclick="openShareMusicPrompt()">
-        <span>➕</span> Share Song
-      </button>
-    </div>
-
-    <div id="yt-frame-container">
-      <iframe id="yt-player" width="200" height="200" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
     </div>
 
     <div id="main-chat">
@@ -292,7 +291,7 @@
       <li class="menu-row" onclick="openModal('dice-modal')"><span>🎲</span> Dice & Ludo Game</li>
       <li class="menu-row" onclick="openModal('vip-modal')"><span>💎</span> VIP Store (സ്റ്റോർ)</li>
       <li class="menu-row" id="change-staff-pass-opt" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()"><span>🔐</span> Change Staff Password</li>
-      <li class="menu-row" onclick="logoutPrompt()"><span>🚪</span> Logout</li>
+      <li class="menu-row" onclick="logoutApp()"><span>🚪</span> Logout</li>
     </ul>
   </div>
 
@@ -357,10 +356,8 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    
-    let staffRoomPassword = "staff123";
-    const OWNER_SECRET_PIN = "kl133250";
 
+    let authMode = 'login'; // 'login' or 'register'
     let myName = "";
     let myAvatar = "";
     let myCoins = 120;
@@ -368,67 +365,78 @@
     let currentRoom = "Normal Room";
     let myRole = 'Member';
     let isOwnerOrAdmin = false;
+    let staffRoomPassword = "staff123";
 
     socket.on('staff password updated', (pass) => {
       staffRoomPassword = pass;
     });
 
-    // സാധാരണ ഫോം ലോഗിൻ
-    function handleFormLogin() {
-      const uInput = document.getElementById('login-username').value.trim();
-      const pInput = document.getElementById('login-password').value.trim();
+    socket.on('force disconnect', (msg) => {
+      alert(msg);
+      window.location.reload();
+    });
 
-      if (!uInput) return alert("Username അല്ലെങ്കിൽ Email നൽകുക!");
+    function openLoginModal(mode) {
+      authMode = mode;
+      document.getElementById('login-modal-overlay').style.display = 'flex';
+      const title = document.getElementById('card-mode-title');
+      const submitBtn = document.getElementById('auth-submit-btn');
+      const forgot = document.getElementById('forgot-pass-link');
 
-      const lower = uInput.toLowerCase();
-      // ഓണർ വെരിഫിക്കേഷൻ: പേര് അമീൻ ആണെങ്കിൽ പാസ്‌വേർഡ് kl133250 ആയിരിക്കണം
-      if (lower === 'ameen' || lower === 'owner') {
-        if (pInput === OWNER_SECRET_PIN) {
-          myRole = 'Owner';
-          alert("👑 സ്വാഗതം അമീൻ! താങ്കളെ OWNER ആയി ലോഗിൻ ചെയ്തു.");
-        } else {
-          alert("❌ തെറ്റായ Owner പാസ്‌വേർഡ്! താങ്കൾ സാധാരണ മെമ്പറായി ലോഗിൻ ചെയ്യപ്പെടുന്നു.");
-          myRole = 'Member';
-        }
+      if (mode === 'register') {
+        title.textContent = 'Register Now';
+        submitBtn.innerHTML = '<span>➔</span> Register';
+        forgot.style.display = 'none';
       } else {
-        myRole = 'Member';
+        title.textContent = 'Login';
+        submitBtn.innerHTML = '<span>➔</span> Login';
+        forgot.style.display = 'block';
       }
-
-      myName = uInput.includes('@') ? uInput.split('@')[0] : uInput;
-      myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
-      startChatSession();
     }
 
-    // ഗെസ്റ്റ് ലോഗിൻ
-    function handleGuestLogin() {
+    function closeLoginModal() {
+      document.getElementById('login-modal-overlay').style.display = 'none';
+    }
+
+    function submitAuthForm() {
+      const u = document.getElementById('auth-username').value.trim();
+      const p = document.getElementById('auth-password').value.trim();
+
+      if (!u || !p) return alert("Username, Password എന്നിവ നൽകുക!");
+
+      if (authMode === 'register') {
+        socket.emit('register user', { username: u, password: p });
+      } else {
+        socket.emit('authenticate user', { username: u, password: p });
+      }
+    }
+
+    socket.on('auth response', (res) => {
+      if (!res.success) {
+        alert(res.msg);
+      } else {
+        if (authMode === 'register') {
+          alert(res.msg);
+          openLoginModal('login');
+        } else {
+          closeLoginModal();
+          myName = res.username;
+          myRole = res.role;
+          myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+          startChatApp();
+        }
+      }
+    });
+
+    function openGuestPrompt() {
       myName = "Guest_" + Math.floor(1000 + Math.random() * 9000);
       myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
       myRole = 'Member';
-      startChatSession();
+      startChatApp();
     }
 
-    // ടെലിഗ്രാം ലോഗിൻ
-    function handleTelegramLogin() {
-      const tgUser = prompt("ടെലിഗ്രാം Username നൽകുക (@ ഒഴിവാക്കി):");
-      if (tgUser && tgUser.trim()) {
-        myName = tgUser.trim().replace('@', '');
-        myAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(myName)}`;
-        myRole = 'Member';
-        startChatSession();
-      }
-    }
-
-    // രജിസ്റ്റർ പ്രോംപ്റ്റ്
-    function handleRegisterPrompt() {
-      const newU = prompt("പുതിയ Username നൽകുക:");
-      if (newU && newU.trim()) {
-        document.getElementById('login-username').value = newU.trim();
-        alert("യൂസർനെയിം നൽകി, ഇനി ഒരു പാസ്‌വേർഡ് ടൈപ്പ് ചെയ്ത് Login അമർത്തുക.");
-      }
-    }
-
-    function startChatSession() {
-      document.getElementById('login-screen').style.display = 'none';
+    function startChatApp() {
+      document.getElementById('front-landing-screen').style.display = 'none';
       document.getElementById('app-layout').style.display = 'flex';
 
       updateProfileUI();
@@ -469,12 +477,10 @@
       if (newP && newP.trim().length >= 3) {
         socket.emit('change staff password', newP.trim());
         alert("✅ പുതിയ സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് അപ്‌ഡേറ്റ് ചെയ്തു: " + newP.trim());
-      } else if (newP) {
-        alert("പാസ്‌വേർഡിന് ചുരുങ്ങിയത് 3 അക്ഷരങ്ങൾ വേണം!");
       }
     }
 
-    function logoutPrompt() {
+    function logoutApp() {
       window.location.reload();
     }
 
@@ -505,41 +511,9 @@
       currentRoom = roomName;
       document.getElementById('header-room-name').textContent = `🏠 ${roomName} ▼`;
       document.getElementById('messages').innerHTML = '';
-      
-      const lofiBar = document.getElementById('lofi-player-bar');
-      const ytPlayer = document.getElementById('yt-player');
-      
-      if(roomName === 'LoFi Room') lofiBar.style.display = 'flex';
-      else { lofiBar.style.display = 'none'; ytPlayer.src = ''; }
-
       socket.emit('switch room', roomName);
       closeModal('room-modal');
     }
-
-    function extractVideoID(url) {
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : null;
-    }
-
-    function openShareMusicPrompt() {
-      const url = prompt("YouTube ലിങ്ക് പേസ്റ്റ് ചെയ്യുക:");
-      if (!url) return;
-      const vId = extractVideoID(url);
-      if (vId) {
-        socket.emit('share yt track', vId);
-      } else {
-        alert("ശരിയായ YouTube ലിങ്ക് നൽകുക!");
-      }
-    }
-
-    socket.on('play yt track', (data) => {
-      if (currentRoom === 'LoFi Room') {
-        const frame = document.getElementById('yt-player');
-        frame.src = `https://www.youtube.com/embed/${data.videoId}?autoplay=1&enablejsapi=1`;
-        document.getElementById('current-track-label').textContent = `Playing: ${data.sharedBy}`;
-      }
-    });
 
     function sendMessage() {
       const inp = document.getElementById('input');
@@ -657,9 +631,7 @@
       document.getElementById('wheel').style.transform = `rotate(${deg}deg)`;
       setTimeout(() => {
         const reward = [20, 40, 50, 100][Math.floor(Math.random() * 4)];
-        if (!isOwnerOrAdmin) {
-          myCoins += reward;
-        }
+        if (!isOwnerOrAdmin) myCoins += reward;
         updateProfileUI();
         document.getElementById('spin-msg').textContent = `🎉 നിങ്ങൾക്ക് ${reward} കോയിനുകൾ ലഭിച്ചു!`;
         socket.emit('game broadcast', `സ്പിൻ വീലിൽ നിന്ന് ${reward} കോയിനുകൾ നേടി! 🎡`);
@@ -675,25 +647,21 @@
 
     function playLudoChallenge() {
       if (!isOwnerOrAdmin && myCoins < 20) return alert("കോയിനുകൾ തികയില്ല!");
-      if (!isOwnerOrAdmin) {
-        myCoins -= 20;
-      }
+      if (!isOwnerOrAdmin) myCoins -= 20;
       const val = Math.floor(Math.random() * 6) + 1;
       document.getElementById('dice-view').textContent = diceIcons[val - 1];
       if (val === 6) {
-        if (!isOwnerOrAdmin) {
-          myCoins += 100;
-        }
+        if (!isOwnerOrAdmin) myCoins += 100;
         alert("🎉 ലുഡോയിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു!");
         socket.emit('game broadcast', `ലുഡോ ചലഞ്ചിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു! 🏆`);
       } else {
-        alert(`കിട്ടിയത് ${val}. ${isOwnerOrAdmin ? 'Unlimited കോയിൻ ആയതിനാൽ കുറയില്ല!' : '20 കോയിൻ നഷ്ടപ്പെട്ടു!'}`);
+        alert(`കിട്ടിയത് ${val}.`);
       }
       updateProfileUI();
     }
 
     function purchaseVip() {
-      if (isOwnerOrAdmin) return alert("താങ്കൾ Owner/Admin ആയതിനാൽ എല്ലാ VIP ഫീച്ചറുകളും ഇതിനകം അൺലോക്ക് ആണ്! 👑");
+      if (isOwnerOrAdmin) return alert("താങ്കൾ ഇതിനകം VIP ആണ്! 👑");
       if (isVip) return alert("താങ്കൾ ഇതിനകം VIP ആണ്!");
       if (myCoins < 200) return alert("200 കോയിനുകൾ വേണം!");
       myCoins -= 200;
