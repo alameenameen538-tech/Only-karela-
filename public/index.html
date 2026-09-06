@@ -10,87 +10,121 @@
       height: 100%; height: 100dvh; margin: 0; padding: 0;
       color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      background: radial-gradient(circle at 10% 20%, #17102e 0%, #09090f 90%);
+      background: #0d0e12;
     }
 
+    /* സ്ക്രീൻഷോട്ടിലെ ഡൂഡിൽ പാറ്റേൺ ലോഗിൻ പേജ് */
     #login-screen {
       position: fixed; inset: 0; z-index: 5000;
-      background: radial-gradient(circle at 50% 25%, #231252, #070610);
+      background-color: #0b0c10;
+      background-image: radial-gradient(#1f222e 15%, transparent 16%), radial-gradient(#1a1d27 15%, transparent 16%);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 20px; text-align: center;
-    }
-    .login-card {
-      background: rgba(22, 19, 43, 0.92); backdrop-filter: blur(18px);
-      border: 1px solid rgba(147, 51, 234, 0.35); border-radius: 26px;
-      padding: 28px 22px; width: 100%; max-width: 360px;
-      box-shadow: 0 16px 45px rgba(0,0,0,0.7), 0 0 25px rgba(139, 92, 246, 0.25);
-    }
-    .login-logo {
-      width: 72px; height: 72px; border-radius: 50%;
-      border: 3px solid #a855f7; margin-bottom: 12px;
-      box-shadow: 0 0 18px rgba(168, 85, 247, 0.6);
-    }
-    .login-title { margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px; }
-    .login-subtitle { color: #a1a1aa; font-size: 0.85rem; margin: 6px 0 20px 0; }
-
-    .oauth-btn {
-      width: 100%; padding: 12px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.12); background: rgba(30, 27, 55, 0.9);
-      color: #fff; font-size: 0.92rem; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;
-      transition: all 0.2s ease;
-    }
-    .oauth-btn:hover { background: rgba(45, 40, 85, 0.9); border-color: #8b5cf6; }
-
-    .divider { display: flex; align-items: center; margin: 14px 0; color: #71717a; font-size: 0.78rem; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-    .divider span { padding: 0 10px; }
-
-    .login-input {
-      width: 100%; padding: 13px 16px; border-radius: 12px;
-      background: rgba(14, 12, 26, 0.95); border: 1.5px solid #3b3558;
-      color: white; font-size: 0.95rem; margin-bottom: 12px; outline: none;
-    }
-    .login-input:focus { border-color: #a855f7; }
-    .login-btn {
-      width: 100%; padding: 13px; border: none; border-radius: 12px;
-      background: linear-gradient(135deg, #9333ea, #3b82f6);
-      color: white; font-size: 1rem; font-weight: bold; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(147, 51, 234, 0.45);
+      padding: 16px;
     }
 
+    .modal-login-card {
+      background: #ffffff;
+      color: #1f2937;
+      border-radius: 20px;
+      padding: 24px 20px 20px;
+      width: 100%; max-width: 360px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .card-close-x {
+      position: absolute; right: 16px; top: 16px;
+      font-size: 1.3rem; font-weight: bold; color: #4b5563;
+      cursor: pointer; line-height: 1;
+    }
+
+    .card-heading {
+      font-size: 1.25rem; font-weight: 700; margin: 0 0 16px 0;
+      color: #111827; text-align: left;
+    }
+
+    .classic-input {
+      width: 100%; padding: 13px 14px; border-radius: 8px;
+      background: #f9fafb; border: 1.5px solid #e5e7eb;
+      color: #111827; font-size: 0.95rem; margin-bottom: 12px; outline: none;
+    }
+    .classic-input:focus { border-color: #00a8e8; background: #fff; }
+
+    .blue-login-btn {
+      width: 100%; padding: 13px; border: none; border-radius: 8px;
+      background: #00a8e8; color: #ffffff; font-size: 1.05rem;
+      font-weight: 700; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; gap: 6px;
+      margin-top: 4px;
+    }
+
+    .forgot-link {
+      display: block; text-align: left; color: #6b7280;
+      font-size: 0.85rem; text-decoration: none; margin-top: 14px;
+    }
+
+    /* താഴെയുള്ള ബട്ടണുകൾ */
+    .external-auth-group {
+      width: 100%; max-width: 360px; display: flex;
+      flex-direction: column; gap: 10px; align-items: center;
+    }
+
+    .telegram-btn {
+      width: 100%; padding: 14px; border-radius: 26px; border: none;
+      background: #5b8719; color: #ffffff; font-size: 1rem;
+      font-weight: 700; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; gap: 8px;
+    }
+
+    .guest-btn {
+      width: 100%; padding: 14px; border-radius: 26px; border: none;
+      background: #1f242d; color: #d1d5db; font-size: 1rem;
+      font-weight: 600; cursor: pointer;
+    }
+
+    .register-footer {
+      margin-top: 14px; text-align: center; font-size: 0.82rem; color: #9ca3af;
+    }
+    .register-footer a {
+      display: block; color: #ffffff; font-size: 1rem;
+      font-weight: 700; text-decoration: none; margin-top: 4px;
+    }
+
+    /* മെയിൻ ചാറ്റ് റൂം ലേഔട്ട് */
     #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; }
 
     #header {
-      background: rgba(18, 16, 32, 0.85); backdrop-filter: blur(12px);
-      padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+      background: #16161c; padding: 10px 14px; display: flex;
+      justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #23232a; flex-shrink: 0;
     }
     .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
-    .icon-btn { background: none; border: none; color: #e4e4e7; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; }
+    .icon-btn { background: none; border: none; color: #e4e4e7; font-size: 1.25rem; cursor: pointer; }
     .room-indicator {
-      font-size: 0.75rem; background: linear-gradient(90deg, #2563eb, #7c3aed);
-      color: #fff; padding: 3px 10px; border-radius: 12px; cursor: pointer; display: inline-block; margin-top: 2px;
+      font-size: 0.75rem; background: #2563eb; color: #fff;
+      padding: 3px 10px; border-radius: 12px; cursor: pointer; display: inline-block; margin-top: 2px;
     }
 
     .coin-badge {
-      background: rgba(42, 33, 16, 0.7); border: 1.5px solid #eab308;
+      background: #23231a; border: 1.5px solid #eab308;
       color: #facc15; padding: 4px 10px; border-radius: 20px;
       font-weight: bold; font-size: 0.82rem; display: flex; align-items: center; gap: 5px; cursor: pointer;
     }
 
     #lofi-player-bar {
-      display: none; background: rgba(26, 18, 48, 0.9);
-      border-bottom: 1px solid #493370; padding: 8px 12px;
-      flex-shrink: 0; align-items: center; justify-content: space-between; gap: 10px;
+      display: none; background: #1b162a; border-bottom: 1px solid #3d2f57;
+      padding: 8px 12px; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 10px;
     }
-    .lofi-track-info { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #d8b4fe; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lofi-track-info { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #d8b4fe; overflow: hidden; white-space: nowrap; }
     .share-music-btn {
       background: #8b5cf6; border: none; color: #fff; padding: 5px 10px;
-      border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;
+      border-radius: 14px; font-size: 0.75rem; font-weight: bold; cursor: pointer;
     }
 
-    #main-chat { flex: 1; overflow-y: auto; padding: 1rem; background: transparent; }
+    #main-chat { flex: 1; overflow-y: auto; padding: 1rem; background: #0c0d12; }
     #messages { list-style: none; margin: 0; padding: 0; }
     #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; }
     .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00e5ff; flex-shrink: 0; }
@@ -110,59 +144,50 @@
     .role-badge.vip { background: #d97706; color: white; }
 
     .msg-content {
-      background: rgba(28, 25, 46, 0.75); backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 9px 14px; border-radius: 15px; word-break: break-word;
-      font-size: 0.92rem; margin-top: 3px; line-height: 1.35;
+      background: #191b24; border: 1px solid rgba(255,255,255,0.06);
+      padding: 9px 14px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px;
     }
     .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
 
     #input-bar {
-      background: rgba(18, 16, 32, 0.92); backdrop-filter: blur(12px);
-      padding: 10px 12px; display: flex; align-items: center; gap: 8px;
-      border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+      background: #14151b; padding: 10px 12px; display: flex;
+      align-items: center; gap: 8px; border-top: 1px solid #23232c; flex-shrink: 0;
     }
     #input {
-      border: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; flex: 1;
-      border-radius: 24px; background: rgba(25, 23, 40, 0.9);
-      color: white; outline: none; font-size: 0.95rem;
+      border: 1px solid #2c2e3a; padding: 12px 16px; flex: 1;
+      border-radius: 24px; background: #1c1d26; color: white; outline: none; font-size: 0.95rem;
     }
-    #input:focus { border-color: #8b5cf6; }
     #send-btn {
-      background: linear-gradient(135deg, #00d2ff, #7c3aed);
-      border: none; width: 44px; height: 44px; border-radius: 50%;
-      color: #fff; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: #00a8e8; border: none; width: 44px; height: 44px;
+      border-radius: 50%; color: #fff; font-size: 1.2rem; cursor: pointer;
     }
 
     #yt-frame-container { position: absolute; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; }
 
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; }
-    .modal-box {
-      background: #181528; border: 1px solid rgba(139, 92, 246, 0.25);
-      border-radius: 18px; width: 90%; max-width: 340px; padding: 20px; text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
+    .modal-box { background: #1a1b24; border-radius: 16px; width: 90%; max-width: 340px; padding: 20px; text-align: center; }
     .game-btn {
       background: #2563eb; color: white; border: none; padding: 11px 16px;
-      border-radius: 10px; font-weight: bold; cursor: pointer; margin: 6px 0;
+      border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0;
       width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between;
     }
 
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 1500; }
     #left-drawer {
       position: fixed; top: 0; left: -280px; width: 260px; height: 100%;
-      background: #151324; z-index: 2000; transition: left 0.3s ease;
-      display: flex; flex-direction: column; border-right: 1px solid #28243d;
+      background: #16171f; z-index: 2000; transition: left 0.3s ease;
+      display: flex; flex-direction: column; border-right: 1px solid #262733;
     }
     #left-drawer.open { left: 0; }
-    .menu-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #201c36; cursor: pointer; color: #cbd5e1; }
+    .menu-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #20212c; cursor: pointer; color: #cbd5e1; }
     
     #right-drawer {
       position: fixed; top: 0; right: -100%; width: 100%; max-width: 360px; height: 100%;
-      background: #121020; z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
+      background: #16171f; z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column;
+    }
     #right-drawer.open { right: 0; }
     .online-capsule-bar {
-      margin: 14px; border: 1.5px solid #8b5cf6; border-radius: 20px; padding: 6px 0;
+      margin: 14px; border: 1.5px solid #00a8e8; border-radius: 20px; padding: 6px 0;
       text-align: center; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
@@ -170,46 +195,47 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.04);
     }
-    .u-dp { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #8b5cf6; }
+    .u-dp { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00a8e8; }
     .mod-toggle-btn {
       background: #7c3aed; border: none; color: #fff; font-size: 0.72rem;
       padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;
     }
   </style>
-  <!-- ഒഫീഷ്യൽ ഗൂഗിൾ ലോഗിൻ ലൈബ്രറി -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
-  <!-- ലോഗിൻ കാർഡ് -->
+  <!-- സ്ക്രീൻഷോട്ട് അനുസരിച്ചുള്ള കൃത്യമായ ലോഗിൻ കാർഡ് -->
   <div id="login-screen">
-    <div class="login-card">
-      <img class="login-logo" src="https://api.dicebear.com/7.x/bottts/svg?seed=KeralaChat" alt="Logo">
-      <h2 class="login-title">Kerala Chat</h2>
-      <p class="login-subtitle">Connect instantly across Kerala</p>
+    
+    <div class="modal-login-card">
+      <span class="card-close-x" onclick="handleGuestLogin()">✕</span>
+      <h3 class="card-heading">Login</h3>
 
-      <!-- ഒറിജിനൽ ഗൂഗിൾ സൈൻ ഇൻ ബട്ടൺ കണ്ടെയ്നർ -->
-      <div id="g_id_onload"
-           data-client_id="1013456789-example.apps.googleusercontent.com"
-           data-callback="handleGoogleCredentialResponse"
-           data-auto_prompt="false">
-      </div>
-      <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-        <button class="oauth-btn" onclick="triggerGoogleSignIn()">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.3 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5.1 3.7-8.8z"/><path fill="#FBBC05" d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.4 0-.8.1-1.6.4-2.4L1.6 7c-.8 1.6-1.3 3.4-1.3 5.3 0 2 .5 3.8 1.4 5.4l3.6-3z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.3-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/></svg>
-          Continue with Google
-        </button>
-      </div>
+      <input type="text" id="login-username" class="classic-input" placeholder="Username/Email" autocomplete="off">
+      <input type="password" id="login-password" class="classic-input" placeholder="Password">
 
-      <button class="oauth-btn" onclick="quickPhoneLogin()">
-        <span>📱</span> Continue with Phone Number
+      <button class="blue-login-btn" onclick="handleFormLogin()">
+        <span>➔</span> Login
       </button>
 
-      <div class="divider"><span>OR ENTER NICKNAME</span></div>
-
-      <input type="text" id="login-username-input" class="login-input" placeholder="Type your Nickname..." maxlength="20">
-      <button class="login-btn" onclick="enterChatRoom()">JOIN CHAT NOW 🚀</button>
+      <a href="javascript:void(0);" class="forgot-link" onclick="alert('പാസ്‌വേർഡ് റീസെറ്റ് ചെയ്യാൻ അഡ്മിനുമായി ബന്ധപ്പെടുക.')">Forgot password?</a>
     </div>
+
+    <div class="external-auth-group">
+      <button class="telegram-btn" onclick="handleTelegramLogin()">
+        <span>✈</span> Login
+      </button>
+
+      <button class="guest-btn" onclick="handleGuestLogin()">
+        Guest login
+      </button>
+
+      <div class="register-footer">
+        New here?
+        <a href="javascript:void(0);" onclick="handleRegisterPrompt()">Register now</a>
+      </div>
+    </div>
+
   </div>
 
   <div id="app-layout">
@@ -217,7 +243,7 @@
       <div class="header-left">
         <button class="icon-btn" onclick="openLeftMenu()">☰</button>
         <div>
-          <strong style="font-size:1rem; display:block; letter-spacing: 0.5px;">KeralaChat</strong>
+          <strong style="font-size:1rem; display:block;">KeralaChat</strong>
           <span id="header-room-name" class="room-indicator" onclick="openModal('room-modal')">🏠 Normal Room ▼</span>
         </div>
       </div>
@@ -255,7 +281,7 @@
 
   <!-- ഇടത് മെനു -->
   <div id="left-drawer">
-    <div style="padding:18px; background:#1b182e; border-bottom:1px solid #28243e;">
+    <div style="padding:18px; background:#1e1f29; border-bottom:1px solid #282a38;">
       <small style="color:#9ca3af;">Profile</small>
       <h3 id="drawer-user-name" style="margin:4px 0 6px 0; font-size:1.15rem; color:#38bdf8;">User</h3>
       <span id="vip-status-badge" style="background:#2563eb; color:white; padding:2px 8px; border-radius:4px; font-size:0.72rem;">Member</span>
@@ -266,20 +292,20 @@
       <li class="menu-row" onclick="openModal('dice-modal')"><span>🎲</span> Dice & Ludo Game</li>
       <li class="menu-row" onclick="openModal('vip-modal')"><span>💎</span> VIP Store (സ്റ്റോർ)</li>
       <li class="menu-row" id="change-staff-pass-opt" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()"><span>🔐</span> Change Staff Password</li>
-      <li class="menu-row" onclick="logoutPrompt()"><span>🚪</span> Logout / Change Name</li>
+      <li class="menu-row" onclick="logoutPrompt()"><span>🚪</span> Logout</li>
     </ul>
   </div>
 
   <!-- വലത് യൂസർ ലിസ്റ്റ് -->
   <div id="right-drawer">
-    <div style="display:flex; justify-content:space-between; padding:14px; background:#18152b; border-bottom:1px solid #26213f;">
+    <div style="display:flex; justify-content:space-between; padding:14px; background:#1e1f29; border-bottom:1px solid #262735;">
       <button class="icon-btn" onclick="closeAllDrawers()">✕</button>
       <strong>Online Users</strong>
       <span></span>
     </div>
     <div class="online-capsule-bar">
       <span>Online in Room</span>
-      <span id="active-count" style="background:#8b5cf6; color:#fff; padding:1px 8px; border-radius:10px; font-size:0.8rem;">1</span>
+      <span id="active-count" style="background:#00a8e8; color:#fff; padding:1px 8px; border-radius:10px; font-size:0.8rem;">1</span>
     </div>
     <ul id="user-rows" class="user-scroll-list"></ul>
   </div>
@@ -347,86 +373,61 @@
       staffRoomPassword = pass;
     });
 
-    // Google Sign-In ട്രിഗർ
-    function triggerGoogleSignIn() {
-      // ബ്രൗസറിലെ ഗൂഗിൾ അക്കൗണ്ട് സെലക്ഷൻ പോപ്പ്-അപ്പ്
-      try {
-        google.accounts.id.initialize({
-          client_id: "614210667086-example.apps.googleusercontent.com",
-          callback: handleGoogleCredentialResponse
-        });
-        google.accounts.id.prompt();
-      } catch (e) {
-        fallbackGoogleNamePrompt();
-      }
-    }
+    // സാധാരണ ഫോം ലോഗിൻ
+    function handleFormLogin() {
+      const uInput = document.getElementById('login-username').value.trim();
+      const pInput = document.getElementById('login-password').value.trim();
 
-    function fallbackGoogleNamePrompt() {
-      const emailOrName = prompt("Google Account ഇമെയിൽ അല്ലെങ്കിൽ പേര് നൽകുക:");
-      if (emailOrName && emailOrName.trim()) {
-        const cleanName = emailOrName.split('@')[0].trim();
-        proceedLogin(cleanName, `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanName)}`);
-      }
-    }
+      if (!uInput) return alert("Username അല്ലെങ്കിൽ Email നൽകുക!");
 
-    function handleGoogleCredentialResponse(response) {
-      try {
-        // ഡീകോഡ് ഗൂഗിൾ ഐഡി ടോക്കൺ
-        const base64Url = response.credential.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-        const userObj = JSON.parse(jsonPayload);
-
-        const gName = userObj.name || userObj.given_name || "Google User";
-        const gPic = userObj.picture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(gName)}`;
-        proceedLogin(gName, gPic);
-      } catch (err) {
-        fallbackGoogleNamePrompt();
-      }
-    }
-
-    function quickPhoneLogin() {
-      const ph = prompt("📱 മൊബൈൽ നമ്പർ നൽകുക (+91...):");
-      if (ph && ph.trim()) {
-        const cleaned = ph.trim().replace(/\D/g, '');
-        const lastDigits = cleaned.length >= 4 ? cleaned.slice(-4) : cleaned;
-        const phoneName = "User_" + (lastDigits || Math.floor(1000 + Math.random() * 9000));
-        proceedLogin(phoneName, `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(phoneName)}`);
-      }
-    }
-
-    // ഓണർ വെരിഫിക്കേഷൻ: അമീൻ എന്ന് വരുമ്പോഴെല്ലാം നിർബന്ധമായി PIN ചോദിക്കും
-    function checkOwnerPinVerification(name) {
-      const lower = (name || '').toLowerCase().trim();
+      const lower = uInput.toLowerCase();
+      // ഓണർ വെരിഫിക്കേഷൻ: പേര് അമീൻ ആണെങ്കിൽ പാസ്‌വേർഡ് kl133250 ആയിരിക്കണം
       if (lower === 'ameen' || lower === 'owner') {
-        const enteredPin = prompt("🔐 Enter Owner Secret PIN (ഓണർ രഹസ്യ പിൻ നൽകുക):");
-        if (enteredPin === OWNER_SECRET_PIN) {
-          alert("👑 സ്വാഗതം അമീൻ! താങ്കളെ OWNER ആയി വെരിഫൈ ചെയ്തു.");
-          return 'Owner';
+        if (pInput === OWNER_SECRET_PIN) {
+          myRole = 'Owner';
+          alert("👑 സ്വാഗതം അമീൻ! താങ്കളെ OWNER ആയി ലോഗിൻ ചെയ്തു.");
         } else {
-          alert("❌ തെറ്റായ പിൻ! താങ്കൾ സാധാരണ മെമ്പറായി പ്രവേശിക്കുന്നു.");
-          return 'Member';
+          alert("❌ തെറ്റായ Owner പാസ്‌വേർഡ്! താങ്കൾ സാധാരണ മെമ്പറായി ലോഗിൻ ചെയ്യപ്പെടുന്നു.");
+          myRole = 'Member';
         }
+      } else {
+        myRole = 'Member';
       }
-      return 'Member';
+
+      myName = uInput.includes('@') ? uInput.split('@')[0] : uInput;
+      myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+      startChatSession();
     }
 
-    function enterChatRoom() {
-      const val = document.getElementById('login-username-input').value.trim();
-      if (!val) return alert("ദയവായി ഒരു പേര് ടൈപ്പ് ചെയ്യുക!");
-      const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(val)}`;
-      proceedLogin(val, avatar);
+    // ഗെസ്റ്റ് ലോഗിൻ
+    function handleGuestLogin() {
+      myName = "Guest_" + Math.floor(1000 + Math.random() * 9000);
+      myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+      myRole = 'Member';
+      startChatSession();
     }
 
-    function proceedLogin(name, avatar) {
-      myName = name;
-      myRole = checkOwnerPinVerification(myName);
+    // ടെലിഗ്രാം ലോഗിൻ
+    function handleTelegramLogin() {
+      const tgUser = prompt("ടെലിഗ്രാം Username നൽകുക (@ ഒഴിവാക്കി):");
+      if (tgUser && tgUser.trim()) {
+        myName = tgUser.trim().replace('@', '');
+        myAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(myName)}`;
+        myRole = 'Member';
+        startChatSession();
+      }
+    }
 
-      myAvatar = avatar;
-      localStorage.setItem('kcr_name', myName);
-      localStorage.setItem('kcr_role', myRole);
-      localStorage.setItem('kcr_dp', myAvatar);
+    // രജിസ്റ്റർ പ്രോംപ്റ്റ്
+    function handleRegisterPrompt() {
+      const newU = prompt("പുതിയ Username നൽകുക:");
+      if (newU && newU.trim()) {
+        document.getElementById('login-username').value = newU.trim();
+        alert("യൂസർനെയിം നൽകി, ഇനി ഒരു പാസ്‌വേർഡ് ടൈപ്പ് ചെയ്ത് Login അമർത്തുക.");
+      }
+    }
 
+    function startChatSession() {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app-layout').style.display = 'flex';
 
@@ -474,15 +475,12 @@
     }
 
     function logoutPrompt() {
-      localStorage.clear();
-      sessionStorage.clear();
       window.location.reload();
     }
 
     socket.on('role updated', (data) => {
       myRole = data.role;
       isVip = data.isVip;
-      localStorage.setItem('kcr_role', myRole);
       updateProfileUI();
       alert(`🎉 നിങ്ങളുടെ പദവി മാറി: താങ്കൾ ഇപ്പോൾ ${myRole} ആണ്!`);
     });
