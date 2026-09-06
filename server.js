@@ -12,6 +12,8 @@ const users = {};
 const stories = [];
 const dynamicAdmins = new Set();
 
+let staffRoomPassword = "staff123"; // ഡിഫോൾട്ട് സ്റ്റാഫ് റൂം പാസ്‌വേർഡ്
+
 const roomCurrentTrack = {
     'LoFi Room': 'jfKfPfyJRdk'
 };
@@ -25,6 +27,9 @@ const roomMessages = {
 
 io.on('connection', (socket) => {
     socket.emit('load stories', stories);
+
+    // പുതിയതായി കണക്റ്റ് ആകുന്നവർക്ക് നിലവിലെ സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് അയച്ചുകൊടുക്കുന്നു
+    socket.emit('staff password updated', staffRoomPassword);
 
     socket.on('join', (data) => {
         socket.currentRoom = data.room || 'Normal Room';
@@ -111,6 +116,25 @@ io.on('connection', (socket) => {
         if (!roomMessages[room]) roomMessages[room] = [];
         roomMessages[room].push(botMsg);
         io.to(room).emit('chat message', botMsg);
+    });
+
+    // ഓണർക്ക് സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് മാറ്റാനുള്ള സോക്കറ്റ് ഇവന്റ്
+    socket.on('change staff password', (newPass) => {
+        const user = users[socket.id];
+        if (user && user.role === 'Owner') {
+            if (newPass && newPass.trim().length >= 3) {
+                staffRoomPassword = newPass.trim();
+                io.emit('staff password updated', staffRoomPassword);
+                socket.emit('chat message', {
+                    id: 'bot_' + Date.now(),
+                    user: '👑 Security',
+                    text: `✅ സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് വിജയകരമായി മാറ്റിയിരിക്കുന്നു: <strong>${staffRoomPassword}</strong>`,
+                    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=secbot',
+                    role: 'Bot',
+                    room: socket.currentRoom
+                });
+            }
+        }
     });
 
     socket.on('toggle moderator', (targetSocketId) => {
