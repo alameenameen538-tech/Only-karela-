@@ -10,6 +10,8 @@ app.use(express.static('public'));
 
 const users = {};
 const stories = [];
+const dynamicAdmins = new Set(); // Owner ആഡ് ചെയ്യുന്ന മോഡറേറ്റർമാർ
+
 const roomCurrentTrack = {
     'LoFi Room': 'jfKfPfyJRdk'
 };
@@ -22,12 +24,12 @@ const roomMessages = {
 };
 
 const OWNERS = ['ameen', 'owner'];
-const ADMINS = ['admin', 'mod'];
+const DEFAULT_ADMINS = ['admin', 'mod'];
 
 function getRole(name) {
     const lower = (name || '').toLowerCase().trim();
     if (OWNERS.some(o => lower.includes(o))) return 'Owner';
-    if (ADMINS.some(a => lower.includes(a))) return 'Admin';
+    if (dynamicAdmins.has(lower) || DEFAULT_ADMINS.some(a => lower.includes(a))) return 'Admin';
     return 'Member';
 }
 
@@ -42,6 +44,7 @@ io.on('connection', (socket) => {
         const isOwnerOrAdmin = role === 'Owner' || role === 'Admin';
 
         users[socket.id] = { 
+            id: socket.id,
             name: data.name, 
             avatar: data.avatar, 
             room: socket.currentRoom,
@@ -49,6 +52,7 @@ io.on('connection', (socket) => {
             isVip: isOwnerOrAdmin ? true : (data.isVip || false)
         };
 
+        io.emit('update users all', Object.values(users));
         io.to(socket.currentRoom).emit('update users', Object.values(users).filter(u => u.room === socket.currentRoom));
         socket.emit('load room messages', roomMessages[socket.currentRoom] || []);
 
@@ -112,6 +116,37 @@ io.on('connection', (socket) => {
         if (!roomMessages[room]) roomMessages[room] = [];
         roomMessages[room].push(botMsg);
         io.to(room).emit('chat message', botMsg);
+    });
+
+    // ഓണർക്ക് ആരെയും Moderator/Admin ആക്കാനും മാറ്റാനുമുള്ള ഫംഗ്ഷൻ
+    socket.on('toggle moderator', (targetSocketId) => {
+        const currentUser = users[socket.id];
+        if (currentUser && currentUser.role === 'Owner') {
+            const target = users[targetSocketId];
+            if (target && target.role !== 'Owner') {
+                const targetLower = target.name.toLowerCase().trim();
+                if (dynamicAdmins.has(targetLower)) {
+                    dynamicAdmins.delete(targetLower);
+                    target.role = 'Member';
+                } else {
+                    dynamicAdmins.add(targetLower);
+                    target.role = 'Admin';
+                    target.isVip = true;
+                }
+                io.to(targetSocketId).emit('role updated', { role: target.role, isVip: target.isVip });
+                io.to(target.room).emit('update users', Object.values(users).filter(u => u.room === target.room));
+                
+                const alertMsg = {
+                    id: 'mod_' + Date.now(),
+                    user: '👑 System Alert',
+                    text: `📢 <strong>${target.name}</strong> has been made <strong>${target.role === 'Admin' ? 'MODERATOR 🛡️' : 'MEMBER'}</strong> by Owner!`,
+                    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=ownerbot',
+                    role: 'Bot',
+                    room: target.room
+                };
+                io.to(target.room).emit('chat message', alertMsg);
+            }
+        }
     });
 
     socket.on('delete message', (msgId) => {
