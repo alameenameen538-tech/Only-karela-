@@ -40,6 +40,11 @@ const users = {};
 const dynamicAdmins = new Set();
 const mutedUsers = {};
 const kickedUsers = new Set();
+const stories = [
+    { id: 'st_1', name: 'Picasso', dp: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100' },
+    { id: 'st_2', name: 'Shan', dp: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=100' }
+];
+
 let staffRoomPassword = "staff123";
 
 function getModData() {
@@ -58,6 +63,7 @@ function getModData() {
 
 io.on('connection', (socket) => {
     socket.emit('staff password updated', staffRoomPassword);
+    socket.emit('load stories', stories);
 
     socket.on('register user', (data) => {
         const u = (data.username || '').toLowerCase().trim();
@@ -179,6 +185,12 @@ io.on('connection', (socket) => {
         saveMessagesToFile();
 
         io.to(room).emit('chat message', messageData);
+    });
+
+    socket.on('add story', (storyObj) => {
+        stories.unshift(storyObj);
+        if (stories.length > 15) stories.pop();
+        io.emit('load stories', stories);
     });
 
     socket.on('toggle admin role', (targetSocketId) => {

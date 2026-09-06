@@ -12,6 +12,7 @@
       overflow: hidden; background: #0f1015;
     }
 
+    /* ലാൻഡിംഗ് സ്ക്രീൻ */
     #front-landing-screen {
       position: fixed; inset: 0; z-index: 4000;
       background-color: #07080b;
@@ -129,7 +130,6 @@
     .role-badge.admin { background: #2563eb; color: white; }
     .role-badge.vip { background: #eab308; color: #000; }
 
-    /* സ്ക്രീൻഷോട്ടിലെ അതേ ക്വോട്ട് / റിപ്ലൈ ബോക്സ് */
     .quoted-box {
       background: rgba(30, 33, 44, 0.9);
       border-left: 3.5px solid #00a8e8;
@@ -138,7 +138,6 @@
     }
     .quoted-user { font-weight: bold; color: #e5e7eb; font-size: 0.75rem; }
 
-    /* keralachatroom ചാറ്റ് ബോക്സ് ഡിസൈൻ */
     .msg-content {
       background: #171922; border: 1px solid rgba(255,255,255,0.04);
       padding: 8px 12px; border-radius: 12px; word-break: break-word;
@@ -150,7 +149,6 @@
     }
     .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
 
-    /* റിപ്ലൈ പ്രിവ്യൂ ബാർ */
     #reply-preview-bar {
       display: none; background: #13151b; padding: 6px 14px;
       border-top: 1px solid #202330; justify-content: space-between; align-items: center;
@@ -171,14 +169,15 @@
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     #send-btn { background: none; border: none; color: #00a8e8; font-size: 1.3rem; cursor: pointer; }
 
+    /* സ്ക്രീൻഷോട്ടിലെ അതേ സ്റ്റിക്കർ & ഇമോജി ട്രേ */
     #emoji-sticker-tray { display: none; height: 260px; background: #15171e; border-top: 1px solid #202330; flex-direction: column; flex-shrink: 0; }
     .tray-nav-tabs { display: flex; align-items: center; justify-content: space-around; background: #111218; padding: 6px 8px; border-bottom: 1px solid #202330; }
-    .tray-tab-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; opacity: 0.6; padding: 4px 10px; border-radius: 8px; }
+    .tray-tab-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; opacity: 0.6; padding: 4px 8px; border-radius: 8px; }
     .tray-tab-btn.active { opacity: 1; background: #222532; }
     .tray-scroll-content { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; text-align: center; }
-    .sticker-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 12px !important; }
+    .sticker-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 10px !important; }
     .emoji-item { font-size: 1.45rem; cursor: pointer; }
-    .sticker-item { width: 58px; height: 58px; object-fit: contain; cursor: pointer; }
+    .sticker-item { width: 52px; height: 52px; object-fit: contain; cursor: pointer; }
 
     #bottom-media-bar {
       height: 38px; background: #0c0d12; border-top: 1px solid #1a1c24;
@@ -187,16 +186,51 @@
     }
     .media-btn { background: none; border: none; color: #e5e7eb; font-size: 1.1rem; cursor: pointer; }
 
+    /* സ്ക്രീൻഷോട്ടിലെ കൃത്യമായ വലത് യൂസർ ഡ്രോയർ (Stories + Pill + Flag Users) */
     #right-drawer {
       position: fixed; top: 0; right: -100%; width: 100%; max-width: 340px; height: 100%;
       background: #15171e; z-index: 3000; transition: right 0.25s ease; display: flex; flex-direction: column;
     }
     #right-drawer.open { right: 0; }
+
+    .drawer-top-icons-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: #111218; border-bottom: 1px solid #202330;
+    }
+    .drawer-top-icons-bar button { background: none; border: none; color: #9ca3af; font-size: 1.15rem; cursor: pointer; }
+
+    /* സ്റ്റോറികൾ വിഭാഗം */
+    .stories-carousel-row {
+      display: flex; gap: 12px; overflow-x: auto; padding: 12px 14px;
+      border-bottom: 1px solid #202330; background: #15171e; flex-shrink: 0;
+    }
+    .stories-carousel-row::-webkit-scrollbar { display: none; }
+    .story-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex-shrink: 0; }
+    .story-dp-wrap {
+      width: 52px; height: 52px; border-radius: 50%; padding: 2px;
+      border: 2px solid #e11d48; display: flex; align-items: center; justify-content: center;
+    }
+    .story-dp-wrap.add-story { border-color: #06b6d4; background: rgba(6, 182, 212, 0.1); }
+    .story-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .story-label { font-size: 0.68rem; color: #9ca3af; max-width: 54px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Online Pill */
+    .online-pill-strip {
+      margin: 10px 14px 4px 14px; background: #000;
+      border: 1.5px solid #00a8e8; border-radius: 20px; padding: 6px 0;
+      text-align: center; font-size: 0.85rem; font-weight: 800; color: #fff;
+    }
+
     .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
-    .u-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .u-dp { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+    .u-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .u-avatar-wrap {
+      width: 40px; height: 40px; border-radius: 50%; padding: 2px;
+      border: 2px solid #ec4899; flex-shrink: 0;
+    }
+    .u-avatar-wrap.blue-border { border-color: #00a8e8; }
+    .u-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
     
-    .owner-action-btn { border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: bold; cursor: pointer; }
+    .owner-action-btn { border: none; padding: 3px 6px; border-radius: 6px; font-size: 0.65rem; font-weight: bold; cursor: pointer; }
     .btn-make-admin { background: #2563eb; color: #fff; }
     .btn-mute { background: #eab308; color: #000; }
     .btn-kick { background: #dc2626; color: #fff; }
@@ -278,7 +312,6 @@
       <ul id="messages"></ul>
     </div>
 
-    <!-- റിപ്ലൈ പ്രിവ്യൂ ബാർ -->
     <div id="reply-preview-bar">
       <span>Replying to <b id="reply-user-name">User</b></span>
       <button style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;" onclick="cancelReply()">✕</button>
@@ -286,7 +319,7 @@
 
     <input type="file" id="media-file-input" accept="image/*,video/*" style="display:none;" onchange="handleMediaUpload(this)">
 
-    <form id="bottom-input-bar" action="javascript:void(0);" onsubmit="sendMessage()">
+    <form id="bottom-input-bar" onsubmit="sendMessage(event)">
       <button type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
       <button type="button" class="input-action-btn" onclick="toggleEmojiTray()">😊</button>
       <input id="input" autocomplete="off" placeholder="Type here..." required />
@@ -294,11 +327,12 @@
       <button id="send-btn" type="submit">✈</button>
     </form>
 
+    <!-- സ്റ്റിക്കർ & ഇമോജി ട്രേ (Tom & Jerry + White Bunny സഹിതം) -->
     <div id="emoji-sticker-tray">
       <div class="tray-nav-tabs">
         <button class="tray-tab-btn active" onclick="switchTrayTab('emoji')">😀</button>
         <button class="tray-tab-btn" onclick="switchTrayTab('animated')">✨</button>
-        <button class="tray-tab-btn" onclick="switchTrayTab('cat')">🐱</button>
+        <button class="tray-tab-btn" onclick="switchTrayTab('tom')">🐱</button>
         <button class="tray-tab-btn" onclick="switchTrayTab('bunny')">🐰</button>
         <button class="tray-tab-btn" style="margin-left:auto;" onclick="toggleEmojiTray()">✕</button>
       </div>
@@ -351,12 +385,32 @@
     </div>
   </div>
 
+  <!-- കൃത്യമായ വലത് ഡ്രോയർ (Stories + Pill + Flag) -->
   <div id="right-drawer">
-    <div style="display:flex; justify-content:space-between; padding:14px; background:#1e2029; border-bottom:1px solid #282a36;">
-      <button class="nav-icon" onclick="closeAllDrawers()">✕</button>
-      <strong>Online Users (<span id="active-user-count">0</span>)</strong>
-      <span></span>
+    <div class="drawer-top-icons-bar">
+      <button onclick="closeAllDrawers()">✕</button>
+      <button style="color:#00a8e8;">👥</button>
+      <button>👤</button>
+      <button>🛡️</button>
+      <button>📞</button>
+      <button>🔍</button>
+      <button>📷</button>
     </div>
+
+    <!-- Stories Row -->
+    <div class="stories-carousel-row" id="stories-strip">
+      <div class="story-item" onclick="addNewStoryPrompt()">
+        <div class="story-dp-wrap add-story">
+          <span style="font-size:1.5rem; color:#06b6d4;">💖</span>
+        </div>
+        <span class="story-label">Add Story</span>
+      </div>
+    </div>
+
+    <div class="online-pill-strip">
+      Online <span id="active-user-count">1</span>
+    </div>
+
     <ul id="user-rows" class="user-scroll-list"></ul>
   </div>
 
@@ -475,8 +529,13 @@
     let isOwnerOrAdmin = false;
     let staffRoomPassword = "staff123";
     let dailySpinCount = 0;
+    let activeReply = null;
 
-    let activeReply = null; // റിപ്ലൈ ഒബ്ജക്റ്റ്
+    socket.on('connect', () => {
+      if (myName) {
+        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
+      }
+    });
 
     socket.on('staff password updated', (pass) => staffRoomPassword = pass);
     socket.on('force disconnect', (msg) => { alert(msg); logoutApp(); });
@@ -484,10 +543,14 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       updateWalletUI();
-      if (myName) startChatApp(false);
+      if (myName) {
+        startChatApp(true);
+      }
     });
 
-    function reloadChatPage() { socket.emit('switch room', currentRoom); }
+    function reloadChatPage() { 
+      socket.emit('switch room', currentRoom); 
+    }
 
     function updateWalletUI() {
       if (isOwnerOrAdmin) {
@@ -541,6 +604,9 @@
       myName = "Guest_" + Math.floor(1000 + Math.random() * 9000);
       myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
       myRole = 'Member';
+      localStorage.setItem('kcr_name', myName);
+      localStorage.setItem('kcr_role', myRole);
+      localStorage.setItem('kcr_avatar', myAvatar);
       startChatApp(true);
     }
 
@@ -634,7 +700,6 @@
       window.location.reload();
     }
 
-    // റിപ്ലൈ ആരംഭിക്കുന്നു
     function triggerReply(sender, text) {
       activeReply = { sender: sender, text: text.substring(0, 45) + (text.length > 45 ? '...' : '') };
       document.getElementById('reply-user-name').textContent = sender;
@@ -647,7 +712,8 @@
       document.getElementById('reply-preview-bar').style.display = 'none';
     }
 
-    function sendMessage() {
+    function sendMessage(e) {
+      if (e) e.preventDefault();
       const inp = document.getElementById('input');
       const text = inp.value.trim();
       if(text) {
@@ -659,9 +725,9 @@
         inp.value = '';
         cancelReply();
       }
+      return false;
     }
 
-    // keralachatroom അനുസരിച്ചുള്ള മെസ്സേജ് കാർഡ് റെൻഡറിംഗ്
     function renderMessage(data) {
       const li = document.createElement('li');
       li.id = data.id;
@@ -683,7 +749,6 @@
         ? `<button class="admin-del-btn" onclick="deleteMsg('${data.id}')" title="Delete">🗑️</button>` 
         : '';
 
-      // റിപ്ലൈ ബോക്സ് (സ്ക്രീൻഷോട്ടിൽ ഉള്ളതുപോലെ)
       let replyHtml = '';
       if (data.replyTo) {
         replyHtml = `
@@ -741,6 +806,36 @@
       const el = document.getElementById(msgId);
       if(el) el.remove();
     });
+
+    // Stories Handling
+    socket.on('load stories', (sts) => {
+      const strip = document.getElementById('stories-strip');
+      strip.innerHTML = `
+        <div class="story-item" onclick="addNewStoryPrompt()">
+          <div class="story-dp-wrap add-story">
+            <span style="font-size:1.5rem; color:#06b6d4;">💖</span>
+          </div>
+          <span class="story-label">Add Story</span>
+        </div>
+      `;
+      sts.forEach(s => {
+        strip.innerHTML += `
+          <div class="story-item" onclick="alert('${s.name} shared this story!')">
+            <div class="story-dp-wrap">
+              <img class="story-dp" src="${s.dp}">
+            </div>
+            <span class="story-label">${s.name}</span>
+          </div>
+        `;
+      });
+    });
+
+    function addNewStoryPrompt() {
+      const url = prompt("Story Image URL നൽകുക:");
+      if (url && url.trim()) {
+        socket.emit('add story', { id: 'st_' + Date.now(), name: myName, dp: url.trim() });
+      }
+    }
 
     window.toggleAdmin = function(targetId, targetName, isNowAdmin) {
       if (myRole !== 'Owner') return alert("ഓണർക്ക് മാത്രമേ അഡ്മിൻ പദവി നൽകാൻ അധികാരമുള്ളൂ!");
@@ -814,6 +909,7 @@
       }
     });
 
+    // സ്ക്രീൻഷോട്ടിൽ ഉള്ളതുപോലെ ഇന്ത്യൻ ഫ്ലാഗും ബാഡ്ജുകളും സഹിതമുള്ള ഓൺലൈൻ ലിസ്റ്റ്
     socket.on('update users', (usersList) => {
       document.getElementById('active-user-count').textContent = usersList.length;
       const list = document.getElementById('user-rows');
@@ -823,24 +919,33 @@
         if (myRole === 'Owner' && u.role !== 'Owner') {
           const isAdm = u.role === 'Admin';
           actionControls = `
-            <div style="display:flex; gap:4px;">
-              <button class="owner-action-btn btn-make-admin" onclick="toggleAdmin('${u.id}', '${u.name}', ${isAdm})">${isAdm ? 'Remove Admin' : '+ Admin'}</button>
+            <div style="display:flex; gap:3px;">
+              <button class="owner-action-btn btn-make-admin" onclick="toggleAdmin('${u.id}', '${u.name}', ${isAdm})">${isAdm ? 'Remove' : '+ Admin'}</button>
               <button class="owner-action-btn btn-mute" onclick="muteUserPrompt('${u.id}', '${u.name}')">Mute</button>
               <button class="owner-action-btn btn-kick" onclick="kickUser('${u.id}', '${u.name}')">Kick</button>
             </div>
           `;
         }
 
+        const borderClass = u.role === 'Owner' ? '' : 'blue-border';
+        const roleIcon = u.role === 'Owner' ? '👑' : (u.role === 'Admin' ? '🛡️' : '🔹');
+
         list.innerHTML += `
           <li class="u-row">
             <div style="display:flex; align-items:center; gap:10px;">
-              <img class="u-dp" src="${u.avatar}">
+              <div class="u-avatar-wrap ${borderClass}">
+                <img class="u-dp" src="${u.avatar}">
+              </div>
               <div>
-                <strong>${u.name}</strong>
+                <strong style="font-size:0.9rem; color:#fff;">${u.name}</strong>
                 <div style="font-size:0.7rem; color:#9ca3af;">${u.role || 'Member'}</div>
               </div>
             </div>
-            ${actionControls}
+            <div style="display:flex; align-items:center; gap:6px;">
+              ${actionControls}
+              <span>${roleIcon}</span>
+              <span style="font-size:1.05rem;">🇮🇳</span>
+            </div>
           </li>
         `;
       });
@@ -922,11 +1027,29 @@
     }
 
     const regularEmojis = ["😀","😃","😄","😁","😆","😅","😂","🤣","😍","🥰","😘","😋","😎","🥳","😭","😡","❤️","🔥","👍","🙏"];
-    const animatedStickers = [
+    const animatedGifs = [
       "https://media.tenor.com/2lFhF228p3kAAAAj/dance-dancing.gif",
       "https://media.tenor.com/97y61fO12iUAAAAj/tkthao219-bubududu.gif",
-      "https://media.tenor.com/x881k5WNO48AAAAj/cute-cat.gif",
       "https://media.tenor.com/O613xVp6G-UAAAAj/love-you.gif"
+    ];
+
+    // സ്ക്രീൻഷോട്ടിൽ കണ്ട Tom & Jerry സ്റ്റിക്കറുകൾ
+    const tomJerryStickers = [
+      "https://media.tenor.com/9i6Tj4H-XQ8AAAAj/tom-and-jerry-dance.gif",
+      "https://media.tenor.com/w4p8U3q9U3cAAAAj/tom-and-jerry-smug.gif",
+      "https://media.tenor.com/x881k5WNO48AAAAj/cute-cat.gif",
+      "https://media.tenor.com/n67hX0U0W4MAAAAj/peach-goma.gif",
+      "https://media.tenor.com/f7jYy104h5kAAAAj/kiss.gif",
+      "https://media.tenor.com/z8L1HwE7z9gAAAAj/hug.gif"
+    ];
+
+    // സ്ക്രീൻഷോട്ടിൽ കണ്ട White Bunny സ്റ്റിക്കറുകൾ
+    const whiteBunnyStickers = [
+      "https://media.tenor.com/Ue14VpY2FesAAAAj/mochi-cat.gif",
+      "https://media.tenor.com/NkWX5h0r74UAAAAj/rabbit-cry.gif",
+      "https://media.tenor.com/vHq0Lz_i_8MAAAAj/rabbit-kiss.gif",
+      "https://media.tenor.com/wQ0pX82Vf3AAAAAj/bunny-love.gif",
+      "https://media.tenor.com/B9B1Z0a1h3sAAAAj/bunny-sleep.gif"
     ];
 
     function toggleEmojiTray() {
@@ -939,12 +1062,19 @@
       document.querySelectorAll('.tray-tab-btn').forEach(b => b.classList.remove('active'));
       const content = document.getElementById('tray-content');
       content.innerHTML = '';
+
       if (tab === 'emoji') {
         content.className = 'tray-scroll-content';
         regularEmojis.forEach(em => content.innerHTML += `<span class="emoji-item" onclick="insertEmoji('${em}')">${em}</span>`);
-      } else {
+      } else if (tab === 'animated') {
         content.className = 'tray-scroll-content sticker-grid';
-        animatedStickers.forEach(st => content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`);
+        animatedGifs.forEach(st => content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`);
+      } else if (tab === 'tom') {
+        content.className = 'tray-scroll-content sticker-grid';
+        tomJerryStickers.forEach(st => content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`);
+      } else if (tab === 'bunny') {
+        content.className = 'tray-scroll-content sticker-grid';
+        whiteBunnyStickers.forEach(st => content.innerHTML += `<img class="sticker-item" src="${st}" onclick="sendSticker('${st}')">`);
       }
     }
     function insertEmoji(em) { document.getElementById('input').value += em; }
