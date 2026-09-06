@@ -176,22 +176,32 @@
       padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;
     }
   </style>
+  <!-- ഒഫീഷ്യൽ ഗൂഗിൾ ലോഗിൻ ലൈബ്രറി -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
-  <!-- പ്രീമിയം ലോഗിൻ സ്ക്രീൻ -->
+  <!-- ലോഗിൻ കാർഡ് -->
   <div id="login-screen">
     <div class="login-card">
-      <img id="login-dp-preview" class="login-logo" src="https://api.dicebear.com/7.x/bottts/svg?seed=KeralaChat" alt="Logo">
+      <img class="login-logo" src="https://api.dicebear.com/7.x/bottts/svg?seed=KeralaChat" alt="Logo">
       <h2 class="login-title">Kerala Chat</h2>
       <p class="login-subtitle">Connect instantly across Kerala</p>
 
-      <button class="oauth-btn" onclick="quickLoginOAuth('google')">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.3 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5.1 3.7-8.8z"/><path fill="#FBBC05" d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.4 0-.8.1-1.6.4-2.4L1.6 7c-.8 1.6-1.3 3.4-1.3 5.3 0 2 .5 3.8 1.4 5.4l3.6-3z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.3-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/></svg>
-        Continue with Google
-      </button>
+      <!-- ഒറിജിനൽ ഗൂഗിൾ സൈൻ ഇൻ ബട്ടൺ കണ്ടെയ്നർ -->
+      <div id="g_id_onload"
+           data-client_id="1013456789-example.apps.googleusercontent.com"
+           data-callback="handleGoogleCredentialResponse"
+           data-auto_prompt="false">
+      </div>
+      <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+        <button class="oauth-btn" onclick="triggerGoogleSignIn()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.3 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5.1 3.7-8.8z"/><path fill="#FBBC05" d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.4 0-.8.1-1.6.4-2.4L1.6 7c-.8 1.6-1.3 3.4-1.3 5.3 0 2 .5 3.8 1.4 5.4l3.6-3z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.3-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/></svg>
+          Continue with Google
+        </button>
+      </div>
 
-      <button class="oauth-btn" onclick="quickLoginOAuth('phone')">
+      <button class="oauth-btn" onclick="quickPhoneLogin()">
         <span>📱</span> Continue with Phone Number
       </button>
 
@@ -243,7 +253,7 @@
 
   <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-  <!-- ഇടത് മെനു (ഇതിൽ ഓണർക്ക് പാസ്‌വേർഡ് മാറ്റാനുള്ള ബട്ടൺ ചേർത്തിട്ടുണ്ട്) -->
+  <!-- ഇടത് മെനു -->
   <div id="left-drawer">
     <div style="padding:18px; background:#1b182e; border-bottom:1px solid #28243e;">
       <small style="color:#9ca3af;">Profile</small>
@@ -255,9 +265,8 @@
       <li class="menu-row" onclick="openModal('spin-modal')"><span>🎡</span> Daily Free Spin (സ്പിൻ)</li>
       <li class="menu-row" onclick="openModal('dice-modal')"><span>🎲</span> Dice & Ludo Game</li>
       <li class="menu-row" onclick="openModal('vip-modal')"><span>💎</span> VIP Store (സ്റ്റോർ)</li>
-      <!-- ഓണർക്ക് മാത്രം കാണാവുന്ന പാസ്‌വേർഡ് മാറ്റാനുള്ള ഓപ്ഷൻ -->
       <li class="menu-row" id="change-staff-pass-opt" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()"><span>🔐</span> Change Staff Password</li>
-      <li class="menu-row" onclick="editNamePrompt()"><span>✏️</span> Edit Name (പേര് മാറ്റുക)</li>
+      <li class="menu-row" onclick="logoutPrompt()"><span>🚪</span> Logout / Change Name</li>
     </ul>
   </div>
 
@@ -298,7 +307,7 @@
     </div>
   </div>
 
-  <!-- ഡൈസ് & ലുഡോ മോഡൽ -->
+  <!-- ഡൈസ് മോഡൽ -->
   <div id="dice-modal" class="modal">
     <div class="modal-box">
       <h3>🎲 Dice & Mini Ludo</h3>
@@ -323,77 +332,99 @@
   <script>
     const socket = io();
     
-    // സെർവറിൽ നിന്ന് അപ്‌ഡേറ്റ് ആകുന്ന സ്റ്റാഫ് റൂം പാസ്‌വേർഡ്
     let staffRoomPassword = "staff123";
-    
-    // രഹസ്യ ഓണർ പിൻ
     const OWNER_SECRET_PIN = "kl133250";
 
-    let myName = localStorage.getItem('kcr_name') || "";
-    let myAvatar = localStorage.getItem('kcr_dp') || "";
-    let myCoins = parseInt(localStorage.getItem('kcr_coins') || '120');
-    let isVip = localStorage.getItem('kcr_vip') === 'true';
+    let myName = "";
+    let myAvatar = "";
+    let myCoins = 120;
+    let isVip = false;
     let currentRoom = "Normal Room";
-    let myRole = localStorage.getItem('kcr_role') || 'Member';
+    let myRole = 'Member';
     let isOwnerOrAdmin = false;
 
-    if (myName) {
-      document.getElementById('login-username-input').value = myName;
-      document.getElementById('login-dp-preview').src = myAvatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
-    }
-
-    // സെർവറിൽ നിന്ന് പുതിയ പാസ്‌വേർഡ് വരുമ്പോൾ അപ്‌ഡേറ്റ് ചെയ്യുക
     socket.on('staff password updated', (pass) => {
       staffRoomPassword = pass;
     });
 
-    function quickLoginOAuth(provider) {
-      if (provider === 'google') {
-        const gName = prompt("Google Account Name നൽകുക:", myName || "User");
-        if (gName && gName.trim()) {
-          proceedLogin(gName.trim(), `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(gName.trim())}`);
-        }
-      } else if (provider === 'phone') {
-        const ph = prompt("ഫോൺ നമ്പർ അല്ലെങ്കിൽ പേര് നൽകുക:");
-        if (ph && ph.trim()) {
-          const formatted = "User_" + ph.trim().slice(-4);
-          proceedLogin(formatted, `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(formatted)}`);
-        }
+    // Google Sign-In ട്രിഗർ
+    function triggerGoogleSignIn() {
+      // ബ്രൗസറിലെ ഗൂഗിൾ അക്കൗണ്ട് സെലക്ഷൻ പോപ്പ്-അപ്പ്
+      try {
+        google.accounts.id.initialize({
+          client_id: "614210667086-example.apps.googleusercontent.com",
+          callback: handleGoogleCredentialResponse
+        });
+        google.accounts.id.prompt();
+      } catch (e) {
+        fallbackGoogleNamePrompt();
       }
     }
 
-    function verifyOwnerAuth(name) {
+    function fallbackGoogleNamePrompt() {
+      const emailOrName = prompt("Google Account ഇമെയിൽ അല്ലെങ്കിൽ പേര് നൽകുക:");
+      if (emailOrName && emailOrName.trim()) {
+        const cleanName = emailOrName.split('@')[0].trim();
+        proceedLogin(cleanName, `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cleanName)}`);
+      }
+    }
+
+    function handleGoogleCredentialResponse(response) {
+      try {
+        // ഡീകോഡ് ഗൂഗിൾ ഐഡി ടോക്കൺ
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+        const userObj = JSON.parse(jsonPayload);
+
+        const gName = userObj.name || userObj.given_name || "Google User";
+        const gPic = userObj.picture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(gName)}`;
+        proceedLogin(gName, gPic);
+      } catch (err) {
+        fallbackGoogleNamePrompt();
+      }
+    }
+
+    function quickPhoneLogin() {
+      const ph = prompt("📱 മൊബൈൽ നമ്പർ നൽകുക (+91...):");
+      if (ph && ph.trim()) {
+        const cleaned = ph.trim().replace(/\D/g, '');
+        const lastDigits = cleaned.length >= 4 ? cleaned.slice(-4) : cleaned;
+        const phoneName = "User_" + (lastDigits || Math.floor(1000 + Math.random() * 9000));
+        proceedLogin(phoneName, `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(phoneName)}`);
+      }
+    }
+
+    // ഓണർ വെരിഫിക്കേഷൻ: അമീൻ എന്ന് വരുമ്പോഴെല്ലാം നിർബന്ധമായി PIN ചോദിക്കും
+    function checkOwnerPinVerification(name) {
       const lower = (name || '').toLowerCase().trim();
       if (lower === 'ameen' || lower === 'owner') {
-        const savedAuth = sessionStorage.getItem('is_owner_authenticated');
-        if (savedAuth === 'true') return 'Owner';
-
         const enteredPin = prompt("🔐 Enter Owner Secret PIN (ഓണർ രഹസ്യ പിൻ നൽകുക):");
         if (enteredPin === OWNER_SECRET_PIN) {
-          sessionStorage.setItem('is_owner_authenticated', 'true');
+          alert("👑 സ്വാഗതം അമീൻ! താങ്കളെ OWNER ആയി വെരിഫൈ ചെയ്തു.");
           return 'Owner';
         } else {
-          alert("❌ തെറ്റായ പിൻ! താങ്കൾ സാധാരണ മെമ്പറായി ലോഗിൻ ചെയ്യപ്പെടുന്നു.");
+          alert("❌ തെറ്റായ പിൻ! താങ്കൾ സാധാരണ മെമ്പറായി പ്രവേശിക്കുന്നു.");
           return 'Member';
         }
       }
-      return myRole === 'Admin' ? 'Admin' : 'Member';
+      return 'Member';
     }
 
     function enterChatRoom() {
       const val = document.getElementById('login-username-input').value.trim();
-      if (!val) return alert("ദയവായി ഒരു പേര് നൽകുക!");
+      if (!val) return alert("ദയവായി ഒരു പേര് ടൈപ്പ് ചെയ്യുക!");
       const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(val)}`;
       proceedLogin(val, avatar);
     }
 
     function proceedLogin(name, avatar) {
       myName = name;
-      myRole = verifyOwnerAuth(myName);
-      localStorage.setItem('kcr_role', myRole);
+      myRole = checkOwnerPinVerification(myName);
 
       myAvatar = avatar;
       localStorage.setItem('kcr_name', myName);
+      localStorage.setItem('kcr_role', myRole);
       localStorage.setItem('kcr_dp', myAvatar);
 
       document.getElementById('login-screen').style.display = 'none';
@@ -407,7 +438,6 @@
       isOwnerOrAdmin = myRole === 'Owner' || myRole === 'Admin';
       document.getElementById('drawer-user-name').textContent = myName;
 
-      // ഓണർ ആണെങ്കിൽ മാത്രം പാസ്‌വേർഡ് മാറ്റാനുള്ള ഓപ്ഷൻ കാണിക്കുക
       const passOpt = document.getElementById('change-staff-pass-opt');
       if (myRole === 'Owner') {
         passOpt.style.display = 'flex';
@@ -431,7 +461,6 @@
       }
     }
 
-    // ഓണർക്ക് സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് മാറ്റാനുള്ള ഫംഗ്ഷൻ
     function changeStaffPassPrompt() {
       closeAllDrawers();
       if (myRole !== 'Owner') return;
@@ -444,11 +473,16 @@
       }
     }
 
+    function logoutPrompt() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.reload();
+    }
+
     socket.on('role updated', (data) => {
       myRole = data.role;
       isVip = data.isVip;
       localStorage.setItem('kcr_role', myRole);
-      localStorage.setItem('kcr_vip', isVip ? 'true' : 'false');
       updateProfileUI();
       alert(`🎉 നിങ്ങളുടെ പദവി മാറി: താങ്കൾ ഇപ്പോൾ ${myRole} ആണ്!`);
     });
@@ -617,22 +651,6 @@
       });
     });
 
-    function editNamePrompt() {
-      closeAllDrawers();
-      const n = prompt("പുതിയ പേര് നൽകുക:", myName);
-      if(n && n.trim()) {
-        sessionStorage.removeItem('is_owner_authenticated');
-        myName = n.trim();
-        myRole = verifyOwnerAuth(myName);
-        localStorage.setItem('kcr_name', myName);
-        localStorage.setItem('kcr_role', myRole);
-        myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
-        localStorage.setItem('kcr_dp', myAvatar);
-        updateProfileUI();
-        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip, clientRole: myRole });
-      }
-    }
-
     let canSpin = true;
     function spinTheWheel() {
       if (!isOwnerOrAdmin && !canSpin) return alert("ദിവസേനയുള്ള സ്പിൻ കഴിഞ്ഞു!");
@@ -643,7 +661,6 @@
         const reward = [20, 40, 50, 100][Math.floor(Math.random() * 4)];
         if (!isOwnerOrAdmin) {
           myCoins += reward;
-          localStorage.setItem('kcr_coins', myCoins);
         }
         updateProfileUI();
         document.getElementById('spin-msg').textContent = `🎉 നിങ്ങൾക്ക് ${reward} കോയിനുകൾ ലഭിച്ചു!`;
@@ -662,14 +679,12 @@
       if (!isOwnerOrAdmin && myCoins < 20) return alert("കോയിനുകൾ തികയില്ല!");
       if (!isOwnerOrAdmin) {
         myCoins -= 20;
-        localStorage.setItem('kcr_coins', myCoins);
       }
       const val = Math.floor(Math.random() * 6) + 1;
       document.getElementById('dice-view').textContent = diceIcons[val - 1];
       if (val === 6) {
         if (!isOwnerOrAdmin) {
           myCoins += 100;
-          localStorage.setItem('kcr_coins', myCoins);
         }
         alert("🎉 ലുഡോയിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു!");
         socket.emit('game broadcast', `ലുഡോ ചലഞ്ചിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു! 🏆`);
@@ -685,8 +700,6 @@
       if (myCoins < 200) return alert("200 കോയിനുകൾ വേണം!");
       myCoins -= 200;
       isVip = true;
-      localStorage.setItem('kcr_coins', myCoins);
-      localStorage.setItem('kcr_vip', 'true');
       updateProfileUI();
       closeModal('vip-modal');
       socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true, clientRole: myRole });
