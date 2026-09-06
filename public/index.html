@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-  <title>കേരള Chat Room</title>
+  <title>Kerala Chat Room</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
       height: 100%; height: 100dvh; margin: 0; padding: 0;
       color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      background: #08090d;
+      background: #121316;
     }
 
-    /* സ്ക്രീൻഷോട്ടിലെ ഫ്രണ്ട് പേജ് ഡിസൈൻ */
+    /* ഫ്രണ്ട് ലാൻഡിംഗ് സ്ക്രീൻ */
     #front-landing-screen {
       position: fixed; inset: 0; z-index: 4000;
       background-color: #07080b;
@@ -23,54 +23,21 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 24px; text-align: center;
     }
+    .top-flag-bar { position: absolute; top: 18px; right: 20px; font-size: 1.5rem; }
+    .brand-header-area { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+    .brand-custom-logo { width: 48px; height: 48px; }
+    .brand-text-wrap { text-align: left; line-height: 1.15; }
+    .brand-text-malayalam { font-size: 1.7rem; font-weight: 900; color: #ffffff; margin: 0; }
+    .brand-text-english { font-size: 1.15rem; font-weight: 700; color: #58a6ff; margin: 0; letter-spacing: 0.5px; }
+    .welcome-main-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 14px 0; color: #fff; }
+    .welcome-description { font-size: 0.95rem; color: #9ca3af; line-height: 1.45; max-width: 320px; margin: 0 auto 30px auto; }
+    .auth-action-buttons { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px; }
+    .tg-login-btn { width: 100%; padding: 14px; border-radius: 28px; border: none; background: #5b8719; color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .guest-login-btn { width: 100%; padding: 14px; border-radius: 28px; border: none; background: #191b22; color: #e5e7eb; font-size: 1.05rem; font-weight: 600; cursor: pointer; }
+    .register-footer-text { margin-top: 20px; font-size: 0.82rem; color: #9ca3af; }
+    .register-trigger-btn { display: block; font-size: 1.05rem; font-weight: 800; color: #fff; margin-top: 4px; cursor: pointer; }
 
-    .top-flag-bar {
-      position: absolute; top: 18px; right: 20px; font-size: 1.5rem;
-    }
-
-    .brand-header-area {
-      display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px;
-    }
-    .brand-custom-logo {
-      width: 48px; height: 48px;
-    }
-    .brand-text-wrap {
-      text-align: left; line-height: 1.15;
-    }
-    .brand-text-malayalam {
-      font-size: 1.7rem; font-weight: 900; color: #ffffff; margin: 0;
-    }
-    .brand-text-english {
-      font-size: 1.15rem; font-weight: 700; color: #58a6ff; margin: 0; letter-spacing: 0.5px;
-    }
-
-    .welcome-main-title {
-      font-size: 1.6rem; font-weight: 800; margin: 0 0 14px 0; color: #fff;
-    }
-    .welcome-description {
-      font-size: 0.95rem; color: #9ca3af; line-height: 1.45; max-width: 320px; margin: 0 auto 30px auto;
-    }
-
-    .auth-action-buttons {
-      width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px;
-    }
-    .tg-login-btn {
-      width: 100%; padding: 14px; border-radius: 28px; border: none;
-      background: #5b8719; color: #fff; font-size: 1.05rem; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .guest-login-btn {
-      width: 100%; padding: 14px; border-radius: 28px; border: none;
-      background: #191b22; color: #e5e7eb; font-size: 1.05rem; font-weight: 600; cursor: pointer;
-    }
-    .register-footer-text {
-      margin-top: 20px; font-size: 0.82rem; color: #9ca3af;
-    }
-    .register-trigger-btn {
-      display: block; font-size: 1.05rem; font-weight: 800; color: #fff; margin-top: 4px; cursor: pointer;
-    }
-
-    /* വെളുത്ത ലോഗിൻ പോപ്പ്-അപ്പ് കാർഡ് */
+    /* ലോഗിൻ പോപ്പ്-അപ്പ് കാർഡ് */
     #login-modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 5000;
       background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
@@ -81,118 +48,117 @@
       padding: 24px 22px; width: 100%; max-width: 340px; position: relative;
       box-shadow: 0 25px 50px rgba(0,0,0,0.7); text-align: left;
     }
-    .modal-close-x {
-      position: absolute; right: 18px; top: 18px; font-size: 1.25rem;
-      font-weight: bold; color: #6b7280; cursor: pointer;
-    }
-    .modal-title-text {
-      font-size: 1.3rem; font-weight: 800; margin: 0 0 16px 0; color: #111827;
-    }
-    .card-text-input {
-      width: 100%; padding: 13px 14px; border-radius: 8px;
-      background: #f9fafb; border: 1.5px solid #e5e7eb;
-      color: #111827; font-size: 0.95rem; margin-bottom: 12px; outline: none;
-    }
+    .modal-close-x { position: absolute; right: 18px; top: 18px; font-size: 1.25rem; font-weight: bold; color: #6b7280; cursor: pointer; }
+    .modal-title-text { font-size: 1.3rem; font-weight: 800; margin: 0 0 16px 0; color: #111827; }
+    .card-text-input { width: 100%; padding: 13px 14px; border-radius: 8px; background: #f9fafb; border: 1.5px solid #e5e7eb; color: #111827; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
     .card-text-input:focus { border-color: #00a8e8; background: #fff; }
-    .card-submit-blue-btn {
-      width: 100%; padding: 13px; border: none; border-radius: 8px;
-      background: #00a8e8; color: #fff; font-size: 1.05rem; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px;
-    }
+    .card-submit-blue-btn { width: 100%; padding: 13px; border: none; border-radius: 8px; background: #00a8e8; color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
 
-    /* ചാറ്റ് റൂം ലേഔട്ട് */
+    /* മെയിൻ ആപ്പ് ലേഔട്ട് */
     #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; }
 
-    #header {
-      background: #14151c; padding: 10px 14px; display: flex;
-      justify-content: space-between; align-items: center; border-bottom: 1px solid #23242e; flex-shrink: 0;
+    /* സ്ക്രീൻഷോട്ടിലെ മുകളിലെ ഹെഡർ */
+    #top-nav-bar {
+      background: #1a1c23; height: 54px; padding: 0 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #282a36; flex-shrink: 0;
     }
-    .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
-    .icon-btn { background: none; border: none; color: #e4e4e7; font-size: 1.25rem; cursor: pointer; }
-    .room-indicator {
-      font-size: 0.75rem; background: #2563eb; color: #fff;
-      padding: 3px 10px; border-radius: 12px; cursor: pointer; display: inline-block; margin-top: 2px;
-    }
-    .coin-badge {
-      background: #23231a; border: 1.5px solid #eab308;
-      color: #facc15; padding: 4px 10px; border-radius: 20px;
-      font-weight: bold; font-size: 0.82rem; display: flex; align-items: center; gap: 5px; cursor: pointer;
+    .nav-icons-group { display: flex; align-items: center; gap: 16px; }
+    .nav-icon { background: none; border: none; color: #d1d5db; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; }
+    .header-dp-wrap { position: relative; width: 34px; height: 34px; cursor: pointer; }
+    .header-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; }
+    .online-green-badge {
+      position: absolute; bottom: -2px; left: -2px; width: 12px; height: 12px;
+      background: #22c55e; border-radius: 50%; border: 2px solid #1a1c23;
     }
 
-    #main-chat { flex: 1; overflow-y: auto; padding: 1rem; background: #0c0d12; }
+    /* സ്ക്രീൻഷോട്ടിലെ സൈഡ് മെനു (Drawer) */
+    #custom-side-drawer {
+      position: fixed; top: 0; left: -320px; width: 285px; height: 100%;
+      background: #1f2128; z-index: 3000; transition: left 0.28s ease;
+      display: flex; flex-direction: column; box-shadow: 6px 0 25px rgba(0,0,0,0.6);
+      overflow-y: auto;
+    }
+    #custom-side-drawer.open { left: 0; }
+
+    .drawer-header-card {
+      background: #282b35; margin: 14px 12px 10px 12px; border-radius: 12px;
+      padding: 12px; display: flex; align-items: center; gap: 12px;
+    }
+    .room-badge-art {
+      width: 44px; height: 44px; border-radius: 8px; background: #064e3b;
+      border: 1px solid #059669; display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: bold; color: #a7f3d0; text-align: center;
+    }
+    .room-badge-details small { font-size: 0.72rem; color: #9ca3af; display: block; }
+    .room-badge-details strong { font-size: 0.95rem; color: #fff; }
+
+    .drawer-menu-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 18px; color: #e5e7eb; font-size: 0.95rem; font-weight: 500;
+      cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .drawer-menu-item:hover { background: #262933; }
+    .drawer-menu-item-left { display: flex; align-items: center; gap: 14px; }
+    .menu-icon { font-size: 1.15rem; width: 22px; text-align: center; color: #38bdf8; }
+    .arrow-icon { color: #6b7280; font-size: 0.9rem; }
+
+    /* ചാറ്റ് സ്പേസ് */
+    #main-chat { flex: 1; overflow-y: auto; padding: 12px; background: #121316; }
     #messages { list-style: none; margin: 0; padding: 0; }
-    #messages > li { display: flex; gap: 10px; margin-bottom: 0.9rem; align-items: flex-start; }
-    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00e5ff; flex-shrink: 0; }
-    .msg-avatar.owner-avatar { border: 2.5px solid #ef4444; box-shadow: 0 0 10px #ef4444; }
-    .msg-avatar.admin-avatar { border: 2.5px solid #3b82f6; box-shadow: 0 0 10px #3b82f6; }
-    .msg-avatar.vip-avatar { border: 2.5px solid #facc15; box-shadow: 0 0 8px #eab308; }
-    
+    #messages > li { display: flex; gap: 10px; margin-bottom: 0.85rem; align-items: flex-start; }
+    .msg-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
     .msg-body { display: flex; flex-direction: column; max-width: 82%; }
-    .sender-name { font-weight: 700; font-size: 0.85rem; color: #38bdf8; display: flex; align-items: center; gap: 5px; }
+    .sender-name { font-weight: 700; font-size: 0.84rem; color: #38bdf8; display: flex; align-items: center; gap: 5px; }
     .sender-name.owner-name { color: #f87171 !important; }
     .sender-name.admin-name { color: #60a5fa !important; }
-    .sender-name.vip-name { color: #facc15 !important; }
-    
-    .role-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
+    .role-badge { font-size: 0.62rem; padding: 1px 5px; border-radius: 3px; font-weight: 800; }
     .role-badge.owner { background: #dc2626; color: white; }
     .role-badge.admin { background: #2563eb; color: white; }
-    .role-badge.vip { background: #d97706; color: white; }
-
     .msg-content {
-      background: #181922; border: 1px solid rgba(255,255,255,0.06);
-      padding: 9px 14px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px;
+      background: #1c1e27; border: 1px solid rgba(255,255,255,0.05);
+      padding: 9px 13px; border-radius: 14px; word-break: break-word; font-size: 0.92rem; margin-top: 3px;
     }
     .admin-del-btn { background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; margin-left: 6px; }
 
-    #input-bar {
-      background: #14151b; padding: 10px 12px; display: flex;
-      align-items: center; gap: 8px; border-top: 1px solid #23232c; flex-shrink: 0;
+    /* ചാറ്റ് താഴെയുള്ള ഇൻപുട്ട് ബാർ */
+    #bottom-input-bar {
+      background: #1a1c23; padding: 8px 12px; display: flex;
+      align-items: center; gap: 8px; border-top: 1px solid #262833; flex-shrink: 0;
     }
     #input {
-      border: 1px solid #2c2e3a; padding: 12px 16px; flex: 1;
-      border-radius: 24px; background: #1c1d26; color: white; outline: none; font-size: 0.95rem;
+      border: 1px solid #2d303e; padding: 11px 16px; flex: 1;
+      border-radius: 20px; background: #232632; color: white; outline: none; font-size: 0.95rem;
     }
     #send-btn {
-      background: #00a8e8; border: none; width: 44px; height: 44px;
-      border-radius: 50%; color: #fff; font-size: 1.2rem; cursor: pointer;
+      background: #00a8e8; border: none; width: 40px; height: 40px;
+      border-radius: 50%; color: #fff; font-size: 1.15rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; }
-    .modal-box { background: #1a1b24; border-radius: 16px; width: 90%; max-width: 340px; padding: 20px; text-align: center; }
-    .game-btn {
-      background: #2563eb; color: white; border: none; padding: 11px 16px;
-      border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0;
-      width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between;
+    /* സ്ക്രീൻഷോട്ടിലെ ഏറ്റവും താഴെയുള്ള മീഡിയ പ്ലെയർ സ്ട്രിപ്പ് */
+    #bottom-media-bar {
+      height: 38px; background: #121317; border-top: 1px solid #1f2129;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
+      flex-shrink: 0; color: #9ca3af;
     }
+    .media-btn { background: none; border: none; color: #e5e7eb; font-size: 1.1rem; cursor: pointer; }
 
-    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 1500; }
-    #left-drawer {
-      position: fixed; top: 0; left: -280px; width: 260px; height: 100%;
-      background: #16171f; z-index: 2000; transition: left 0.3s ease;
-      display: flex; flex-direction: column; border-right: 1px solid #262733;
-    }
-    #left-drawer.open { left: 0; }
-    .menu-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #20212c; cursor: pointer; color: #cbd5e1; }
-    
+    /* യൂസർ ലിസ്റ്റ് ഡ്രോയർ (വലതുഭാഗം) */
     #right-drawer {
-      position: fixed; top: 0; right: -100%; width: 100%; max-width: 360px; height: 100%;
-      background: #16171f; z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column;
+      position: fixed; top: 0; right: -100%; width: 100%; max-width: 340px; height: 100%;
+      background: #1a1c23; z-index: 3000; transition: right 0.28s ease; display: flex; flex-direction: column;
     }
     #right-drawer.open { right: 0; }
-    .online-capsule-bar {
-      margin: 14px; border: 1.5px solid #00a8e8; border-radius: 20px; padding: 6px 0;
-      text-align: center; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
     .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
-    .u-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .u-dp { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #00a8e8; }
-    .mod-toggle-btn {
-      background: #7c3aed; border: none; color: #fff; font-size: 0.72rem;
-      padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold;
-    }
+    .u-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .u-dp { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+    .mod-toggle-btn { background: #7c3aed; border: none; color: #fff; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; justify-content: center; align-items: center; }
+    .modal-box { background: #1f2128; border-radius: 16px; width: 90%; max-width: 340px; padding: 20px; text-align: center; }
+    .game-btn { background: #2563eb; color: white; border: none; padding: 11px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0; width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2500; }
   </style>
 </head>
 <body>
@@ -250,72 +216,186 @@
     </div>
   </div>
 
-  <!-- മെയിൻ ചാറ്റ് റൂം ആപ്പ് ലേഔട്ട് -->
+  <!-- മെയിൻ ആപ്പ് ലേഔട്ട് -->
   <div id="app-layout">
-    <div id="header">
-      <div class="header-left">
-        <button class="icon-btn" onclick="openLeftMenu()">☰</button>
-        <div>
-          <strong style="font-size:1rem; display:block;">KeralaChat</strong>
-          <span id="header-room-name" class="room-indicator" onclick="openModal('room-modal')">🏠 Normal Room ▼</span>
-        </div>
+    
+    <!-- ടോപ്പ് ഹെഡർ (സ്ക്രീൻഷോട്ട് അനുസരിച്ച്) -->
+    <div id="top-nav-bar">
+      <div class="nav-icons-group">
+        <button class="nav-icon" onclick="openLeftDrawer()">☰</button>
       </div>
-      <div class="header-right">
-        <div class="coin-badge" onclick="openModal('vip-modal')">🪙 <span id="coin-balance">120</span></div>
-        <button class="icon-btn" onclick="openActiveUsers()">👥</button>
+      <div class="nav-icons-group">
+        <button class="nav-icon" onclick="window.location.reload()">🔄</button>
+        <button class="nav-icon" onclick="alert('Messages empty')">✉</button>
+        <button class="nav-icon" onclick="openRightUsers()">👥</button>
+        <button class="nav-icon" onclick="alert('No new notifications')">🔔</button>
+        <div class="header-dp-wrap" onclick="openLeftDrawer()">
+          <img id="nav-user-dp" class="header-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user">
+          <div class="online-green-badge"></div>
+        </div>
       </div>
     </div>
 
+    <!-- ചാറ്റ് ബോഡി -->
     <div id="main-chat">
       <ul id="messages"></ul>
     </div>
 
-    <form id="input-bar" action="javascript:void(0);" onsubmit="sendMessage()">
+    <!-- ചാറ്റ് ഇൻപുട്ട് ബാർ -->
+    <form id="bottom-input-bar" action="javascript:void(0);" onsubmit="sendMessage()">
       <input id="input" autocomplete="off" placeholder="Type a message..." required />
-      <button id="send-btn" type="submit">➤</button>
+      <button id="send-btn" type="submit">✈</button>
     </form>
+
+    <!-- താഴെയുള്ള പ്ലെയർ ബാർ -->
+    <div id="bottom-media-bar">
+      <button class="media-btn" onclick="togglePlayMusic()">▶</button>
+      <span style="font-size:0.75rem; letter-spacing:0.5px;">KeralaChat Radio</span>
+      <button class="media-btn" onclick="openModal('room-modal')">☰</button>
+    </div>
+
   </div>
 
   <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-  <!-- ഇടത് മെനു -->
-  <div id="left-drawer">
-    <div style="padding:18px; background:#1e1f29; border-bottom:1px solid #282a38;">
-      <small style="color:#9ca3af;">Profile</small>
-      <h3 id="drawer-user-name" style="margin:4px 0 6px 0; font-size:1.15rem; color:#38bdf8;">User</h3>
-      <span id="vip-status-badge" style="background:#2563eb; color:white; padding:2px 8px; border-radius:4px; font-size:0.72rem;">Member</span>
+  <!-- കൃത്യമായ സൈഡ് ഡ്രോയർ മെനു (സ്ക്രീൻഷോട്ടിൽ ഉള്ളത്) -->
+  <div id="custom-side-drawer">
+    
+    <div class="drawer-header-card">
+      <div class="room-badge-art">മലയാളം</div>
+      <div class="room-badge-details">
+        <small>Current room</small>
+        <strong id="drawer-current-room-text">Kerala Chat Room</strong>
+      </div>
     </div>
-    <ul style="list-style:none; padding:0; margin:0;">
-      <li class="menu-row" onclick="openModal('room-modal')"><span>🏠</span> Room list (റൂമുകൾ)</li>
-      <li class="menu-row" onclick="openModal('spin-modal')"><span>🎡</span> Daily Free Spin (സ്പിൻ)</li>
-      <li class="menu-row" onclick="openModal('dice-modal')"><span>🎲</span> Dice & Ludo Game</li>
-      <li class="menu-row" onclick="openModal('vip-modal')"><span>💎</span> VIP Store (സ്റ്റോർ)</li>
-      <li class="menu-row" id="change-staff-pass-opt" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()"><span>🔐</span> Change Staff Password</li>
-      <li class="menu-row" onclick="logoutApp()"><span>🚪</span> Logout</li>
-    </ul>
+
+    <div class="drawer-menu-item" onclick="openModal('room-modal')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🏠</span>
+        <span>Room list</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="alert('Friends wall coming soon!')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">📡</span>
+        <span>Friends wall</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="alert('Latest Kerala Updates')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">📰</span>
+        <span>News</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="alert('Community Forum')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🌐</span>
+        <span>Chat Forum</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="openModal('games-hub-modal')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🎲</span>
+        <span>Games</span>
+      </div>
+      <span class="arrow-icon">❯</span>
+    </div>
+
+    <div class="drawer-menu-item" onclick="alert('Top players & active chatters')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🏅</span>
+        <span>Leaderboards</span>
+      </div>
+      <span class="arrow-icon">❯</span>
+    </div>
+
+    <div class="drawer-menu-item" onclick="alert('Public Wall Posts')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">📡</span>
+        <span>Public Wall</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="editNamePrompt()">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">📝</span>
+        <span>Edit Name</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="openModal('vip-modal')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon" style="color:#00a8e8;">💎</span>
+        <span>Buy VIP</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="alert('Live Poll Wall')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">📊</span>
+        <span>Poll Wall</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="openModal('spin-modal')">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🎁</span>
+        <span>Lucky Draw</span>
+      </div>
+    </div>
+
+    <!-- ഓണർക്ക് മാത്രം കാണാവുന്ന സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് മാറ്റാനുള്ള ഓപ്ഷൻ -->
+    <div id="owner-secret-staff-menu" class="drawer-menu-item" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🔐</span>
+        <span>Change Staff Password</span>
+      </div>
+    </div>
+
+    <div class="drawer-menu-item" onclick="window.location.reload()" style="color:#ef4444; border-top:1px solid #282a38; margin-top:12px;">
+      <div class="drawer-menu-item-left">
+        <span class="menu-icon">🚪</span>
+        <span>Logout</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- വലത് യൂസർ ലിസ്റ്റ് -->
   <div id="right-drawer">
-    <div style="display:flex; justify-content:space-between; padding:14px; background:#1e1f29; border-bottom:1px solid #262735;">
-      <button class="icon-btn" onclick="closeAllDrawers()">✕</button>
+    <div style="display:flex; justify-content:space-between; padding:14px; background:#1e2029; border-bottom:1px solid #282a36;">
+      <button class="nav-icon" onclick="closeAllDrawers()">✕</button>
       <strong>Online Users</strong>
       <span></span>
     </div>
-    <div class="online-capsule-bar">
-      <span>Online in Room</span>
-      <span id="active-count" style="background:#00a8e8; color:#fff; padding:1px 8px; border-radius:10px; font-size:0.8rem;">1</span>
-    </div>
     <ul id="user-rows" class="user-scroll-list"></ul>
+  </div>
+
+  <!-- ഗെയിംസ് സെലക്ഷൻ മോഡൽ -->
+  <div id="games-hub-modal" class="modal">
+    <div class="modal-box">
+      <h3 style="margin-top:0;">Select Game</h3>
+      <button class="game-btn" style="background:#10b981;" onclick="closeModal('games-hub-modal'); openModal('spin-modal');">
+        <span>🎡 Daily Lucky Spin</span> <span>Play</span>
+      </button>
+      <button class="game-btn" style="background:#8b5cf6;" onclick="closeModal('games-hub-modal'); openModal('dice-modal');">
+        <span>🎲 Mini Ludo / Dice</span> <span>Play</span>
+      </button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('games-hub-modal')">Close</button>
+    </div>
   </div>
 
   <!-- റൂം മോഡൽ -->
   <div id="room-modal" class="modal">
     <div class="modal-box">
       <h3 style="margin-top:0;">Select Room</h3>
-      <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Normal Room')"><span>💬 Normal Room</span> <span>Enter</span></button>
-      <button class="game-btn" style="background:#8b5cf6;" onclick="selectRoom('LoFi Room')"><span>🎶 LoFi Room</span> <span>Enter</span></button>
-      <button class="game-btn" style="background:#ec4899;" onclick="selectRoom('Game Room')"><span>🎮 Game Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Kerala Chat Room')"><span>💬 Kerala Chat Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#8b5cf6;" onclick="selectRoom('LoFi Room')"><span>🎶 LoFi Music Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#ec4899;" onclick="selectRoom('Game Room')"><span>🎮 Gaming Zone</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#10b981;" onclick="selectRoom('Staff Room')"><span>🛡️ Staff Room 🔒</span> <span>Enter</span></button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
     </div>
@@ -324,9 +404,9 @@
   <!-- സ്പിൻ മോഡൽ -->
   <div id="spin-modal" class="modal">
     <div class="modal-box">
-      <h3>🎡 Lucky Free Spin</h3>
+      <h3>🎁 Lucky Draw / Spin</h3>
       <div id="wheel" style="width:140px; height:140px; border-radius:50%; border:5px solid #eab308; margin:15px auto; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); transition:transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);">🎁</div>
-      <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">സ്പിൻ ചെയ്ത് കോയിൻ നേടൂ!</p>
+      <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">സ്പിൻ ചെയ്ത് സമ്മാനം നേടൂ!</p>
       <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW</button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('spin-modal')">Close</button>
     </div>
@@ -346,7 +426,7 @@
   <!-- വിഐപി മോഡൽ -->
   <div id="vip-modal" class="modal">
     <div class="modal-box">
-      <h3 style="color:#facc15;">💎 VIP Store</h3>
+      <h3 style="color:#facc15;">💎 Buy VIP</h3>
       <p style="font-size:0.85rem; color:#9ca3af;">സ്വർണ്ണ നിറത്തിലുള്ള പേരും ബാഡ്ജും നേടാം (200 Coins)</p>
       <button class="game-btn" style="background:#f59e0b; color:#000; justify-content:center;" onclick="purchaseVip()">Unlock VIP</button>
       <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('vip-modal')">Close</button>
@@ -357,12 +437,12 @@
   <script>
     const socket = io();
 
-    let authMode = 'login'; // 'login' or 'register'
+    let authMode = 'login';
     let myName = "";
     let myAvatar = "";
     let myCoins = 120;
     let isVip = false;
-    let currentRoom = "Normal Room";
+    let currentRoom = "Kerala Chat Room";
     let myRole = 'Member';
     let isOwnerOrAdmin = false;
     let staffRoomPassword = "staff123";
@@ -402,7 +482,7 @@
       const u = document.getElementById('auth-username').value.trim();
       const p = document.getElementById('auth-password').value.trim();
 
-      if (!u || !p) return alert("Username, Password എന്നിവ നൽകുക!");
+      if (!u || !p) return alert("Username, Password നൽകുക!");
 
       if (authMode === 'register') {
         socket.emit('register user', { username: u, password: p });
@@ -439,35 +519,46 @@
       document.getElementById('front-landing-screen').style.display = 'none';
       document.getElementById('app-layout').style.display = 'flex';
 
+      document.getElementById('nav-user-dp').src = myAvatar;
       updateProfileUI();
       socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
     }
 
     function updateProfileUI() {
       isOwnerOrAdmin = myRole === 'Owner' || myRole === 'Admin';
-      document.getElementById('drawer-user-name').textContent = myName;
+      const staffOpt = document.getElementById('owner-secret-staff-menu');
+      if (myRole === 'Owner') staffOpt.style.display = 'flex';
+      else staffOpt.style.display = 'none';
+    }
 
-      const passOpt = document.getElementById('change-staff-pass-opt');
-      if (myRole === 'Owner') {
-        passOpt.style.display = 'flex';
-      } else {
-        passOpt.style.display = 'none';
-      }
+    function openLeftDrawer() {
+      document.getElementById('custom-side-drawer').classList.add('open');
+      document.getElementById('overlay').style.display = 'block';
+    }
+    function openRightUsers() {
+      document.getElementById('right-drawer').classList.add('open');
+      document.getElementById('overlay').style.display = 'block';
+    }
+    function closeAllDrawers() {
+      document.getElementById('custom-side-drawer').classList.remove('open');
+      document.getElementById('right-drawer').classList.remove('open');
+      document.getElementById('overlay').style.display = 'none';
+    }
+    function openModal(id) { closeAllDrawers(); document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-      if (isOwnerOrAdmin) {
-        document.getElementById('coin-balance').innerHTML = '♾️ Unlimited';
-        document.getElementById('vip-status-badge').textContent = myRole === 'Owner' ? '👑 OWNER' : '🛡️ ADMIN / MOD';
-        document.getElementById('vip-status-badge').style.background = myRole === 'Owner' ? '#dc2626' : '#2563eb';
-      } else {
-        document.getElementById('coin-balance').textContent = myCoins;
-        if (isVip) {
-          document.getElementById('vip-status-badge').textContent = '👑 VIP MEMBER';
-          document.getElementById('vip-status-badge').style.background = '#eab308';
-        } else {
-          document.getElementById('vip-status-badge').textContent = 'Member';
-          document.getElementById('vip-status-badge').style.background = '#374151';
+    function selectRoom(roomName) {
+      if (roomName === 'Staff Room') {
+        const enteredPass = prompt("🛡️ സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് നൽകുക:");
+        if (enteredPass !== staffRoomPassword) {
+          return alert("❌ തെറ്റായ പാസ്‌വേർഡ്!");
         }
       }
+      currentRoom = roomName;
+      document.getElementById('drawer-current-room-text').textContent = roomName;
+      document.getElementById('messages').innerHTML = '';
+      socket.emit('switch room', roomName);
+      closeModal('room-modal');
     }
 
     function changeStaffPassPrompt() {
@@ -480,39 +571,15 @@
       }
     }
 
-    function logoutApp() {
-      window.location.reload();
-    }
-
-    socket.on('role updated', (data) => {
-      myRole = data.role;
-      isVip = data.isVip;
-      updateProfileUI();
-      alert(`🎉 നിങ്ങളുടെ പദവി മാറി: താങ്കൾ ഇപ്പോൾ ${myRole} ആണ്!`);
-    });
-
-    function openLeftMenu() { document.getElementById('left-drawer').classList.add('open'); document.getElementById('overlay').style.display='block'; }
-    function openActiveUsers() { document.getElementById('right-drawer').classList.add('open'); document.getElementById('overlay').style.display='block'; }
-    function closeAllDrawers() {
-      document.getElementById('left-drawer').classList.remove('open');
-      document.getElementById('right-drawer').classList.remove('open');
-      document.getElementById('overlay').style.display='none';
-    }
-    function openModal(id) { closeAllDrawers(); document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function selectRoom(roomName) {
-      if (roomName === 'Staff Room') {
-        const enteredPass = prompt("🛡️ സ്റ്റാഫ് റൂം പാസ്‌വേർഡ് നൽകുക:");
-        if (enteredPass !== staffRoomPassword) {
-          return alert("❌ തെറ്റായ പാസ്‌വേർഡ്! പ്രവേശനം അനുവദനീയമല്ല.");
-        }
+    function editNamePrompt() {
+      closeAllDrawers();
+      const n = prompt("പുതിയ പേര് നൽകുക:", myName);
+      if (n && n.trim()) {
+        myName = n.trim();
+        myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+        document.getElementById('nav-user-dp').src = myAvatar;
+        socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip, clientRole: myRole });
       }
-      currentRoom = roomName;
-      document.getElementById('header-room-name').textContent = `🏠 ${roomName} ▼`;
-      document.getElementById('messages').innerHTML = '';
-      socket.emit('switch room', roomName);
-      closeModal('room-modal');
     }
 
     function sendMessage() {
@@ -528,22 +595,16 @@
       const li = document.createElement('li');
       li.id = data.id;
 
-      let avatarClass = '';
-      let nameClass = '';
+      let avatarBorder = '';
+      let nameColor = '';
       let badgeHtml = '';
 
       if (data.role === 'Owner') {
-        avatarClass = 'owner-avatar';
-        nameClass = 'owner-name';
+        nameColor = 'owner-name';
         badgeHtml = '<span class="role-badge owner">👑 OWNER</span>';
       } else if (data.role === 'Admin') {
-        avatarClass = 'admin-avatar';
-        nameClass = 'admin-name';
+        nameColor = 'admin-name';
         badgeHtml = '<span class="role-badge admin">🛡️ ADMIN</span>';
-      } else if (data.isVip) {
-        avatarClass = 'vip-avatar';
-        nameClass = 'vip-name';
-        badgeHtml = '<span class="role-badge vip">VIP</span>';
       }
 
       const deleteBtnHtml = isOwnerOrAdmin 
@@ -551,9 +612,9 @@
         : '';
 
       li.innerHTML = `
-        <img class="msg-avatar ${avatarClass}" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=guest'}">
+        <img class="msg-avatar" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=guest'}">
         <div class="msg-body">
-          <div class="sender-name ${nameClass}">
+          <div class="sender-name ${nameColor}">
             ${data.user} ${badgeHtml} ${deleteBtnHtml}
           </div>
           <div class="msg-content">${data.text}</div>
@@ -595,7 +656,6 @@
     };
 
     socket.on('update users', (users) => {
-      document.getElementById('active-count').textContent = users.length;
       const list = document.getElementById('user-rows');
       list.innerHTML = '';
       users.forEach(u => {
@@ -611,17 +671,21 @@
               <img class="u-dp" src="${u.avatar}">
               <div>
                 <strong>${u.name}</strong>
-                <div style="font-size:0.7rem; color:#a1a1aa;">${u.role || 'Member'}</div>
+                <div style="font-size:0.7rem; color:#9ca3af;">${u.role || 'Member'}</div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
               ${modBtn}
-              <span>${u.role === 'Owner' ? '👑' : (u.role === 'Admin' ? '🛡️' : '🇮🇳')}</span>
+              <span>${u.role === 'Owner' ? '👑' : (u.role === 'Admin' ? '🛡️' : '')}</span>
             </div>
           </li>
         `;
       });
     });
+
+    function togglePlayMusic() {
+      alert("Radio playing Malayalam Live FM...");
+    }
 
     let canSpin = true;
     function spinTheWheel() {
@@ -632,7 +696,6 @@
       setTimeout(() => {
         const reward = [20, 40, 50, 100][Math.floor(Math.random() * 4)];
         if (!isOwnerOrAdmin) myCoins += reward;
-        updateProfileUI();
         document.getElementById('spin-msg').textContent = `🎉 നിങ്ങൾക്ക് ${reward} കോയിനുകൾ ലഭിച്ചു!`;
         socket.emit('game broadcast', `സ്പിൻ വീലിൽ നിന്ന് ${reward} കോയിനുകൾ നേടി! 🎡`);
       }, 3100);
@@ -657,7 +720,6 @@
       } else {
         alert(`കിട്ടിയത് ${val}.`);
       }
-      updateProfileUI();
     }
 
     function purchaseVip() {
@@ -666,7 +728,6 @@
       if (myCoins < 200) return alert("200 കോയിനുകൾ വേണം!");
       myCoins -= 200;
       isVip = true;
-      updateProfileUI();
       closeModal('vip-modal');
       socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: true, clientRole: myRole });
     }
