@@ -172,7 +172,26 @@
     .drawer-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; color: #e5e7eb; font-size: 0.95rem; font-weight: 500; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); }
     .drawer-menu-item-left { display: flex; align-items: center; gap: 14px; }
     .menu-icon { font-size: 1.15rem; width: 22px; text-align: center; color: #00a8e8; }
-  </style>
+  
+    /* Swipe-to-Mention Styles */
+    #messages li {
+      position: relative;
+      transition: transform 0.15s ease-out;
+      touch-action: pan-y;
+      user-select: none;
+    }
+    .swipe-reply-hint {
+      position: absolute;
+      right: -45px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+</style>
 </head>
 <body>
 
@@ -488,6 +507,49 @@
       return false;
     }
 
+    
+  // മൊബൈൽ ടച്ച് സ്വൈപ്പ് ലോജിക്
+  function attachSwipeToReply(el, user, content) {
+    let startX = 0;
+    let currentX = 0;
+    let isSwiping = false;
+
+    el.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isSwiping = true;
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      if (!isSwiping) return;
+      currentX = e.touches[0].clientX;
+      const diffX = currentX - startX;
+
+      // ഇടത്തോട്ട് മാത്രം സ്വൈപ്പ് അനുവദിക്കുന്നു (പരമാവധി 60px)
+      if (diffX < 0 && diffX > -80) {
+        el.style.transform = `translateX(${diffX}px)`;
+      }
+    }, { passive: true });
+
+    el.addEventListener('touchend', (e) => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      const diffX = currentX - startX;
+
+      // 45px-ൽ കൂടുതൽ ഇടത്തോട്ട് വലിച്ചാൽ മെൻഷൻ ആകും
+      if (diffX < -45) {
+        if (typeof replyToMessage === 'function') {
+          replyToMessage(user, content);
+          if (navigator.vibrate) navigator.vibrate(40); // ചെറിയൊരു വൈബ്രേഷൻ ഫീഡ്‌ബാക്ക്
+        }
+      }
+
+      // പഴയ സ്ഥാനത്തേക്ക് തിരികെ കൊണ്ടുവരുന്നു
+      el.style.transform = 'translateX(0px)';
+      startX = 0;
+      currentX = 0;
+    });
+  }
+
     function renderMessage(data) {
       if (!data) return;
       if (data.id && document.getElementById(data.id)) return;
@@ -524,6 +586,11 @@
         '</div>';
 
       const msgList = document.getElementById('messages');
+      
+      // സ്വൈപ്പ് ഫീച്ചർ ഘടിപ്പിക്കുന്നു
+      const plainText = (data.content || data.text || '');
+      attachSwipeToReply(li, data.user, plainText);
+
       if (msgList) msgList.appendChild(li);
     }
 
