@@ -476,17 +476,34 @@
     }
 
     function sendMessage(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      if (e) { e.preventDefault(); e.stopPropagation(); }
       const inp = document.getElementById('input');
       if (!inp) return false;
       const text = inp.value.trim();
-      if (text) {
-        socket.emit('chat message', { type: 'text', content: text });
-        inp.value = '';
-      }
+      if (!text) return false;
+
+      const tempId = 'msg_' + Date.now();
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // സ്ക്രീനിൽ ഉടൻ കാണിക്കുന്നു (ലാഗ് ഒഴിവാക്കാൻ)
+      const instantMsg = {
+        id: tempId,
+        user: myName,
+        avatar: myAvatar,
+        role: myRole,
+        type: 'text',
+        content: text,
+        time: timeStr
+      };
+      renderMessage(instantMsg);
+      const chatArea = document.getElementById('main-chat');
+      if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
+
+      inp.value = '';
+
+      // സെർവറിലേക്ക് അയക്കുന്നു
+      socket.emit('chat message', instantMsg);
       return false;
     }
 
@@ -500,6 +517,7 @@
     };
 
     function renderMessage(data) {
+      if (data.id && document.getElementById(data.id)) return;
       const li = document.createElement('li');
       li.id = data.id;
 
