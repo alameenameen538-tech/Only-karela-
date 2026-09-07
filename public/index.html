@@ -454,6 +454,21 @@
 
     function logoutApp() { localStorage.clear(); window.location.reload(); }
 
+    
+    socket.on("message deleted", (msgId) => {
+      const el = document.getElementById(msgId);
+      if (el) el.remove();
+    });
+
+    function promptDeleteMessage(msgId) {
+      if (!isOwnerOrAdmin && !isVip) {
+        return alert("⭐ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യാനുള്ള സൗകര്യം VIP അംഗങ്ങൾക്കും Owner-ക്കും മാത്രമുള്ളതാണ്!");
+      }
+      if (confirm("ഈ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യണമെന്നുറപ്പാണോ?")) {
+        socket.emit("delete chat message", msgId);
+      }
+    }
+
     function sendMessage(e) {
       if (e) e.preventDefault();
       const inp = document.getElementById('input');
@@ -507,7 +522,7 @@
         <div class="msg-body">
           <div class="msg-meta-row">
             <div class="sender-name" onclick="openUserProfileModal('${data.user}', '${data.role}', false)">★ ${data.user}</div>
-            <span class="msg-time">${data.time || ''}</span>
+            <div style="display:flex; align-items:center; gap:6px;"><span class="msg-time">${data.time || ''}</span><span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage('${data.id}')">🗑️</span></div>
           </div>
           <div class="msg-content">${contentHtml}</div>
         </div>

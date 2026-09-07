@@ -139,6 +139,19 @@ io.on('connection', (socket) => {
         socket.emit('load room messages', roomMessages[newRoom]);
     });
 
+    
+    socket.on("delete chat message", (msgId) => {
+      const u = users[socket.id];
+      const isOwnerOrVip = u && (u.role === "Owner" || u.isVip);
+      if (!isOwnerOrVip) {
+        return socket.emit("mute warning", "⛔ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യാൻ VIP അല്ലെങ്കിൽ Owner ആവണം!");
+      }
+      if (socket.currentRoom && roomMessages[socket.currentRoom]) {
+        roomMessages[socket.currentRoom] = roomMessages[socket.currentRoom].filter(m => m.id !== msgId);
+      }
+      io.to(socket.currentRoom || "Kerala Chat Room").emit("message deleted", msgId);
+    });
+
     socket.on('chat message', (msgData) => {
         const user = users[socket.id] || { name: 'Anonymous', avatar: '', isVip: false, role: 'Member' };
         const uLower = user.name.toLowerCase().trim();
