@@ -476,10 +476,14 @@
     }
 
     function sendMessage(e) {
-      if (e) e.preventDefault();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       const inp = document.getElementById('input');
+      if (!inp) return false;
       const text = inp.value.trim();
-      if(text) {
+      if (text) {
         socket.emit('chat message', { type: 'text', content: text });
         inp.value = '';
       }
