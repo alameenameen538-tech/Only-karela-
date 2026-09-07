@@ -34,7 +34,7 @@ function saveHistory() {
   } catch (e) {}
 }
 
-let staffRoomPassword = "staff123";
+let staffRoomPassword = "a26h31";
 const users = {};
 
 io.on('connection', (socket) => {
