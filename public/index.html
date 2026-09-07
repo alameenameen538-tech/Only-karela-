@@ -550,6 +550,69 @@
     });
   }
 
+    
+  let activeReply = null;
+
+  function replyToMessage(user, text) {
+    activeReply = { user: user, text: text };
+    const bar = document.getElementById("reply-preview-bar");
+    const userEl = document.getElementById("reply-to-user");
+    const textEl = document.getElementById("reply-to-text");
+    
+    if (userEl) userEl.textContent = user;
+    if (textEl) textEl.textContent = (text.length > 40 ? text.substring(0, 40) + "..." : text);
+    if (bar) bar.style.display = "flex";
+
+    const inp = document.getElementById("input");
+    if (inp) {
+      inp.focus();
+    }
+  }
+
+  function cancelReply() {
+    activeReply = null;
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "none";
+  }
+
+  function attachSwipeToReply(el, user, content) {
+    let startX = 0;
+    let currentX = 0;
+    let isSwiping = false;
+
+    el.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isSwiping = true;
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      if (!isSwiping) return;
+      currentX = e.touches[0].clientX;
+      const diffX = currentX - startX;
+
+      // ഇടത്തോട്ട് നീക്കുമ്പോൾ
+      if (diffX < 0 && diffX > -90) {
+        el.style.transform = "translateX(" + diffX + "px)";
+      }
+    }, { passive: true });
+
+    el.addEventListener('touchend', (e) => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      const diffX = currentX - startX;
+
+      // 35px-ൽ കൂടുതൽ ഇടത്തോട്ട് നീങ്ങിയാൽ മെൻഷൻ ട്രിഗർ ചെയ്യും
+      if (diffX < -35) {
+        replyToMessage(user, content);
+        if (navigator.vibrate) navigator.vibrate(40);
+      }
+
+      el.style.transform = 'translateX(0px)';
+      startX = 0;
+      currentX = 0;
+    });
+  }
+
     function renderMessage(data) {
       if (!data) return;
       if (data.id && document.getElementById(data.id)) return;
