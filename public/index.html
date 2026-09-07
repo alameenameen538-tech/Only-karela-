@@ -242,63 +242,7 @@
   <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
   <!-- അക്കൗണ്ട് & പ്രൊഫൈൽ മോഡൽ -->
-  <div id="account-profile-modal">
-    <div class="profile-card-container">
-      <div class="profile-card-header">
-        <div style="display:flex; gap:6px;">
-          <div class="badge-chip" style="color:#eab308;">⭐ 16</div>
-          <div class="badge-chip" style="color:#38bdf8;">👍 5</div>
-        </div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <span style="cursor:pointer;" onclick="changeProfilePicPrompt()">📷</span>
-          <span style="cursor:pointer;" onclick="alert('Profile mode')">👁️</span>
-          <span style="cursor:pointer; font-weight:bold; font-size:1.1rem;" onclick="closeProfileModal()">✕</span>
-        </div>
-      </div>
-
-      <div class="profile-center-avatar-wrap">
-        <div class="profile-main-dp-ring">
-          <img id="prof-modal-dp" class="profile-main-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user">
-        </div>
-        <div style="font-size:0.75rem; color:#38bdf8; font-weight:bold;">🔹 VIP</div>
-        <h3 id="prof-modal-username" class="profile-user-title">Ameen7</h3>
-      </div>
-
-      <div class="profile-red-tab-bar">
-        <button id="tab-btn-info" class="prof-tab-btn active" onclick="switchProfileTab('info')">Info</button>
-        <button id="tab-btn-account" class="prof-tab-btn" onclick="switchProfileTab('account')">Account</button>
-        <button id="tab-btn-more" class="prof-tab-btn" onclick="switchProfileTab('more')">More</button>
-      </div>
-
-      <div class="profile-tab-body">
-        <div id="prof-tab-content-info">
-          <div class="prof-info-row"><span class="prof-info-label">❤️ Relationship</span> <span class="prof-info-val">In a relationship</span></div>
-          <div class="prof-info-row"><span class="prof-info-label">🌐 Country</span> <span class="prof-info-val">India</span></div>
-          <div class="prof-info-row"><span class="prof-info-label">🔤 Language</span> <span class="prof-info-val">English</span></div>
-          <div class="prof-info-row"><span class="prof-info-label">🏠 Current room</span> <span class="prof-info-val" id="prof-info-room">Kerala Chat Room</span></div>
-          <div class="hexagon-badge-row">
-            <div class="hex-badge" style="background:#e11d48;">📈<span>6</span></div>
-            <div class="hex-badge" style="background:#0284c7;">💬<span>1</span></div>
-            <div class="hex-badge" style="background:#9333ea;">👥<span>1</span></div>
-            <div class="hex-badge" style="background:#d97706;">🪙<span>9</span></div>
-            <div class="hex-badge" style="background:#db2777;">💎<span>3</span></div>
-          </div>
-        </div>
-
-        <div id="prof-tab-content-account" style="display:none;">
-          <div class="prof-menu-row" onclick="alert('Edit info')">📇 Edit info</div>
-          <div class="prof-menu-row" onclick="alert('Edit relationship')">❤️ Edit relationship</div>
-          <div class="prof-menu-row" onclick="alert('Edit mood')">🤍 Edit mood</div>
-          <div class="prof-menu-row" onclick="alert('Change password')">🔑 Change password</div>
-        </div>
-
-        <div id="prof-tab-content-more" style="display:none;">
-          <div class="prof-menu-row" onclick="alert('Gifts')">🎁 Gifts</div>
-          <div class="prof-menu-row" onclick="alert('Friends')">👤+ Manage friends</div>
-          <div class="prof-menu-row" style="color:#ef4444;" onclick="logoutApp()">↪️ Logout</div>
-        </div>
-      </div>
-    </div>
+  
   </div>
 
   <div id="custom-side-drawer">
@@ -720,6 +664,69 @@
         isRecording = false;
         micBtn.style.color = '#9ca3af';
       }
+    }
+  </script>
+
+  <!-- ലളിതമായ പ്രൊഫൈൽ മോഡൽ -->
+  <div id="account-profile-modal" style="display:none; position:fixed; inset:0; z-index:6000; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#15171e; border:1.5px solid #2a2d3d; width:100%; max-width:320px; border-radius:20px; padding:22px; text-align:center; color:#fff; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
+      <span style="position:absolute; right:16px; top:14px; font-size:1.25rem; cursor:pointer; color:#9ca3af;" onclick="closeProfileModal()">✕</span>
+      <h3 style="margin:0 0 16px 0; font-size:1.15rem; color:#e5e7eb;">My Profile</h3>
+
+      <div style="position:relative; width:94px; height:94px; margin:0 auto 12px auto;">
+        <img id="prof-modal-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:2.5px solid #00a8e8;">
+        <button onclick="document.getElementById('avatar-file-input').click()" style="position:absolute; bottom:0; right:0; background:#00a8e8; border:none; border-radius:50%; width:30px; height:30px; color:#fff; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);" title="Change Photo">📷</button>
+      </div>
+
+      <h4 id="prof-modal-username" style="margin:0 0 4px 0; font-size:1.25rem; color:#fff;">Username</h4>
+      <div id="prof-modal-role" style="font-size:0.82rem; color:#38bdf8; font-weight:700; margin-bottom:16px;">Member</div>
+
+      <div style="background:#0e0f14; border-radius:12px; padding:12px 14px; text-align:left; font-size:0.88rem; margin-bottom:18px; border:1px solid #1f2230;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#9ca3af;">🏠 Current Room:</span> <strong id="prof-info-room" style="color:#fff;">Kerala Chat Room</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#9ca3af;">🌐 Country:</span> <strong style="color:#fff;">India 🇮🇳</strong></div>
+      </div>
+
+      <button onclick="document.getElementById('avatar-file-input').click()" style="width:100%; background:#2563eb; color:#fff; border:none; padding:11px; border-radius:10px; font-weight:bold; font-size:0.95rem; cursor:pointer; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px;">📷 ഗ്യാലറിയിൽ നിന്ന് DP മാറ്റുക</button>
+      <button onclick="logoutApp()" style="width:100%; background:#dc2626; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:bold; font-size:0.9rem; cursor:pointer;">🚪 Logout</button>
+    </div>
+  </div>
+
+  <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="uploadNewProfilePic(this)">
+
+  <script>
+    function openUserProfileModal(userName, userRole, isSelf) {
+      closeAllDrawers();
+      document.getElementById("prof-modal-username").textContent = userName;
+      const roleEl = document.getElementById("prof-modal-role");
+      if (roleEl) roleEl.textContent = userRole || "Member";
+      const roomEl = document.getElementById("prof-info-room");
+      if (roomEl) roomEl.textContent = currentRoom;
+      const dpEl = document.getElementById("prof-modal-dp");
+      if (dpEl) dpEl.src = (isSelf && myAvatar) ? myAvatar : (userName === myName ? myAvatar : "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(userName));
+      document.getElementById("account-profile-modal").style.display = "flex";
+    }
+
+    function closeProfileModal() {
+      document.getElementById("account-profile-modal").style.display = "none";
+    }
+
+    function uploadNewProfilePic(el) {
+      const file = el.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) return alert("ഫോട്ടോ സൈസ് 5MB-ൽ താഴെയായിരിക്കണം!");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        myAvatar = e.target.result;
+        localStorage.setItem("kcr_avatar", myAvatar);
+        const navDp = document.getElementById("nav-user-dp");
+        const modalDp = document.getElementById("prof-modal-dp");
+        if (navDp) navDp.src = myAvatar;
+        if (modalDp) modalDp.src = myAvatar;
+        socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
+        alert("✅ പ്രൊഫൈൽ ഫോട്ടോ അപ്‌ഡേറ്റ് ആയി!");
+      };
+      reader.readAsDataURL(file);
+      el.value = "";
     }
   </script>
 </body>
