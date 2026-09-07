@@ -111,7 +111,7 @@
 
     /* ലൈവ് പ്രൊഫൈൽ മോഡൽ (സ്ക്രീൻ റെക്കോർഡിലെ രൂപം) */
     #account-profile-modal {
-      display: none; position: fixed; inset: 0; z-index: 6000; pointer-events: none;
+      display: none; position:fixed; inset:0; z-index:6000; display:none; pointer-events: none;
       background: rgba(0,0,0,0.82); backdrop-filter: blur(6px);
       align-items: center; justify-content: center; padding: 14px;
     }
@@ -192,6 +192,14 @@
     }
 
 </style>
+
+  <style id="swipe-active-style">
+    #messages li {
+      position: relative !important;
+      transition: transform 0.15s ease-out !important;
+      touch-action: pan-y !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -880,7 +888,7 @@
   </script>
 
   <!-- ലളിതമായ പ്രൊഫൈൽ മോഡൽ -->
-  <div id="account-profile-modal" style="display:none; pointer-events:none;" style="display:none; position: fixed; inset: 0; z-index: 6000; pointer-events: none; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+  <div id="account-profile-modal" style="display:none; pointer-events:none;" style="display:none; position:fixed; inset:0; z-index:6000; display:none; pointer-events: none; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
     <div style="background:#15171e; border:1.5px solid #2a2d3d; width:100%; max-width:320px; border-radius:20px; padding:22px; text-align:center; color:#fff; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
       <span style="position:absolute; right:16px; top:14px; font-size:1.25rem; cursor:pointer; color:#9ca3af;" onclick="closeProfileModal()">✕</span>
       <h3 style="margin:0 0 16px 0; font-size:1.15rem; color:#e5e7eb;">My Profile</h3>
@@ -965,6 +973,132 @@
 
           socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
           alert("✅ പ്രൊഫൈൽ ഫോട്ടോ വിജയകരമായി സെറ്റ് ആയി!");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      el.value = "";
+    }
+  </script>
+
+  <div id="reply-preview-bar" style="display:none; position:fixed; bottom:65px; left:0; right:0; background:#1c1f2e; border-left:4px solid #00a8e8; padding:8px 14px; z-index:5000; align-items:center; justify-content:space-between; font-size:0.85rem; color:#fff; box-shadow:0 -4px 10px rgba(0,0,0,0.4);">
+    <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">
+      <span style="color:#38bdf8; font-weight:bold;">↩️ Replying to <span id="reply-to-user" style="color:#00e5ff;"></span>:</span> 
+      <span id="reply-to-text" style="color:#9ca3af; margin-left:4px;"></span>
+    </div>
+    <span onclick="cancelReply()" style="cursor:pointer; color:#ef4444; font-weight:bold; font-size:1.1rem; padding:0 8px;">✕</span>
+  </div>
+
+  <div id="typing-indicator-bar" style="display:none; position:fixed; bottom:65px; left:0; right:0; padding:4px 14px; font-size:0.8rem; color:#38bdf8; background:rgba(18,20,26,0.9); font-style:italic; z-index:4999;">
+    ✍️ <span id="typing-user-name"></span> is typing...
+  </div>
+
+  <!-- ഫോട്ടോ അപ്‌ലോഡർ -->
+  <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="uploadNewProfilePic(this)">
+
+  <script>
+    let activeReply = null;
+    let typingTimeout = null;
+
+    function replyToMessage(user, text) {
+      activeReply = { user: user, text: text };
+      const bar = document.getElementById("reply-preview-bar");
+      const userEl = document.getElementById("reply-to-user");
+      const textEl = document.getElementById("reply-to-text");
+      if (userEl) userEl.textContent = user;
+      if (textEl) textEl.textContent = (text && text.length > 35) ? text.substring(0, 35) + "..." : (text || "");
+      if (bar) bar.style.display = "flex";
+
+      const inp = document.getElementById("input");
+      if (inp) {
+        inp.focus();
+        inp.placeholder = "Replying to " + user + "...";
+      }
+    }
+
+    function cancelReply() {
+      activeReply = null;
+      const bar = document.getElementById("reply-preview-bar");
+      if (bar) bar.style.display = "none";
+      const inp = document.getElementById("input");
+      if (inp) inp.placeholder = "Type here...";
+    }
+
+    function handleTypingInput() {
+      if (typeof currentRoom !== "undefined" && currentRoom === 'hanu ameen secret room 💗') {
+        socket.emit('typing', { user: myName, isTyping: true });
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          socket.emit('typing', { user: myName, isTyping: false });
+        }, 1500);
+      }
+    }
+
+    function attachSwipeToReply(el, sender, content) {
+      let startX = 0;
+      let currentX = 0;
+      let swiping = false;
+
+      el.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        swiping = true;
+      }, { passive: true });
+
+      el.addEventListener('touchmove', (e) => {
+        if (!swiping) return;
+        currentX = e.touches[0].clientX;
+        const diffX = currentX - startX;
+        if (diffX < 0 && diffX > -70) {
+          el.style.transform = "translateX(" + diffX + "px)";
+        }
+      }, { passive: true });
+
+      el.addEventListener('touchend', (e) => {
+        if (!swiping) return;
+        swiping = false;
+        const diffX = currentX - startX;
+        if (diffX < -30) {
+          replyToMessage(sender, content);
+          if (navigator.vibrate) { try { navigator.vibrate(30); } catch(err){} }
+        }
+        el.style.transform = "translateX(0px)";
+        startX = 0;
+        currentX = 0;
+      });
+    }
+
+    function uploadNewProfilePic(el) {
+      const file = el.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const MAX_SIZE = 300;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+          } else {
+            if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          myAvatar = canvas.toDataURL("image/jpeg", 0.85);
+          localStorage.setItem("kcr_avatar", myAvatar);
+          localStorage.setItem("kcr_saved_dp_" + myName, myAvatar);
+
+          const navDp = document.getElementById("nav-user-dp");
+          const modalDp = document.getElementById("prof-modal-dp");
+          if (navDp) navDp.src = myAvatar;
+          if (modalDp) modalDp.src = myAvatar;
+
+          socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
+          alert("✅ പ്രൊഫൈൽ ഫോട്ടോ അപ്ഡേറ്റ് ആയി!");
         };
         img.src = e.target.result;
       };
