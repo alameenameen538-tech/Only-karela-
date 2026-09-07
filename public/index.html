@@ -613,6 +613,74 @@
     });
   }
 
+    
+  let activeReply = null;
+
+  function replyToMessage(user, text) {
+    activeReply = { user: user, text: text };
+    const bar = document.getElementById("reply-preview-bar");
+    const userEl = document.getElementById("reply-to-user");
+    const textEl = document.getElementById("reply-to-text");
+    
+    if (userEl) userEl.textContent = user;
+    if (textEl) textEl.textContent = (text && text.length > 35) ? text.substring(0, 35) + "..." : (text || "");
+    if (bar) bar.style.display = "flex";
+
+    const inp = document.getElementById("input");
+    if (inp) {
+      inp.focus();
+      inp.placeholder = "Replying to " + user + "...";
+    }
+  }
+
+  function cancelReply() {
+    activeReply = null;
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "none";
+    const inp = document.getElementById("input");
+    if (inp) inp.placeholder = "Type here...";
+  }
+
+  function attachSwipeToReply(liElement, sender, messageText) {
+    let touchStartX = 0;
+    let touchCurrentX = 0;
+    let isMoving = false;
+
+    liElement.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      isMoving = true;
+    }, { passive: true });
+
+    liElement.addEventListener('touchmove', (e) => {
+      if (!isMoving) return;
+      touchCurrentX = e.touches[0].clientX;
+      const moveDiff = touchCurrentX - touchStartX;
+
+      // ഇടത്തോട്ട് നീക്കുമ്പോൾ മാത്രം
+      if (moveDiff < 0 && moveDiff > -80) {
+        liElement.style.transform = "translateX(" + moveDiff + "px)";
+      }
+    }, { passive: true });
+
+    liElement.addEventListener('touchend', (e) => {
+      if (!isMoving) return;
+      isMoving = false;
+      const moveDiff = touchCurrentX - touchStartX;
+
+      // 30px-ൽ കൂടുതൽ ഇടത്തോട്ട് വലിച്ചാൽ മെൻഷൻ ഓൺ ആകും
+      if (moveDiff < -30) {
+        replyToMessage(sender, messageText);
+        if (navigator.vibrate) {
+          try { navigator.vibrate(35); } catch(err) {}
+        }
+      }
+
+      liElement.style.transform = "translateX(0px)";
+      touchStartX = 0;
+      touchCurrentX = 0;
+    });
+  }
+
     function renderMessage(data) {
       if (!data) return;
       if (data.id && document.getElementById(data.id)) return;
