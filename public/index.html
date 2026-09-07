@@ -383,7 +383,8 @@
         closeLoginModal();
         myName = res.username;
         myRole = res.role;
-        myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+        const savedUserDp = localStorage.getItem('kcr_saved_dp_' + myName);
+        myAvatar = savedUserDp || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
         localStorage.setItem('kcr_name', myName);
         localStorage.setItem('kcr_role', myRole);
         localStorage.setItem('kcr_avatar', myAvatar);
@@ -452,7 +453,12 @@
       }
     }
 
-    function logoutApp() { localStorage.clear(); window.location.reload(); }
+    function logoutApp() { 
+      localStorage.removeItem('kcr_name');
+      localStorage.removeItem('kcr_role');
+      localStorage.removeItem('kcr_avatar');
+      window.location.reload(); 
+    }
 
     
     socket.on("message deleted", (msgId) => {
@@ -733,6 +739,7 @@
       reader.onload = function(e) {
         myAvatar = e.target.result;
         localStorage.setItem("kcr_avatar", myAvatar);
+        localStorage.setItem("kcr_saved_dp_" + myName, myAvatar);
         const navDp = document.getElementById("nav-user-dp");
         const modalDp = document.getElementById("prof-modal-dp");
         if (navDp) navDp.src = myAvatar;
