@@ -77,6 +77,15 @@ io.on('connection', (socket) => {
     broadcastUsers(newRoom);
   });
 
+  
+  socket.on('typing', (data) => {
+    const room = socket.currentRoom || 'Kerala Chat Room';
+    // secret room-ൽ ടൈപ്പ് ചെയ്യുമ്പോൾ മാത്രം മറ്റുള്ളവർക്ക് അയക്കുന്നു
+    if (room === 'hanu ameen secret room 💗') {
+      socket.to(room).emit('user typing', { user: data.user, isTyping: data.isTyping });
+    }
+  });
+
   socket.on('chat message', (data) => {
     const u = users[socket.id] || { name: 'User', avatar: '', role: 'Member', isVip: false };
     const room = socket.currentRoom || 'Kerala Chat Room';
@@ -93,6 +102,7 @@ io.on('connection', (socket) => {
       isVip: u.isVip,
       type: data.type || 'text',
       content: data.content,
+      replyTo: data.replyTo || null,
       time: timeStr
     };
 

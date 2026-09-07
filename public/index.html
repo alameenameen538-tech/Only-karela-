@@ -233,7 +233,7 @@
     <form id="bottom-input-bar" onsubmit="sendMessage(event)">
       <button type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
       <button type="button" class="input-action-btn" onclick="shareTikTokPrompt()">🎵</button>
-      <input id="input" autocomplete="off" placeholder="Type here..." required />
+      <input id="input" oninput="handleTypingInput()" autocomplete="off" placeholder="Type here..." required />
       <button type="button" id="mic-btn" class="input-action-btn" onclick="toggleVoiceRecord()">🎤</button>
       <button id="send-btn" type="submit">✈</button>
     </form>
@@ -482,8 +482,17 @@
       const text = inp.value.trim();
       if (!text) return false;
 
-      // സെർവറിലേക്ക് അയക്കുന്നു, സെർവർ വഴി സ്ക്രീനിൽ വരുമ്പോൾ മെസ്സേജ് മാഞ്ഞുപോകില്ല
-      socket.emit('chat message', { type: 'text', content: text });
+      const payload = { type: 'text', content: text };
+      if (activeReply) {
+        payload.replyTo = activeReply;
+        cancelReply();
+      }
+
+      if (currentRoom === 'hanu ameen secret room 💗') {
+        socket.emit('typing', { user: myName, isTyping: false });
+      }
+
+      socket.emit('chat message', payload);
       inp.value = '';
       return false;
     }
@@ -496,6 +505,9 @@
       if (data.id) li.id = data.id;
 
       let contentHtml = '';
+      if (data.replyTo) {
+        contentHtml += '<div style="background:#13151b; border-left:3px solid #38bdf8; padding:4px 8px; border-radius:4px; font-size:0.8rem; color:#9ca3af; margin-bottom:5px;">💬 <strong style="color:#38bdf8;">' + data.replyTo.user + ':</strong> ' + data.replyTo.text + '</div>';
+      }
       const type = data.type || 'text';
       const textBody = data.text || data.content;
 
@@ -517,7 +529,7 @@
             '<div class="sender-name" onclick="openUserProfileModal(\'' + data.user + '\', \'' + data.role + '\', false)">★ ' + data.user + '</div>' +
             '<div style="display:flex; align-items:center; gap:6px;">' +
               '<span class="msg-time">' + (data.time || '') + '</span>' +
-              '<span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage(\'' + (data.id || '') + '\')" title="Delete Message">🗑️</span>' +
+              '<span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage(\'' + (data.id || '') + '\')" title="Delete Message">🗑️</span><span style="cursor:pointer; font-size:0.8rem; margin-left:4px;" onclick="replyToMessage('${data.user}', '${(data.content || '').replace(/['"]/g, ' ')}')" title="Reply">↩️</span>' +
             '</div>' +
           '</div>' +
           '<div class="msg-content">' + contentHtml + '</div>' +
@@ -770,6 +782,48 @@
       reader.readAsDataURL(file);
       el.value = "";
     }
-  </script>
+  
+  let activeReply = null;
+  let typingTimeout = null;
+
+  function replyToMessage(user, text) {
+    activeReply = { user: user, text: text };
+    document.getElementById("reply-to-text").textContent = user + ": " + (text.length > 35 ? text.substring(0, 35) + "..." : text);
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "flex";
+    const inp = document.getElementById("input");
+    if (inp) { inp.focus(); }
+  }
+
+  function cancelReply() {
+    activeReply = null;
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "none";
+  }
+
+  // ഇൻപുട്ട് ടൈപ്പ് ചെയ്യുമ്പോൾ typing ഇവന്റ് അയക്കുന്നു
+  function handleTypingInput() {
+    if (currentRoom === 'hanu ameen secret room 💗') {
+      socket.emit('typing', { user: myName, isTyping: true });
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        socket.emit('typing', { user: myName, isTyping: false });
+      }, 1500);
+    }
+  }
+
+  socket.on('user typing', (data) => {
+    const bar = document.getElementById("typing-indicator-bar");
+    const nameEl = document.getElementById("typing-user-name");
+    if (!bar || !nameEl) return;
+    if (data.isTyping && currentRoom === 'hanu ameen secret room 💗') {
+      nameEl.textContent = data.user;
+      bar.style.display = "block";
+    } else {
+      bar.style.display = "none";
+    }
+  });
+
+</script>
 </body>
 </html>
