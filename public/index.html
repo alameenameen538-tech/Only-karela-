@@ -111,7 +111,7 @@
 
     /* ലൈവ് പ്രൊഫൈൽ മോഡൽ (സ്ക്രീൻ റെക്കോർഡിലെ രൂപം) */
     #account-profile-modal {
-      display: none; position: fixed; inset: 0; z-index: 6000;
+      display: none; position: fixed; inset: 0; z-index: 6000; pointer-events: none;
       background: rgba(0,0,0,0.82); backdrop-filter: blur(6px);
       align-items: center; justify-content: center; padding: 14px;
     }
@@ -188,8 +188,8 @@
     <h2 class="welcome-main-title">Welcome To The Chat</h2>
     <p class="welcome-description">Our chat community gives you the opportunity of making new friends and sharing fun moments.</p>
     <div class="auth-action-buttons">
-      <button class="tg-login-btn" onclick="openLoginModal('login')"><span>✈</span> Login</button>
-      <button class="guest-login-btn" onclick="openGuestPrompt()">Guest login</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="tg-login-btn" onclick="openLoginModal('login')"><span>✈</span> Login</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="guest-login-btn" onclick="openGuestPrompt()">Guest login</button>
       <div class="register-footer-text">New here? <span class="register-trigger-btn" onclick="openLoginModal('register')">Register now</span></div>
     </div>
   </div>
@@ -200,23 +200,23 @@
       <h3 id="card-mode-title" class="modal-title-text">Login</h3>
       <input type="text" id="auth-username" class="card-text-input" placeholder="Username/Email" autocomplete="off">
       <input type="password" id="auth-password" class="card-text-input" placeholder="Password">
-      <button id="auth-submit-btn" class="card-submit-blue-btn" onclick="submitAuthForm()"><span>➔</span> Login</button>
+      <button style="pointer-events:auto; cursor:pointer;"  id="auth-submit-btn" class="card-submit-blue-btn" onclick="submitAuthForm()"><span>➔</span> Login</button>
     </div>
   </div>
 
   <div id="app-layout">
     <div id="top-nav-bar">
       <div class="nav-icons-group">
-        <button class="nav-icon" onclick="openLeftDrawer()">☰</button>
+        <button style="pointer-events:auto; cursor:pointer;"  class="nav-icon" onclick="openLeftDrawer()">☰</button>
         <div class="wallet-chip" onclick="openModal('wallet-modal')">
           <span>🪙</span> <span id="wallet-balance-top">15,000</span>
         </div>
       </div>
       <div class="nav-icons-group">
-        <button class="nav-icon" onclick="openModal('games-hub-modal')" title="Games">🎲</button>
-        <button class="nav-icon" onclick="reloadChatPage()" title="Refresh">🔄</button>
-        <button class="nav-icon" onclick="shareYouTubePrompt()" title="YouTube">▶️</button>
-        <button class="nav-icon" onclick="openRightUsers()">👥</button>
+        <button style="pointer-events:auto; cursor:pointer;"  class="nav-icon" onclick="openModal('games-hub-modal')" title="Games">🎲</button>
+        <button style="pointer-events:auto; cursor:pointer;"  class="nav-icon" onclick="reloadChatPage()" title="Refresh">🔄</button>
+        <button style="pointer-events:auto; cursor:pointer;"  class="nav-icon" onclick="shareYouTubePrompt()" title="YouTube">▶️</button>
+        <button style="pointer-events:auto; cursor:pointer;"  class="nav-icon" onclick="openRightUsers()">👥</button>
         <div class="header-dp-wrap" onclick="openUserProfileModal(myName, myRole, true)">
           <img id="nav-user-dp" class="header-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user">
           <div class="online-green-badge"></div>
@@ -231,11 +231,11 @@
     <input type="file" id="media-file-input" accept="image/*,video/*" style="display:none;" onchange="handleMediaUpload(this)">
 
     <form id="bottom-input-bar" onsubmit="sendMessage(event)">
-      <button type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
-      <button type="button" class="input-action-btn" onclick="shareTikTokPrompt()">🎵</button>
-      <input id="input" oninput="handleTypingInput()" autocomplete="off" placeholder="Type here..." required />
-      <button type="button" id="mic-btn" class="input-action-btn" onclick="toggleVoiceRecord()">🎤</button>
-      <button id="send-btn" type="submit">✈</button>
+      <button style="pointer-events:auto; cursor:pointer;"  type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
+      <button style="pointer-events:auto; cursor:pointer;"  type="button" class="input-action-btn" onclick="shareTikTokPrompt()">🎵</button>
+      <input id="input" autocomplete="off" placeholder="Type here..." required />
+      <button style="pointer-events:auto; cursor:pointer;"  type="button" id="mic-btn" class="input-action-btn" onclick="toggleVoiceRecord()">🎤</button>
+      <button style="pointer-events:auto; cursor:pointer;"  id="send-btn" type="submit">✈</button>
     </form>
   </div>
 
@@ -264,11 +264,11 @@
   <!-- റൈറ്റ് ഡ്രോയർ (Stories + Online Users) -->
   <div id="right-drawer">
     <div class="drawer-top-icons-bar">
-      <button onclick="closeAllDrawers()">✕</button>
-      <button style="color:#00a8e8;">👥</button>
-      <button onclick="openUserProfileModal(myName, myRole, true)">👤</button>
-      <button>🛡️</button>
-      <button>📞</button>
+      <button style="pointer-events:auto; cursor:pointer;"  onclick="closeAllDrawers()">✕</button>
+      <button style="pointer-events:auto; cursor:pointer;"  style="color:#00a8e8;">👥</button>
+      <button style="pointer-events:auto; cursor:pointer;"  onclick="openUserProfileModal(myName, myRole, true)">👤</button>
+      <button style="pointer-events:auto; cursor:pointer;" >🛡️</button>
+      <button style="pointer-events:auto; cursor:pointer;" >📞</button>
     </div>
     <div class="stories-carousel-row" id="stories-strip">
       <div class="story-item" onclick="alert('Add story')">
@@ -284,13 +284,13 @@
     <div class="modal-box" style="text-align: center;">
       <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('games-hub-modal')">✕</span>
       <h3 style="margin-top:0;">🎲 Games Hub</h3>
-      <button class="game-btn" style="background:#10b981;" onclick="closeModal('games-hub-modal'); openModal('spin-modal');">
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#10b981;" onclick="closeModal('games-hub-modal'); openModal('spin-modal');">
         <span>🎡 Daily Lucky Spin (2 Times)</span> <span>Play</span>
       </button>
-      <button class="game-btn" style="background:#8b5cf6;" onclick="closeModal('games-hub-modal'); openModal('dice-modal');">
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#8b5cf6;" onclick="closeModal('games-hub-modal'); openModal('dice-modal');">
         <span>🎲 Mini Ludo / Dice</span> <span>Play</span>
       </button>
-      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('games-hub-modal')">Close</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('games-hub-modal')">Close</button>
     </div>
   </div>
 
@@ -300,8 +300,8 @@
       <h3>🎁 Lucky Draw (Spin)</h3>
       <div id="wheel" style="width:140px; height:140px; border-radius:50%; border:5px solid #eab308; margin:15px auto; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); transition:transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);">🎁</div>
       <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">ഇന്ന് ബാക്കിയുള്ള സ്പിൻ: <span id="spin-count-label">2</span>/2</p>
-      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW (Max 500 🪙)</button>
-      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('spin-modal')">Close</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW (Max 500 🪙)</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('spin-modal')">Close</button>
     </div>
   </div>
 
@@ -310,9 +310,9 @@
       <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('dice-modal')">✕</span>
       <h3>🎲 Dice & Mini Ludo</h3>
       <div id="dice-view" style="font-size:3.5rem; margin:15px 0;">🎲</div>
-      <button class="game-btn" style="background:#8b5cf6; justify-content:center;" onclick="rollDiceOnly()">Roll Dice</button>
-      <button class="game-btn" style="background:#ec4899; justify-content:center;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
-      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('dice-modal')">Close</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#8b5cf6; justify-content:center;" onclick="rollDiceOnly()">Roll Dice</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#ec4899; justify-content:center;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('dice-modal')">Close</button>
     </div>
   </div>
 
@@ -321,7 +321,7 @@
       <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('wallet-modal')">✕</span>
       <h3>🪙 My Coin Wallet</h3>
       <div style="font-size: 2.2rem; font-weight: 800; color: #facc15; margin: 15px 0;"><span id="wallet-modal-num">15000</span> <small style="font-size: 1rem; color: #9ca3af;">Coins</small></div>
-      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="closeModal('wallet-modal'); openModal('spin-modal');">Earn Free Coins (Spin)</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#10b981; justify-content:center;" onclick="closeModal('wallet-modal'); openModal('spin-modal');">Earn Free Coins (Spin)</button>
     </div>
   </div>
 
@@ -329,9 +329,9 @@
     <div class="modal-box" style="text-align: center;">
       <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('room-modal')">✕</span>
       <h3>Select Room</h3>
-      <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Kerala Chat Room')"><span>💬 Kerala Chat Room</span> <span>Enter</span></button>
-      <button class="game-btn" style="background:#db2777;" onclick="selectRoom('hanu ameen secret room 💗')"><span>💗 hanu ameen secret room 🔒</span> <span>Enter</span></button>
-      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#2563eb;" onclick="selectRoom('Kerala Chat Room')"><span>💬 Kerala Chat Room</span> <span>Enter</span></button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#db2777;" onclick="selectRoom('hanu ameen secret room 💗')"><span>💗 hanu ameen secret room 🔒</span> <span>Enter</span></button>
+      <button style="pointer-events:auto; cursor:pointer;"  class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
     </div>
   </div>
 
@@ -482,17 +482,8 @@
       const text = inp.value.trim();
       if (!text) return false;
 
-      const payload = { type: 'text', content: text };
-      if (activeReply) {
-        payload.replyTo = activeReply;
-        cancelReply();
-      }
-
-      if (currentRoom === 'hanu ameen secret room 💗') {
-        socket.emit('typing', { user: myName, isTyping: false });
-      }
-
-      socket.emit('chat message', payload);
+      // സെർവറിലേക്ക് അയക്കുന്നു, സെർവർ വഴി സ്ക്രീനിൽ വരുമ്പോൾ മെസ്സേജ് മാഞ്ഞുപോകില്ല
+      socket.emit('chat message', { type: 'text', content: text });
       inp.value = '';
       return false;
     }
@@ -505,9 +496,6 @@
       if (data.id) li.id = data.id;
 
       let contentHtml = '';
-      if (data.replyTo) {
-        contentHtml += '<div style="background:#13151b; border-left:3px solid #38bdf8; padding:4px 8px; border-radius:4px; font-size:0.8rem; color:#9ca3af; margin-bottom:5px;">💬 <strong style="color:#38bdf8;">' + data.replyTo.user + ':</strong> ' + data.replyTo.text + '</div>';
-      }
       const type = data.type || 'text';
       const textBody = data.text || data.content;
 
@@ -516,7 +504,7 @@
       } else if (type === 'youtube') {
         contentHtml = '<iframe width="100%" height="200" src="https://www.youtube.com/embed/' + data.content + '" frameborder="0" allowfullscreen style="border-radius:10px; max-width:320px;"></iframe>';
       } else if (type === 'tiktok' || type === 'video') {
-        contentHtml = '<div class="tiktok-card-wrap"><div class="tiktok-card-head"><span class="tiktok-card-title">🎵 Video Media</span><button class="card-dl-btn" onclick="downloadVid(\'' + data.content + '\')">⬇️ Save</button></div><video class="tiktok-video-elem" controls playsinline preload="metadata" src="' + data.content + '"></video></div>';
+        contentHtml = '<div class="tiktok-card-wrap"><div class="tiktok-card-head"><span class="tiktok-card-title">🎵 Video Media</span><button style="pointer-events:auto; cursor:pointer;"  class="card-dl-btn" onclick="downloadVid(\'' + data.content + '\')">⬇️ Save</button></div><video class="tiktok-video-elem" controls playsinline preload="metadata" src="' + data.content + '"></video></div>';
       } else if (type === 'image') {
         contentHtml = '<img src="' + data.content + '" style="max-width:220px; border-radius:10px; display:block;">';
       } else if (type === 'audio') {
@@ -529,7 +517,7 @@
             '<div class="sender-name" onclick="openUserProfileModal(\'' + data.user + '\', \'' + data.role + '\', false)">★ ' + data.user + '</div>' +
             '<div style="display:flex; align-items:center; gap:6px;">' +
               '<span class="msg-time">' + (data.time || '') + '</span>' +
-              '<span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage(\'' + (data.id || '') + '\')" title="Delete Message">🗑️</span><span style="cursor:pointer; font-size:0.8rem; margin-left:4px;" onclick="replyToMessage('${data.user}', '${(data.content || '').replace(/['"]/g, ' ')}')" title="Reply">↩️</span>' +
+              '<span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage(\'' + (data.id || '') + '\')" title="Delete Message">🗑️</span>' +
             '</div>' +
           '</div>' +
           '<div class="msg-content">' + contentHtml + '</div>' +
@@ -562,6 +550,8 @@
     }
 
     function closeProfileModal() {
+      const m = document.getElementById("account-profile-modal");
+      if (m) { m.style.display = "none"; m.style.pointerEvents = "none"; }
       document.getElementById('account-profile-modal').style.display = 'none';
     }
 
@@ -692,14 +682,14 @@
   </script>
 
   <!-- ലളിതമായ പ്രൊഫൈൽ മോഡൽ -->
-  <div id="account-profile-modal" style="display:none; position:fixed; inset:0; z-index:6000; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+  <div id="account-profile-modal" style="display:none; pointer-events:none;" style="display:none; position: fixed; inset: 0; z-index: 6000; pointer-events: none; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
     <div style="background:#15171e; border:1.5px solid #2a2d3d; width:100%; max-width:320px; border-radius:20px; padding:22px; text-align:center; color:#fff; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
       <span style="position:absolute; right:16px; top:14px; font-size:1.25rem; cursor:pointer; color:#9ca3af;" onclick="closeProfileModal()">✕</span>
       <h3 style="margin:0 0 16px 0; font-size:1.15rem; color:#e5e7eb;">My Profile</h3>
 
       <div style="position:relative; width:94px; height:94px; margin:0 auto 12px auto;">
         <img id="prof-modal-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:2.5px solid #00a8e8;">
-        <button onclick="document.getElementById('avatar-file-input').click()" style="position:absolute; bottom:0; right:0; background:#00a8e8; border:none; border-radius:50%; width:30px; height:30px; color:#fff; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);" title="Change Photo">📷</button>
+        <button style="pointer-events:auto; cursor:pointer;"  onclick="document.getElementById('avatar-file-input').click()" style="position:absolute; bottom:0; right:0; background:#00a8e8; border:none; border-radius:50%; width:30px; height:30px; color:#fff; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);" title="Change Photo">📷</button>
       </div>
 
       <h4 id="prof-modal-username" style="margin:0 0 4px 0; font-size:1.25rem; color:#fff;">Username</h4>
@@ -710,8 +700,8 @@
         <div style="display:flex; justify-content:space-between;"><span style="color:#9ca3af;">🌐 Country:</span> <strong style="color:#fff;">India 🇮🇳</strong></div>
       </div>
 
-      <button onclick="document.getElementById('avatar-file-input').click()" style="width:100%; background:#2563eb; color:#fff; border:none; padding:11px; border-radius:10px; font-weight:bold; font-size:0.95rem; cursor:pointer; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px;">📷 ഗ്യാലറിയിൽ നിന്ന് DP മാറ്റുക</button>
-      <button onclick="logoutApp()" style="width:100%; background:#dc2626; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:bold; font-size:0.9rem; cursor:pointer;">🚪 Logout</button>
+      <button style="pointer-events:auto; cursor:pointer;"  onclick="document.getElementById('avatar-file-input').click()" style="width:100%; background:#2563eb; color:#fff; border:none; padding:11px; border-radius:10px; font-weight:bold; font-size:0.95rem; cursor:pointer; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px;">📷 ഗ്യാലറിയിൽ നിന്ന് DP മാറ്റുക</button>
+      <button style="pointer-events:auto; cursor:pointer;"  onclick="logoutApp()" style="width:100%; background:#dc2626; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:bold; font-size:0.9rem; cursor:pointer;">🚪 Logout</button>
     </div>
   </div>
 
@@ -727,7 +717,8 @@
       if (roomEl) roomEl.textContent = currentRoom;
       const dpEl = document.getElementById("prof-modal-dp");
       if (dpEl) dpEl.src = (isSelf && myAvatar) ? myAvatar : (userName === myName ? myAvatar : "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(userName));
-      document.getElementById("account-profile-modal").style.display = "flex";
+      const m = document.getElementById("account-profile-modal");
+      if (m) { m.style.display = "flex"; m.style.pointerEvents = "auto"; }
     }
 
     function closeProfileModal() {
@@ -782,48 +773,6 @@
       reader.readAsDataURL(file);
       el.value = "";
     }
-  
-  let activeReply = null;
-  let typingTimeout = null;
-
-  function replyToMessage(user, text) {
-    activeReply = { user: user, text: text };
-    document.getElementById("reply-to-text").textContent = user + ": " + (text.length > 35 ? text.substring(0, 35) + "..." : text);
-    const bar = document.getElementById("reply-preview-bar");
-    if (bar) bar.style.display = "flex";
-    const inp = document.getElementById("input");
-    if (inp) { inp.focus(); }
-  }
-
-  function cancelReply() {
-    activeReply = null;
-    const bar = document.getElementById("reply-preview-bar");
-    if (bar) bar.style.display = "none";
-  }
-
-  // ഇൻപുട്ട് ടൈപ്പ് ചെയ്യുമ്പോൾ typing ഇവന്റ് അയക്കുന്നു
-  function handleTypingInput() {
-    if (currentRoom === 'hanu ameen secret room 💗') {
-      socket.emit('typing', { user: myName, isTyping: true });
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => {
-        socket.emit('typing', { user: myName, isTyping: false });
-      }, 1500);
-    }
-  }
-
-  socket.on('user typing', (data) => {
-    const bar = document.getElementById("typing-indicator-bar");
-    const nameEl = document.getElementById("typing-user-name");
-    if (!bar || !nameEl) return;
-    if (data.isTyping && currentRoom === 'hanu ameen secret room 💗') {
-      nameEl.textContent = data.user;
-      bar.style.display = "block";
-    } else {
-      bar.style.display = "none";
-    }
-  });
-
-</script>
+  </script>
 </body>
 </html>
