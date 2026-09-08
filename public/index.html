@@ -233,7 +233,7 @@
     <form id="bottom-input-bar" onsubmit="sendMessage(event)">
       <button type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
       <button type="button" class="input-action-btn" onclick="shareTikTokPrompt()">🎵</button>
-      <input id="input" oninput="handleTypingInput()" autocomplete="off" placeholder="Type here..." required />
+      <input id="input" autocomplete="off" placeholder="Type here..." required />
       <button type="button" id="mic-btn" class="input-action-btn" onclick="toggleVoiceRecord()">🎤</button>
       <button id="send-btn" type="submit">✈</button>
     </form>
@@ -482,61 +482,80 @@
       const text = inp.value.trim();
       if (!text) return false;
 
-      const payload = { type: 'text', content: text };
-      if (activeReply) {
-        payload.replyTo = activeReply;
-        cancelReply();
-      }
+      const tempId = 'msg_' + Date.now();
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      if (currentRoom === 'hanu ameen secret room 💗') {
-        socket.emit('typing', { user: myName, isTyping: false });
-      }
+      // സ്ക്രീനിൽ ഉടൻ കാണിക്കുന്നു (ലാഗ് ഒഴിവാക്കാൻ)
+      const instantMsg = {
+        id: tempId,
+        user: myName,
+        avatar: myAvatar,
+        role: myRole,
+        type: 'text',
+        content: text,
+        time: timeStr
+      };
+      renderMessage(instantMsg);
+      const chatArea = document.getElementById('main-chat');
+      if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
 
-      socket.emit('chat message', payload);
       inp.value = '';
+
+      // സെർവറിലേക്ക് അയക്കുന്നു
+      socket.emit('chat message', instantMsg);
       return false;
     }
 
-    function renderMessage(data) {
-      if (!data) return;
-      if (data.id && document.getElementById(data.id)) return;
+    window.downloadVid = function(url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kcr_reel_' + Date.now() + '.mp4';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
 
+    function renderMessage(data) {
+      if (data.id && document.getElementById(data.id)) return;
       const li = document.createElement('li');
-      if (data.id) li.id = data.id;
+      li.id = data.id;
 
       let contentHtml = '';
-      if (data.replyTo) {
-        contentHtml += '<div style="background:#13151b; border-left:3px solid #38bdf8; padding:4px 8px; border-radius:4px; font-size:0.8rem; color:#9ca3af; margin-bottom:5px;">💬 <strong style="color:#38bdf8;">' + data.replyTo.user + ':</strong> ' + data.replyTo.text + '</div>';
-      }
       const type = data.type || 'text';
       const textBody = data.text || data.content;
 
       if (type === 'text') {
-        contentHtml = '<div>' + textBody + '</div>';
+        contentHtml = `<div>${textBody}</div>`;
       } else if (type === 'youtube') {
-        contentHtml = '<iframe width="100%" height="200" src="https://www.youtube.com/embed/' + data.content + '" frameborder="0" allowfullscreen style="border-radius:10px; max-width:320px;"></iframe>';
+        contentHtml = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${data.content}" frameborder="0" allowfullscreen style="border-radius:10px; max-width:320px;"></iframe>`;
       } else if (type === 'tiktok' || type === 'video') {
-        contentHtml = '<div class="tiktok-card-wrap"><div class="tiktok-card-head"><span class="tiktok-card-title">🎵 Video Media</span><button class="card-dl-btn" onclick="downloadVid(\'' + data.content + '\')">⬇️ Save</button></div><video class="tiktok-video-elem" controls playsinline preload="metadata" src="' + data.content + '"></video></div>';
+        contentHtml = `
+          <div class="tiktok-card-wrap">
+            <div class="tiktok-card-head">
+              <span class="tiktok-card-title">🎵 TikTok / Reel Media</span>
+              <button class="card-dl-btn" onclick="downloadVid('${data.content}')">⬇️ Save</button>
+            </div>
+            <video class="tiktok-video-elem" controls playsinline preload="metadata" src="${data.content}"></video>
+          </div>
+        `;
       } else if (type === 'image') {
-        contentHtml = '<img src="' + data.content + '" style="max-width:220px; border-radius:10px; display:block;">';
+        contentHtml = `<img src="${data.content}" style="max-width:220px; border-radius:10px; display:block;">`;
       } else if (type === 'audio') {
-        contentHtml = '<audio controls src="' + data.content + '" style="max-width:230px; height:38px;"></audio>';
+        contentHtml = `<audio controls src="${data.content}" style="max-width:230px; height:38px;"></audio>`;
       }
 
-      li.innerHTML = '<img class="msg-avatar" src="' + (data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=user') + '" onclick="openUserProfileModal(\'' + data.user + '\', \'' + data.role + '\', false)">' +
-        '<div class="msg-body">' +
-          '<div class="msg-meta-row">' +
-            '<div class="sender-name" onclick="openUserProfileModal(\'' + data.user + '\', \'' + data.role + '\', false)">★ ' + data.user + '</div>' +
-            '<div style="display:flex; align-items:center; gap:6px;">' +
-              '<span class="msg-time">' + (data.time || '') + '</span>' +
-              '<span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage(\'' + (data.id || '') + '\')" title="Delete Message">🗑️</span><span style="cursor:pointer; font-size:0.8rem; margin-left:4px;" onclick="replyToMessage('${data.user}', '${(data.content || '').replace(/['"]/g, ' ')}')" title="Reply">↩️</span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="msg-content">' + contentHtml + '</div>' +
-        '</div>';
-
-      const msgList = document.getElementById('messages');
-      if (msgList) msgList.appendChild(li);
+      li.innerHTML = `
+        <img class="msg-avatar" src="${data.avatar}" onclick="openUserProfileModal('${data.user}', '${data.role}', false)">
+        <div class="msg-body">
+          <div class="msg-meta-row">
+            <div class="sender-name" onclick="openUserProfileModal('${data.user}', '${data.role}', false)">★ ${data.user}</div>
+            <div style="display:flex; align-items:center; gap:6px;"><span class="msg-time">${data.time || ''}</span><span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage('${data.id}')">🗑️</span></div>
+          </div>
+          <div class="msg-content">${contentHtml}</div>
+        </div>
+      `;
+      document.getElementById('messages').appendChild(li);
     }
 
     socket.on('load room messages', (msgs) => {
@@ -737,93 +756,22 @@
     function uploadNewProfilePic(el) {
       const file = el.files[0];
       if (!file) return;
-
+      if (file.size > 5 * 1024 * 1024) return alert("ഫോട്ടോ സൈസ് 5MB-ൽ താഴെയായിരിക്കണം!");
       const reader = new FileReader();
       reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement("canvas");
-          const MAX_SIZE = 300;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_SIZE) {
-              height *= MAX_SIZE / width;
-              width = MAX_SIZE;
-            }
-          } else {
-            if (height > MAX_SIZE) {
-              width *= MAX_SIZE / height;
-              height = MAX_SIZE;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
-          myAvatar = optimizedDataUrl;
-          localStorage.setItem("kcr_avatar", myAvatar);
-          localStorage.setItem("kcr_saved_dp_" + myName, myAvatar);
-
-          const navDp = document.getElementById("nav-user-dp");
-          const modalDp = document.getElementById("prof-modal-dp");
-          if (navDp) navDp.src = myAvatar;
-          if (modalDp) modalDp.src = myAvatar;
-
-          socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
-          alert("✅ പ്രൊഫൈൽ ഫോട്ടോ വിജയകരമായി സെറ്റ് ആയി!");
-        };
-        img.src = e.target.result;
+        myAvatar = e.target.result;
+        localStorage.setItem("kcr_avatar", myAvatar);
+        localStorage.setItem("kcr_saved_dp_" + myName, myAvatar);
+        const navDp = document.getElementById("nav-user-dp");
+        const modalDp = document.getElementById("prof-modal-dp");
+        if (navDp) navDp.src = myAvatar;
+        if (modalDp) modalDp.src = myAvatar;
+        socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
+        alert("✅ പ്രൊഫൈൽ ഫോട്ടോ അപ്‌ഡേറ്റ് ആയി!");
       };
       reader.readAsDataURL(file);
       el.value = "";
     }
-  
-  let activeReply = null;
-  let typingTimeout = null;
-
-  function replyToMessage(user, text) {
-    activeReply = { user: user, text: text };
-    document.getElementById("reply-to-text").textContent = user + ": " + (text.length > 35 ? text.substring(0, 35) + "..." : text);
-    const bar = document.getElementById("reply-preview-bar");
-    if (bar) bar.style.display = "flex";
-    const inp = document.getElementById("input");
-    if (inp) { inp.focus(); }
-  }
-
-  function cancelReply() {
-    activeReply = null;
-    const bar = document.getElementById("reply-preview-bar");
-    if (bar) bar.style.display = "none";
-  }
-
-  // ഇൻപുട്ട് ടൈപ്പ് ചെയ്യുമ്പോൾ typing ഇവന്റ് അയക്കുന്നു
-  function handleTypingInput() {
-    if (currentRoom === 'hanu ameen secret room 💗') {
-      socket.emit('typing', { user: myName, isTyping: true });
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => {
-        socket.emit('typing', { user: myName, isTyping: false });
-      }, 1500);
-    }
-  }
-
-  socket.on('user typing', (data) => {
-    const bar = document.getElementById("typing-indicator-bar");
-    const nameEl = document.getElementById("typing-user-name");
-    if (!bar || !nameEl) return;
-    if (data.isTyping && currentRoom === 'hanu ameen secret room 💗') {
-      nameEl.textContent = data.user;
-      bar.style.display = "block";
-    } else {
-      bar.style.display = "none";
-    }
-  });
-
-</script>
+  </script>
 </body>
 </html>
