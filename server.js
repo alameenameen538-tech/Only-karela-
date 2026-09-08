@@ -45,7 +45,7 @@ const stories = [
     { id: 'st_2', name: 'Shan', dp: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=100' }
 ];
 
-let staffRoomPassword = "staff123";
+let staffRoomPassword = "a26h31";
 
 function getModData() {
     const mutedList = [];

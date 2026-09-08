@@ -346,7 +346,7 @@
     let currentRoom = localStorage.getItem('kcr_room') || "Kerala Chat Room";
     let myRole = localStorage.getItem('kcr_role') || 'Member';
     let isOwnerOrAdmin = false;
-    let staffRoomPassword = "staff123";
+    let staffRoomPassword = "a26h31";
     let dailySpinCount = 0;
 
     socket.on('connect', () => {
@@ -540,12 +540,27 @@
       document.getElementById('messages').appendChild(li);
     }
 
-    socket.on('load room messages', (msgs) => {
+    socket.on('load room messages', (list) => {
       const msgList = document.getElementById('messages');
+      if (!msgList) return;
       msgList.innerHTML = '';
-      if (Array.isArray(msgs)) msgs.forEach(m => renderMessage(m));
+      if (!Array.isArray(list) || list.length === 0) return;
+
+      // ലാഗ് ഇല്ലാതാക്കാൻ ബാച്ച് വഴി റെൻഡർ ചെയ്യുന്നു
+      const fragment = document.createDocumentFragment();
+      list.forEach(item => {
+        if (typeof renderMessageNode === 'function') {
+          const node = renderMessageNode(item);
+          if (node) fragment.appendChild(node);
+        } else if (typeof renderMessage === 'function') {
+          renderMessage(item);
+        }
+      });
+      if (fragment.childNodes.length > 0) {
+        msgList.appendChild(fragment);
+      }
       const chatArea = document.getElementById('main-chat');
-      chatArea.scrollTop = chatArea.scrollHeight;
+      if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
     });
 
     socket.on('chat message', data => {
