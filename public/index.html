@@ -2,245 +2,483 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <title>Kerala Chat Room</title>
-  <script src="/socket.io/socket.io.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: #0c0d12; color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-    
-    /* Login Page */
-    #login-page {
-      position: fixed; inset: 0; background: #0c0d12; z-index: 10000;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-    }
-    .login-box {
-      background: #15171e; border: 1px solid #2a2d3d; border-radius: 20px; padding: 30px 20px;
-      width: 100%; max-width: 360px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .login-box h2 { font-size: 1.5rem; color: #38bdf8; margin-bottom: 6px; }
-    .login-box p { font-size: 0.85rem; color: #9ca3af; margin-bottom: 24px; line-height: 1.4; }
-    .login-input {
-      width: 100%; padding: 12px 16px; background: #0e0f14; border: 1px solid #2a2d3d;
-      border-radius: 10px; color: #fff; font-size: 1rem; margin-bottom: 14px; outline: none;
-    }
-    .btn-main {
-      width: 100%; padding: 12px; background: #558b2f; color: #fff; border: none;
-      border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-bottom: 12px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-guest {
-      width: 100%; padding: 12px; background: #1e2230; color: #fff; border: 1px solid #2a2d3d;
-      border-radius: 10px; font-weight: bold; font-size: 0.95rem; cursor: pointer;
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      height: 100%; height: 100dvh; margin: 0; padding: 0;
+      color: #e5e7eb; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden; background: #0b0c10;
     }
 
-    /* Main Chat UI */
-    #chat-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
-    
-    /* Nav */
-    header {
-      height: 55px; background: #15171e; border-bottom: 1px solid #2a2d3d;
-      display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0;
+    #front-landing-screen {
+      position: fixed; inset: 0; z-index: 4000; background-color: #07080b;
+      background-image: radial-gradient(#181a24 16%, transparent 16%), radial-gradient(#12141c 16%, transparent 16%);
+      background-size: 55px 55px; background-position: 0 0, 28px 28px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center;
     }
-    .nav-title { font-size: 1rem; font-weight: bold; color: #38bdf8; cursor: pointer; }
-    .nav-dp { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid #00a8e8; object-fit: cover; cursor: pointer; }
+    .top-flag-bar { position: absolute; top: 18px; right: 20px; font-size: 1.5rem; }
+    .brand-header-area { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+    .brand-custom-logo { width: 50px; height: 50px; }
+    .brand-text-wrap { text-align: left; line-height: 1.15; }
+    .brand-text-malayalam { font-size: 1.75rem; font-weight: 900; color: #ffffff; margin: 0; }
+    .brand-text-english { font-size: 1.15rem; font-weight: 700; color: #58a6ff; margin: 0; }
+    .welcome-main-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 14px 0; color: #fff; }
+    .welcome-description { font-size: 0.95rem; color: #9ca3af; line-height: 1.45; max-width: 320px; margin: 0 auto 30px auto; }
+    .auth-action-buttons { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px; }
+    .tg-login-btn { width: 100%; padding: 14px; border-radius: 28px; border: none; background: #5b8719; color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .guest-login-btn { width: 100%; padding: 14px; border-radius: 28px; border: none; background: #191b22; color: #e5e7eb; font-size: 1.05rem; font-weight: 600; cursor: pointer; }
+    .register-footer-text { margin-top: 20px; font-size: 0.82rem; color: #9ca3af; }
+    .register-trigger-btn { display: block; font-size: 1.05rem; font-weight: 800; color: #fff; margin-top: 4px; cursor: pointer; }
 
-    /* Chat Messages */
-    #main-chat { flex: 1; overflow-y: auto; padding: 12px 14px; list-style: none; }
-    #messages { display: flex; flex-direction: column; gap: 10px; }
-    #messages li {
-      display: flex; gap: 10px; align-items: flex-start;
-      position: relative; transition: transform 0.15s ease-out; touch-action: pan-y;
+    #login-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 5000; background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;
     }
-    .msg-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; cursor: pointer; }
-    .msg-body { background: #15171e; border: 1px solid #242735; padding: 8px 12px; border-radius: 14px; max-width: 82%; }
-    .msg-meta-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 4px; }
-    .sender-name { font-size: 0.8rem; font-weight: bold; color: #e2e8f0; cursor: pointer; }
-    .msg-time { font-size: 0.7rem; color: #9ca3af; }
-    .msg-content { font-size: 0.9rem; color: #fff; word-break: break-word; }
+    .modal-login-card {
+      background: #ffffff; color: #111827; border-radius: 22px; padding: 24px 22px;
+      width: 100%; max-width: 340px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.7); text-align: left;
+    }
+    .modal-close-x { position: absolute; right: 18px; top: 18px; font-size: 1.25rem; font-weight: bold; color: #6b7280; cursor: pointer; }
+    .modal-title-text { font-size: 1.3rem; font-weight: 800; margin: 0 0 16px 0; color: #111827; }
+    .card-text-input { width: 100%; padding: 13px 14px; border-radius: 8px; background: #f9fafb; border: 1.5px solid #e5e7eb; color: #111827; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
+    .card-submit-blue-btn { width: 100%; padding: 13px; border: none; border-radius: 8px; background: #00a8e8; color: #fff; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
 
-    /* Reply preview inside bubble */
-    .quoted-reply { background: #0c0d12; border-left: 3px solid #38bdf8; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; color: #9ca3af; margin-bottom: 6px; }
+    #app-layout { display: none; flex-direction: column; height: 100%; height: 100dvh; position: relative; background: #0e0f14; }
 
-    /* Reply Preview Bar */
-    #reply-preview-bar {
-      display: none; background: #1e2230; border-left: 4px solid #00a8e8; padding: 6px 14px;
-      align-items: center; justify-content: space-between; font-size: 0.85rem; color: #fff;
+    #top-nav-bar {
+      background: #15171e; height: 52px; padding: 0 12px; display: flex;
+      align-items: center; justify-content: space-between; border-bottom: 1px solid #202330; flex-shrink: 0;
+    }
+    .nav-icons-group { display: flex; align-items: center; gap: 14px; }
+    .nav-icon { background: none; border: none; color: #9ca3af; font-size: 1.3rem; cursor: pointer; padding: 4px; }
+    .wallet-chip {
+      background: #1e212c; border: 1.5px solid #eab308; color: #facc15;
+      padding: 3px 9px; border-radius: 14px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px;
+    }
+    .header-dp-wrap { position: relative; width: 34px; height: 34px; cursor: pointer; }
+    .header-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1.5px solid #00a8e8; }
+    .online-green-badge { position: absolute; bottom: -2px; left: -2px; width: 11px; height: 11px; background: #22c55e; border-radius: 50%; border: 2px solid #15171e; }
+
+    #main-chat { flex: 1; overflow-y: auto; padding: 12px 14px; background-color: #0e0f14; transition: background 0.4s ease; }
+    #main-chat.hanu-secret-bg {
+      background-color: #1a0b22 !important;
+      background-image: 
+        radial-gradient(circle at 20% 25%, rgba(180, 18, 95, 0.45) 0%, transparent 45%),
+        radial-gradient(circle at 80% 65%, rgba(130, 15, 115, 0.5) 0%, transparent 50%),
+        radial-gradient(circle at 45% 85%, rgba(200, 25, 100, 0.4) 0%, transparent 45%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 700'%3E%3Cdefs%3E%3ClinearGradient id='pink1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23d81b60'/%3E%3Cstop offset='100%25' stop-color='%23880e4f'/%3E%3C/linearGradient%3E%3ClinearGradient id='purp1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ab47bc'/%3E%3Cstop offset='100%25' stop-color='%234a148c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Cpath d='M95,140 C60,90 10,130 40,180 L95,235 L150,180 C180,130 130,90 95,140 Z' fill='url(%23purp1)' opacity='0.78' transform='rotate(-18 95 140)'/%3E%3Cpath d='M230,370 C145,270 50,330 100,430 L230,555 L360,430 C410,330 315,270 230,370 Z' fill='url(%23pink1)' opacity='0.88' transform='rotate(12 230 370)'/%3E%3C/g%3E%3C/svg%3E") !important;
+      background-size: cover !important; background-position: center !important;
     }
 
-    /* Secret Room Typing Bar */
-    #typing-indicator-bar { display: none; padding: 4px 14px; font-size: 0.8rem; color: #38bdf8; background: #12141a; font-style: italic; }
+    #messages { list-style: none; margin: 0; padding: 0; }
+    #messages > li { display: flex; gap: 10px; margin-bottom: 0.95rem; align-items: flex-start; }
+    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1.5px solid #2a2d3d; cursor: pointer; }
+    .msg-body { display: flex; flex-direction: column; flex: 1; max-width: 86%; }
+    .msg-meta-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+    .sender-name { font-weight: 700; font-size: 0.88rem; color: #ff6b81; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .msg-time { font-size: 0.72rem; color: #6b7280; font-weight: 500; }
+    .msg-content { background: #171922; border: 1px solid rgba(255,255,255,0.04); padding: 8px 12px; border-radius: 12px; word-break: break-word; font-size: 0.94rem; color: #f3f4f6; }
+    .hanu-secret-bg .msg-content { background: rgba(43, 17, 56, 0.82) !important; border: 1px solid rgba(236, 72, 153, 0.35) !important; }
 
-    /* Bottom Input Bar */
-    #bottom-input-bar {
-      background: #15171e; border-top: 1px solid #2a2d3d; padding: 8px 12px;
-      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+    /* സ്ക്രീൻ റെക്കോർഡിലെ ലൈവ് വീഡിയോ കാർഡ് ഡിസൈൻ */
+    .tiktok-card-wrap {
+      background: #11131a; border: 1.5px solid #db2777; border-radius: 14px;
+      padding: 8px 10px; margin-top: 4px; max-width: 290px; box-shadow: 0 4px 15px rgba(219, 39, 119, 0.2);
     }
-    #input {
-      flex: 1; background: #0e0f14; border: 1px solid #2a2d3d; border-radius: 20px;
-      padding: 10px 16px; color: #fff; font-size: 0.92rem; outline: none;
+    .tiktok-card-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
     }
-    .btn-send { background: none; border: none; color: #00a8e8; font-size: 1.3rem; cursor: pointer; padding: 4px; }
+    .tiktok-card-title {
+      font-size: 0.82rem; font-weight: bold; color: #ec4899; display: flex; align-items: center; gap: 6px;
+    }
+    .tiktok-video-elem {
+      width: 100%; border-radius: 8px; max-height: 260px; background: #000; outline: none; display: block;
+    }
+    .tiktok-card-footer {
+      display: flex; justify-content: flex-end; margin-top: 6px;
+    }
+    .card-dl-btn {
+      background: #db2777; color: #fff; border: none; border-radius: 6px;
+      padding: 4px 10px; font-size: 0.72rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;
+    }
 
-    /* Simplified Profile Modal */
+    #bottom-input-bar { background: #15171e; padding: 8px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #202330; flex-shrink: 0; }
+    .input-action-btn { flex-shrink: 0; min-width: 30px;  background: none; border: none; color: #9ca3af; font-size: 1.35rem; cursor: pointer; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
+    #input { min-width: 0;  border: 1px solid #242735; padding: 10px 14px; flex: 1; border-radius: 20px; background: #1b1e27; color: white; outline: none; font-size: 0.95rem; }
+    #send-btn { flex-shrink: 0; min-width: 30px;  background: none; border: none; color: #00a8e8; font-size: 1.3rem; cursor: pointer; }
+
+    /* ലൈവ് പ്രൊഫൈൽ മോഡൽ (സ്ക്രീൻ റെക്കോർഡിലെ രൂപം) */
     #account-profile-modal {
-      display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(5px); align-items: center; justify-content: center; padding: 16px;
+      display: none; position: fixed; inset: 0; z-index: 6000;
+      background: rgba(0,0,0,0.82); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 14px;
     }
-    .modal-box {
-      background: #15171e; border: 1px solid #2a2d3d; width: 100%; max-width: 320px;
-      border-radius: 20px; padding: 22px; text-align: center; color: #fff; position: relative;
+    .profile-card-container {
+      background: #111218; width: 100%; max-width: 360px; border-radius: 24px;
+      overflow: hidden; box-shadow: 0 0 35px rgba(220, 38, 38, 0.35); border: 1.5px solid #3b1117;
+      display: flex; flex-direction: column;
     }
+    .profile-card-header { padding: 14px 16px 8px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .badge-chip { background: rgba(255,255,255,0.08); border-radius: 14px; padding: 4px 10px; font-size: 0.78rem; font-weight: bold; }
+    .profile-center-avatar-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0 12px 0; }
+    .profile-main-dp-ring { width: 86px; height: 86px; border-radius: 50%; padding: 3px; border: 2px solid #fff; position: relative; margin-bottom: 8px; }
+    .profile-main-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .profile-user-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin: 0; }
+    
+    .profile-red-tab-bar { background: #b91c1c; display: flex; padding: 3px; }
+    .prof-tab-btn { flex: 1; padding: 10px 0; background: none; border: none; color: #fca5a5; font-size: 0.92rem; font-weight: bold; cursor: pointer; text-align: center; }
+    .prof-tab-btn.active { background: rgba(0,0,0,0.25); color: #ffffff; border-radius: 6px; }
+    .profile-tab-body { padding: 14px 18px; max-height: 280px; overflow-y: auto; background: #0c0d12; }
+    .prof-info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; }
+    .prof-info-label { color: #9ca3af; }
+    .prof-info-val { font-weight: 600; color: #fff; }
+    .prof-menu-row { display: flex; align-items: center; gap: 14px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.92rem; color: #e5e7eb; cursor: pointer; }
+    .hexagon-badge-row { display: flex; justify-content: center; gap: 8px; margin-top: 14px; padding-top: 8px; }
+    .hex-badge { width: 38px; height: 38px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #fff; }
 
-    /* Room Select Modal */
-    #room-modal {
-      display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,0.8);
-      align-items: center; justify-content: center; padding: 16px;
+    /* ലൈവ് റൈറ്റ് യൂസർ ഡ്രോയറും സ്റ്റോറികളും */
+    #right-drawer {
+      position: fixed; top: 0; right: -100%; width: 100%; max-width: 340px; height: 100%;
+      background: #15171e; z-index: 3000; transition: right 0.25s ease; display: flex; flex-direction: column;
     }
+    #right-drawer.open { right: 0; }
+    .drawer-top-icons-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #111218; border-bottom: 1px solid #202330; }
+    .drawer-top-icons-bar button { background: none; border: none; color: #9ca3af; font-size: 1.15rem; cursor: pointer; }
+    .stories-carousel-row { display: flex; gap: 12px; overflow-x: auto; padding: 12px 14px; border-bottom: 1px solid #202330; background: #15171e; flex-shrink: 0; }
+    .stories-carousel-row::-webkit-scrollbar { display: none; }
+    .story-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex-shrink: 0; }
+    .story-dp-wrap { width: 50px; height: 50px; border-radius: 50%; padding: 2px; border: 2px solid #e11d48; display: flex; align-items: center; justify-content: center; }
+    .story-dp-wrap.add-story { border-color: #06b6d4; background: rgba(6, 182, 212, 0.1); }
+    .story-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .story-label { font-size: 0.68rem; color: #9ca3af; max-width: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .online-pill-strip { margin: 10px 14px 4px 14px; background: #000; border: 1.5px solid #00a8e8; border-radius: 20px; padding: 6px 0; text-align: center; font-size: 0.85rem; font-weight: 800; color: #fff; }
+    .user-scroll-list { flex: 1; overflow-y: auto; padding: 8px 14px; list-style: none; margin: 0; }
+    .u-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .u-avatar-wrap { width: 40px; height: 40px; border-radius: 50%; padding: 2px; border: 2px solid #ec4899; flex-shrink: 0; cursor: pointer; }
+    .u-dp { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+    /* മോഡലുകൾ */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; justify-content: center; align-items: center; padding: 16px; }
+    .modal-box { background: #161821; border-radius: 18px; width: 100%; max-width: 360px; padding: 22px; text-align: left; color: #fff; border: 1px solid #252836; position: relative; }
+    .game-btn { background: #2563eb; color: white; border: none; padding: 11px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 6px 0; width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2500; }
+
+    #custom-side-drawer { position: fixed; top: 0; left: -320px; width: 285px; height: 100%; background: #15171e; z-index: 3000; transition: left 0.25s ease; display: flex; flex-direction: column; box-shadow: 6px 0 25px rgba(0,0,0,0.65); overflow-y: auto; }
+    #custom-side-drawer.open { left: 0; }
+    .drawer-header-card { background: #1f222d; margin: 12px; border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 12px; }
+    .room-badge-art { width: 44px; height: 44px; border-radius: 8px; background: #064e3b; border: 1px solid #059669; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: bold; color: #a7f3d0; }
+    .drawer-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; color: #e5e7eb; font-size: 0.95rem; font-weight: 500; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .drawer-menu-item-left { display: flex; align-items: center; gap: 14px; }
+    .menu-icon { font-size: 1.15rem; width: 22px; text-align: center; color: #00a8e8; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN PAGE -->
-  <div id="login-page">
-    <div class="login-box">
-      <h2>കേരള Chat Room</h2>
-      <p>Welcome! Enter your username to continue to the chat community.</p>
-      <input type="text" id="username-input" class="login-input" placeholder="Enter Username..." />
-      <button class="btn-main" onclick="startAppLogin()">✈ Login</button>
-      <button class="btn-guest" onclick="startGuestLogin()">Guest login</button>
+  <div id="front-landing-screen">
+    <div class="top-flag-bar">🇺🇸</div>
+    <div class="brand-header-area">
+      <svg class="brand-custom-logo" viewBox="0 0 100 100"><path d="M25,15 L45,35 L45,65 L25,85 Z" fill="#58a6ff"/><path d="M50,15 L75,40 L55,50 L75,85 Z" fill="#a855f7"/></svg>
+      <div class="brand-text-wrap">
+        <h1 class="brand-text-malayalam">കേരള</h1>
+        <div class="brand-text-english">Chat Room</div>
+      </div>
+    </div>
+    <h2 class="welcome-main-title">Welcome To The Chat</h2>
+    <p class="welcome-description">Our chat community gives you the opportunity of making new friends and sharing fun moments.</p>
+    <div class="auth-action-buttons">
+      <button class="tg-login-btn" onclick="openLoginModal('login')"><span>✈</span> Login</button>
+      <button class="guest-login-btn" onclick="openGuestPrompt()">Guest login</button>
+      <div class="register-footer-text">New here? <span class="register-trigger-btn" onclick="openLoginModal('register')">Register now</span></div>
     </div>
   </div>
 
-  <!-- CHAT CONTAINER -->
-  <div id="chat-container">
-    <header>
-      <div class="nav-title" onclick="openRoomPicker()">🏠 <span id="nav-room-name">Kerala Chat Room</span> ▼</div>
-      <img id="nav-user-dp" class="nav-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" onclick="openProfileModal()" />
-    </header>
+  <div id="login-modal-overlay">
+    <div class="modal-login-card">
+      <span class="modal-close-x" onclick="closeLoginModal()">✕</span>
+      <h3 id="card-mode-title" class="modal-title-text">Login</h3>
+      <input type="text" id="auth-username" class="card-text-input" placeholder="Username/Email" autocomplete="off">
+      <input type="password" id="auth-password" class="card-text-input" placeholder="Password">
+      <button id="auth-submit-btn" class="card-submit-blue-btn" onclick="submitAuthForm()"><span>➔</span> Login</button>
+    </div>
+  </div>
+
+  <div id="app-layout">
+    <div id="top-nav-bar">
+      <div class="nav-icons-group">
+        <button class="nav-icon" onclick="openLeftDrawer()">☰</button>
+        <div class="wallet-chip" onclick="openModal('wallet-modal')">
+          <span>🪙</span> <span id="wallet-balance-top">15,000</span>
+        </div>
+      </div>
+      <div class="nav-icons-group">
+        <button class="nav-icon" onclick="openModal('games-hub-modal')" title="Games">🎲</button>
+        <button class="nav-icon" onclick="reloadChatPage()" title="Refresh">🔄</button>
+        <button class="nav-icon" onclick="shareYouTubePrompt()" title="YouTube">▶️</button>
+        <button class="nav-icon" onclick="openRightUsers()">👥</button>
+        <div class="header-dp-wrap" onclick="openUserProfileModal(myName, myRole, true)">
+          <img id="nav-user-dp" class="header-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user">
+          <div class="online-green-badge"></div>
+        </div>
+      </div>
+    </div>
 
     <div id="main-chat">
       <ul id="messages"></ul>
     </div>
 
-    <div id="typing-indicator-bar">✍️ <span id="typing-user-name"></span> is typing...</div>
+    <input type="file" id="media-file-input" accept="image/*,video/*" style="display:none;" onchange="handleMediaUpload(this)">
 
-    <div id="reply-preview-bar">
-      <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">
-        <span style="color:#38bdf8; font-weight:bold;">↩️ Replying to <span id="reply-to-user"></span>:</span>
-        <span id="reply-to-text" style="color:#9ca3af; margin-left:4px;"></span>
-      </div>
-      <span onclick="cancelReply()" style="cursor:pointer; color:#ef4444; font-weight:bold; font-size:1.1rem;">✕</span>
-    </div>
-
-    <form id="bottom-input-bar" onsubmit="return sendMessage(event)">
-      <input type="text" id="input" placeholder="Type here..." autocomplete="off" oninput="handleTypingInput()" />
-      <button type="submit" class="btn-send">✈</button>
+    <form id="bottom-input-bar" onsubmit="sendMessage(event)">
+      <button type="button" class="input-action-btn" onclick="document.getElementById('media-file-input').click()">➕</button>
+      <button type="button" class="input-action-btn" onclick="shareTikTokPrompt()">🎵</button>
+      <input id="input" oninput="handleTypingInput()" autocomplete="off" placeholder="Type here..." required />
+      <button type="button" id="mic-btn" class="input-action-btn" onclick="toggleVoiceRecord()">🎤</button>
+      <button id="send-btn" type="submit">✈</button>
     </form>
   </div>
 
-  <!-- PROFILE MODAL -->
-  <div id="account-profile-modal">
-    <div class="modal-box">
-      <span style="position:absolute; right:16px; top:14px; font-size:1.25rem; cursor:pointer; color:#9ca3af;" onclick="closeProfileModal()">✕</span>
-      <h3 style="margin-bottom:16px; font-size:1.1rem; color:#e5e7eb;">My Profile</h3>
+  <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-      <div style="position:relative; width:92px; height:92px; margin:0 auto 12px auto;">
-        <img id="prof-modal-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:2px solid #00a8e8;">
-        <button onclick="document.getElementById('avatar-file-input').click()" style="position:absolute; bottom:0; right:0; background:#00a8e8; border:none; border-radius:50%; width:30px; height:30px; color:#fff; cursor:pointer;">📷</button>
+  <!-- അക്കൗണ്ട് & പ്രൊഫൈൽ മോഡൽ -->
+  
+  </div>
+
+  <div id="custom-side-drawer">
+    <div class="drawer-header-card">
+      <div class="room-badge-art">മലയാളം</div>
+      <div>
+        <small style="color:#9ca3af; font-size:0.72rem;">Current room</small>
+        <strong id="drawer-current-room-text" style="color:#fff; font-size:0.95rem; display:block;">Kerala Chat Room</strong>
       </div>
+    </div>
+    <div class="drawer-menu-item" onclick="openModal('wallet-modal')"><div class="drawer-menu-item-left"><span class="menu-icon" style="color:#facc15;">🪙</span><span>My Wallet</span></div></div>
+    <div class="drawer-menu-item" onclick="openModal('room-modal')"><div class="drawer-menu-item-left"><span class="menu-icon">🏠</span><span>Room list</span></div></div>
+    <div class="drawer-menu-item" onclick="openModal('games-hub-modal')"><div class="drawer-menu-item-left"><span class="menu-icon">🎲</span><span>Games Hub</span></div></div>
+    <div class="drawer-menu-item" onclick="openModal('spin-modal')"><div class="drawer-menu-item-left"><span class="menu-icon">🎁</span><span>Lucky Spin (2 Times)</span></div></div>
+    <div class="drawer-menu-item" id="owner-secret-pass-menu" style="display:none; color:#f87171;" onclick="changeStaffPassPrompt()"><div class="drawer-menu-item-left"><span class="menu-icon">🔐</span><span>Change Secret Room Password</span></div></div>
+    <div class="drawer-menu-item" onclick="logoutApp()" style="color:#ef4444; margin-top:12px;"><div class="drawer-menu-item-left"><span class="menu-icon">🚪</span><span>Logout</span></div></div>
+  </div>
 
-      <h4 id="prof-modal-username" style="margin-bottom:4px; font-size:1.2rem;">Username</h4>
-      <div id="prof-modal-role" style="font-size:0.8rem; color:#38bdf8; font-weight:bold; margin-bottom:16px;">Member</div>
-
-      <div style="background:#0e0f14; border-radius:10px; padding:12px; text-align:left; font-size:0.85rem; margin-bottom:16px; border:1px solid #242735;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span style="color:#9ca3af;">🏠 Room:</span> <strong id="prof-info-room">Kerala Chat Room</strong></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#9ca3af;">🌐 Country:</span> <strong>India 🇮🇳</strong></div>
+  <!-- റൈറ്റ് ഡ്രോയർ (Stories + Online Users) -->
+  <div id="right-drawer">
+    <div class="drawer-top-icons-bar">
+      <button onclick="closeAllDrawers()">✕</button>
+      <button style="color:#00a8e8;">👥</button>
+      <button onclick="openUserProfileModal(myName, myRole, true)">👤</button>
+      <button>🛡️</button>
+      <button>📞</button>
+    </div>
+    <div class="stories-carousel-row" id="stories-strip">
+      <div class="story-item" onclick="alert('Add story')">
+        <div class="story-dp-wrap add-story"><span style="font-size:1.5rem; color:#06b6d4;">💖</span></div>
+        <span class="story-label">Add Story</span>
       </div>
+    </div>
+    <div class="online-pill-strip">Online <span id="active-user-count">1</span></div>
+    <ul id="user-rows" class="user-scroll-list"></ul>
+  </div>
 
-      <button onclick="document.getElementById('avatar-file-input').click()" style="width:100%; background:#2563eb; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer; margin-bottom:8px;">📷 ഗ്യാലറിയിൽ നിന്ന് DP മാറ്റുക</button>
-      <button onclick="logoutApp()" style="width:100%; background:#dc2626; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;">🚪 Logout</button>
+  <div id="games-hub-modal" class="modal">
+    <div class="modal-box" style="text-align: center;">
+      <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('games-hub-modal')">✕</span>
+      <h3 style="margin-top:0;">🎲 Games Hub</h3>
+      <button class="game-btn" style="background:#10b981;" onclick="closeModal('games-hub-modal'); openModal('spin-modal');">
+        <span>🎡 Daily Lucky Spin (2 Times)</span> <span>Play</span>
+      </button>
+      <button class="game-btn" style="background:#8b5cf6;" onclick="closeModal('games-hub-modal'); openModal('dice-modal');">
+        <span>🎲 Mini Ludo / Dice</span> <span>Play</span>
+      </button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('games-hub-modal')">Close</button>
     </div>
   </div>
 
-  <!-- ROOM PICKER MODAL -->
-  <div id="room-modal">
-    <div class="modal-box">
-      <span style="position:absolute; right:16px; top:14px; font-size:1.25rem; cursor:pointer; color:#9ca3af;" onclick="closeRoomPicker()">✕</span>
-      <h3 style="margin-bottom:16px; font-size:1.1rem; color:#e5e7eb;">Choose Room</h3>
-      <button onclick="selectRoom('Kerala Chat Room')" style="width:100%; background:#1e2230; color:#fff; border:1px solid #2a2d3d; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; margin-bottom:10px;">🏠 Kerala Chat Room</button>
-      <button onclick="selectRoom('hanu ameen secret room 💗')" style="width:100%; background:#3b1e2e; color:#ff77a9; border:1px solid #ff77a9; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">🔒 hanu ameen secret room 💗</button>
+  <div id="spin-modal" class="modal">
+    <div class="modal-box" style="text-align: center;">
+      <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('spin-modal')">✕</span>
+      <h3>🎁 Lucky Draw (Spin)</h3>
+      <div id="wheel" style="width:140px; height:140px; border-radius:50%; border:5px solid #eab308; margin:15px auto; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:conic-gradient(#ef4444 0deg 90deg, #3b82f6 90deg 180deg, #10b981 180deg 270deg, #f59e0b 270deg 360deg); transition:transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);">🎁</div>
+      <p id="spin-msg" style="font-size:0.85rem; color:#9ca3af;">ഇന്ന് ബാക്കിയുള്ള സ്പിൻ: <span id="spin-count-label">2</span>/2</p>
+      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="spinTheWheel()">SPIN NOW (Max 500 🪙)</button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('spin-modal')">Close</button>
     </div>
   </div>
 
-  <!-- Hidden Photo Picker -->
-  <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="uploadNewProfilePic(this)">
+  <div id="dice-modal" class="modal">
+    <div class="modal-box" style="text-align: center;">
+      <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('dice-modal')">✕</span>
+      <h3>🎲 Dice & Mini Ludo</h3>
+      <div id="dice-view" style="font-size:3.5rem; margin:15px 0;">🎲</div>
+      <button class="game-btn" style="background:#8b5cf6; justify-content:center;" onclick="rollDiceOnly()">Roll Dice</button>
+      <button class="game-btn" style="background:#ec4899; justify-content:center;" onclick="playLudoChallenge()">Ludo 6 Challenge (20 🪙)</button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('dice-modal')">Close</button>
+    </div>
+  </div>
 
+  <div id="wallet-modal" class="modal">
+    <div class="modal-box" style="text-align: center;">
+      <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('wallet-modal')">✕</span>
+      <h3>🪙 My Coin Wallet</h3>
+      <div style="font-size: 2.2rem; font-weight: 800; color: #facc15; margin: 15px 0;"><span id="wallet-modal-num">15000</span> <small style="font-size: 1rem; color: #9ca3af;">Coins</small></div>
+      <button class="game-btn" style="background:#10b981; justify-content:center;" onclick="closeModal('wallet-modal'); openModal('spin-modal');">Earn Free Coins (Spin)</button>
+    </div>
+  </div>
+
+  <div id="room-modal" class="modal">
+    <div class="modal-box" style="text-align: center;">
+      <span style="position: absolute; right: 18px; top: 15px; cursor: pointer; font-size: 1.2rem;" onclick="closeModal('room-modal')">✕</span>
+      <h3>Select Room</h3>
+      <button class="game-btn" style="background:#2563eb;" onclick="selectRoom('Kerala Chat Room')"><span>💬 Kerala Chat Room</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#db2777;" onclick="selectRoom('hanu ameen secret room 💗')"><span>💗 hanu ameen secret room 🔒</span> <span>Enter</span></button>
+      <button class="game-btn" style="background:#374151; justify-content:center;" onclick="closeModal('room-modal')">Close</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    let myName = localStorage.getItem('kcr_name') || '';
-    let myRole = localStorage.getItem('kcr_role') || 'Member';
-    let myAvatar = localStorage.getItem('kcr_avatar') || '';
-    let currentRoom = 'Kerala Chat Room';
-    let activeReply = null;
-    let typingTimeout = null;
-    const SECRET_ROOM_PASS = 'a26h31';
 
-    // ആപ്പ് ലോഡ് ചെയ്യുമ്പോൾ ലോഗിൻ പരിശോധിക്കുന്നു
-    window.addEventListener('DOMContentLoaded', () => {
-      if (myName) {
-        initChat();
-      } else {
-        document.getElementById('login-page').style.display = 'flex';
+    let myName = localStorage.getItem('kcr_name') || "";
+    let myAvatar = localStorage.getItem('kcr_avatar') || "";
+    let myCoins = parseInt(localStorage.getItem('kcr_coins') || '15000');
+    let isVip = localStorage.getItem('kcr_vip') === 'true';
+    let currentRoom = localStorage.getItem('kcr_room') || "Kerala Chat Room";
+    let myRole = localStorage.getItem('kcr_role') || 'Member';
+    let isOwnerOrAdmin = false;
+    let staffRoomPassword = "staff123";
+    let dailySpinCount = 0;
+
+    socket.on('connect', () => {
+      if (myName) socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
+    });
+
+    socket.on('staff password updated', (p) => staffRoomPassword = p);
+    socket.on('force disconnect', (msg) => { alert(msg); logoutApp(); });
+
+    function reloadChatPage() { socket.emit('switch room', currentRoom); }
+
+    function updateWalletUI() {
+      document.getElementById('wallet-balance-top').textContent = isOwnerOrAdmin ? 'Unlimited' : myCoins.toLocaleString();
+      document.getElementById('wallet-modal-num').textContent = isOwnerOrAdmin ? 'Unlimited' : myCoins.toLocaleString();
+      localStorage.setItem('kcr_coins', myCoins);
+    }
+
+    function openLoginModal(mode) {
+      document.getElementById('login-modal-overlay').style.display = 'flex';
+      document.getElementById('card-mode-title').textContent = mode === 'register' ? 'Register Now' : 'Login';
+    }
+    function closeLoginModal() { document.getElementById('login-modal-overlay').style.display = 'none'; }
+
+    function submitAuthForm() {
+      const u = document.getElementById('auth-username').value.trim();
+      const p = document.getElementById('auth-password').value.trim();
+      if (!u || !p) return alert("Username, Password നൽകുക!");
+      socket.emit('authenticate user', { username: u, password: p });
+    }
+
+    socket.on('auth response', (res) => {
+      if (!res.success) alert(res.msg);
+      else {
+        closeLoginModal();
+        myName = res.username;
+        myRole = res.role;
+        const savedUserDp = localStorage.getItem('kcr_saved_dp_' + myName);
+        myAvatar = savedUserDp || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+        localStorage.setItem('kcr_name', myName);
+        localStorage.setItem('kcr_role', myRole);
+        localStorage.setItem('kcr_avatar', myAvatar);
+        startChatApp(true);
       }
     });
 
-    function startAppLogin() {
-      const inp = document.getElementById('username-input');
-      const val = inp.value.trim();
-      if (!val) return alert("Username നൽകുക!");
-      executeLogin(val);
-    }
-
-    function startGuestLogin() {
-      const guestName = "Guest_" + Math.floor(1000 + Math.random() * 9000);
-      executeLogin(guestName);
-    }
-
-    function executeLogin(username) {
-      myName = username;
-      myRole = (username.toLowerCase() === 'ameen') ? 'Owner' : 'Member';
-      
-      const savedDp = localStorage.getItem('kcr_saved_dp_' + myName);
-      myAvatar = savedDp || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
-
+    function openGuestPrompt() {
+      myName = "Guest_" + Math.floor(1000 + Math.random() * 9000);
+      myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myName)}`;
+      myRole = 'Member';
       localStorage.setItem('kcr_name', myName);
       localStorage.setItem('kcr_role', myRole);
       localStorage.setItem('kcr_avatar', myAvatar);
-
-      initChat();
+      startChatApp(true);
     }
 
-    function initChat() {
-      document.getElementById('login-page').style.display = 'none';
+    function startChatApp(emitJoin = true) {
+      document.getElementById('front-landing-screen').style.display = 'none';
+      document.getElementById('app-layout').style.display = 'flex';
       document.getElementById('nav-user-dp').src = myAvatar;
-      document.getElementById('prof-modal-dp').src = myAvatar;
-      document.getElementById('prof-modal-username').textContent = myName;
-      document.getElementById('prof-modal-role').textContent = myRole;
-
-      socket.emit('join', {
-        name: myName,
-        avatar: myAvatar,
-        room: currentRoom,
-        isVip: (myRole === 'Owner'),
-        clientRole: myRole
-      });
+      isOwnerOrAdmin = myRole === 'Owner' || myRole === 'Admin';
+      
+      const passOpt = document.getElementById('owner-secret-pass-menu');
+      if (myRole === 'Owner' && passOpt) passOpt.style.display = 'flex';
+      
+      updateWalletUI();
+      if (emitJoin) socket.emit('join', { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
     }
 
-    // മെസ്സേജ് അയക്കൽ
+    function openLeftDrawer() { document.getElementById('custom-side-drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; }
+    function openRightUsers() { document.getElementById('right-drawer').classList.add('open'); document.getElementById('overlay').style.display = 'block'; }
+    function closeAllDrawers() {
+      document.getElementById('custom-side-drawer').classList.remove('open');
+      document.getElementById('right-drawer').classList.remove('open');
+      document.getElementById('overlay').style.display = 'none';
+    }
+    function openModal(id) { closeAllDrawers(); document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function selectRoom(roomName) {
+      if (roomName === 'hanu ameen secret room 💗') {
+        const enteredPass = prompt("💗 hanu ameen secret room പാസ്‌വേർഡ് നൽകുക:");
+        if (enteredPass !== staffRoomPassword) return alert("❌ തെറ്റായ പാസ്‌വേർഡ്!");
+      }
+      currentRoom = roomName;
+      localStorage.setItem('kcr_room', currentRoom);
+      document.getElementById('drawer-current-room-text').textContent = roomName;
+      
+      const chatEl = document.getElementById('main-chat');
+      if (roomName === 'hanu ameen secret room 💗') chatEl.classList.add('hanu-secret-bg');
+      else chatEl.classList.remove('hanu-secret-bg');
+
+      document.getElementById('messages').innerHTML = '';
+      socket.emit('switch room', roomName);
+      closeModal('room-modal');
+    }
+
+    function changeStaffPassPrompt() {
+      closeAllDrawers();
+      if (myRole !== 'Owner') return;
+      const newP = prompt("💗 പുതിയ Secret Room പാസ്‌വേർഡ് നൽകുക:", staffRoomPassword);
+      if (newP && newP.trim().length >= 3) {
+        socket.emit('change staff password', newP.trim());
+        alert("✅ പാസ്‌വേർഡ് അപ്‌ഡേറ്റ് ചെയ്തു: " + newP.trim());
+      }
+    }
+
+    function logoutApp() { 
+      localStorage.removeItem('kcr_name');
+      localStorage.removeItem('kcr_role');
+      localStorage.removeItem('kcr_avatar');
+      window.location.reload(); 
+    }
+
+    
+    socket.on("message deleted", (msgId) => {
+      const el = document.getElementById(msgId);
+      if (el) el.remove();
+    });
+
+    function promptDeleteMessage(msgId) {
+      if (!isOwnerOrAdmin && !isVip) {
+        return alert("⭐ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യാനുള്ള സൗകര്യം VIP അംഗങ്ങൾക്കും Owner-ക്കും മാത്രമുള്ളതാണ്!");
+      }
+      if (confirm("ഈ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യണമെന്നുറപ്പാണോ?")) {
+        socket.emit("delete chat message", msgId);
+      }
+    }
+
     function sendMessage(e) {
-      if (e) e.preventDefault();
+      if (e) { e.preventDefault(); e.stopPropagation(); }
       const inp = document.getElementById('input');
+      if (!inp) return false;
       const text = inp.value.trim();
       if (!text) return false;
 
@@ -259,19 +497,6 @@
       return false;
     }
 
-    // മെസ്സേജ് റെൻഡറിംഗ് & സ്വൈപ്പ് അറ്റാച്ച്
-    socket.on('chat message', (data) => {
-      renderMessage(data);
-    });
-
-    socket.on('load room messages', (list) => {
-      const msgList = document.getElementById('messages');
-      msgList.innerHTML = '';
-      if (Array.isArray(list)) {
-        list.forEach(m => renderMessage(m));
-      }
-    });
-
     function renderMessage(data) {
       if (!data) return;
       if (data.id && document.getElementById(data.id)) return;
@@ -279,123 +504,236 @@
       const li = document.createElement('li');
       if (data.id) li.id = data.id;
 
-      let quoteHtml = '';
+      let contentHtml = '';
       if (data.replyTo) {
-        quoteHtml = `<div class="quoted-reply">💬 <strong>${data.replyTo.user}:</strong> ${data.replyTo.text}</div>`;
+        contentHtml += '<div style="background:#13151b; border-left:3px solid #38bdf8; padding:4px 8px; border-radius:4px; font-size:0.8rem; color:#9ca3af; margin-bottom:5px;">💬 <strong style="color:#38bdf8;">' + data.replyTo.user + ':</strong> ' + data.replyTo.text + '</div>';
+      }
+      const type = data.type || 'text';
+      const textBody = data.text || data.content;
+
+      if (type === 'text') {
+        contentHtml = '<div>' + textBody + '</div>';
+      } else if (type === 'youtube') {
+        contentHtml = '<iframe width="100%" height="200" src="https://www.youtube.com/embed/' + data.content + '" frameborder="0" allowfullscreen style="border-radius:10px; max-width:320px;"></iframe>';
+      } else if (type === 'tiktok' || type === 'video') {
+        contentHtml = '<div class="tiktok-card-wrap"><div class="tiktok-card-head"><span class="tiktok-card-title">🎵 Video Media</span><button class="card-dl-btn" onclick="downloadVid(\'' + data.content + '\')">⬇️ Save</button></div><video class="tiktok-video-elem" controls playsinline preload="metadata" src="' + data.content + '"></video></div>';
+      } else if (type === 'image') {
+        contentHtml = '<img src="' + data.content + '" style="max-width:220px; border-radius:10px; display:block;">';
+      } else if (type === 'audio') {
+        contentHtml = '<audio controls src="' + data.content + '" style="max-width:230px; height:38px;"></audio>';
       }
 
-      const isOwnerOrVip = (myRole === 'Owner');
-      const delBtn = `<span style="cursor:pointer; font-size:0.75rem; opacity:0.6; margin-left:6px;" onclick="promptDeleteMessage('${data.id}')" title="Delete">🗑️</span>`;
+      li.innerHTML = '<img class="msg-avatar" src="' + (data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=user') + '" onclick="openUserProfileModal(\'' + data.user + '\', \'' + data.role + '\', false)">' +
+        '<div class="msg-body">' +
+          '<div class="msg-meta-row">' +
+            '<div class="sender-name" onclick="openUserProfileModal(\'' + data.user + '\', \'' + data.role + '\', false)">★ ' + data.user + '</div>' +
+            '<div style="display:flex; align-items:center; gap:6px;">' +
+              '<span class="msg-time">' + (data.time || '') + '</span>' +
+              '<span style="cursor:pointer; font-size:0.75rem; opacity:0.6;" onclick="promptDeleteMessage(\'' + (data.id || '') + '\')" title="Delete Message">🗑️</span><span style="cursor:pointer; font-size:0.8rem; margin-left:4px;" onclick="replyToMessage('${data.user}', '${(data.content || '').replace(/['"]/g, ' ')}')" title="Reply">↩️</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="msg-content">' + contentHtml + '</div>' +
+        '</div>';
 
-      li.innerHTML = `
-        <img class="msg-avatar" src="${data.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=user'}" onclick="openUserProfileModal('${data.user}', '${data.role}', false)">
-        <div class="msg-body">
-          <div class="msg-meta-row">
-            <span class="sender-name" onclick="openUserProfileModal('${data.user}', '${data.role}', false)">★ ${data.user}</span>
-            <div>
-              <span class="msg-time">${data.time || ''}</span>
-              ${delBtn}
-            </div>
-          </div>
-          ${quoteHtml}
-          <div class="msg-content">${data.content}</div>
-        </div>
-      `;
+      const msgList = document.getElementById('messages');
+      if (msgList) msgList.appendChild(li);
+    }
 
-      // ഇടത്തോട്ട് സ്വൈപ്പ് ചെയ്യുമ്പോൾ മെൻഷൻ ചെയ്യുന്ന ടച്ച് ഇവന്റ്
-      attachSwipeToReply(li, data.user, data.content);
-
-      document.getElementById('messages').appendChild(li);
+    socket.on('load room messages', (msgs) => {
+      const msgList = document.getElementById('messages');
+      msgList.innerHTML = '';
+      if (Array.isArray(msgs)) msgs.forEach(m => renderMessage(m));
       const chatArea = document.getElementById('main-chat');
       chatArea.scrollTop = chatArea.scrollHeight;
+    });
+
+    socket.on('chat message', data => {
+      renderMessage(data);
+      const chatArea = document.getElementById('main-chat');
+      chatArea.scrollTop = chatArea.scrollHeight;
+    });
+
+    function openUserProfileModal(userName, userRole, isSelf) {
+      closeAllDrawers();
+      document.getElementById('prof-modal-username').textContent = userName;
+      document.getElementById('prof-info-room').textContent = currentRoom;
+      document.getElementById('account-profile-modal').style.display = 'flex';
+      switchProfileTab('info');
     }
 
-    // Swipe-to-Mention ടച്ച് ഇവന്റ്
-    function attachSwipeToReply(liElement, sender, text) {
-      let startX = 0;
-      let diffX = 0;
-      let swiping = false;
+    function closeProfileModal() {
+      document.getElementById('account-profile-modal').style.display = 'none';
+    }
 
-      liElement.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        swiping = true;
-      }, { passive: true });
+    function switchProfileTab(tab) {
+      document.getElementById('tab-btn-info').classList.remove('active');
+      document.getElementById('tab-btn-account').classList.remove('active');
+      document.getElementById('tab-btn-more').classList.remove('active');
 
-      liElement.addEventListener('touchmove', (e) => {
-        if (!swiping) return;
-        diffX = e.touches[0].clientX - startX;
-        if (diffX < 0 && diffX > -70) {
-          liElement.style.transform = `translateX(${diffX}px)`;
-        }
-      }, { passive: true });
+      document.getElementById('prof-tab-content-info').style.display = 'none';
+      document.getElementById('prof-tab-content-account').style.display = 'none';
+      document.getElementById('prof-tab-content-more').style.display = 'none';
 
-      liElement.addEventListener('touchend', () => {
-        if (!swiping) return;
-        swiping = false;
-        if (diffX < -30) {
-          replyToMessage(sender, text);
-          if (navigator.vibrate) { try { navigator.vibrate(30); } catch(err){} }
-        }
-        liElement.style.transform = "translateX(0px)";
-        startX = 0; diffX = 0;
+      if (tab === 'info') {
+        document.getElementById('tab-btn-info').classList.add('active');
+        document.getElementById('prof-tab-content-info').style.display = 'block';
+      } else if (tab === 'account') {
+        document.getElementById('tab-btn-account').classList.add('active');
+        document.getElementById('prof-tab-content-account').style.display = 'block';
+      } else if (tab === 'more') {
+        document.getElementById('tab-btn-more').classList.add('active');
+        document.getElementById('prof-tab-content-more').style.display = 'block';
+      }
+    }
+
+    function spinTheWheel() {
+      if (!isOwnerOrAdmin && dailySpinCount >= 2) return alert("❌ ഇന്നത്തെ സ്പിൻ പരിധി കഴിഞ്ഞു! (പരമാവധി 2 തവണ)");
+      dailySpinCount++;
+      document.getElementById('spin-count-label').textContent = 2 - dailySpinCount;
+
+      const deg = 1800 + Math.floor(Math.random() * 360);
+      document.getElementById('wheel').style.transform = `rotate(${deg}deg)`;
+      setTimeout(() => {
+        const reward = Math.floor(Math.random() * 451) + 50;
+        if (!isOwnerOrAdmin) myCoins += reward;
+        updateWalletUI();
+        document.getElementById('spin-msg').textContent = `🎉 നിങ്ങൾക്ക് ${reward} കോയിനുകൾ ലഭിച്ചു!`;
+      }, 3100);
+    }
+
+    const diceIcons = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    function rollDiceOnly() {
+      const val = Math.floor(Math.random() * 6) + 1;
+      document.getElementById('dice-view').textContent = diceIcons[val - 1];
+    }
+
+    function playLudoChallenge() {
+      if (!isOwnerOrAdmin && myCoins < 20) return alert("കോയിനുകൾ തികയില്ല!");
+      if (!isOwnerOrAdmin) myCoins -= 20;
+      updateWalletUI();
+      const val = Math.floor(Math.random() * 6) + 1;
+      document.getElementById('dice-view').textContent = diceIcons[val - 1];
+      if (val === 6) {
+        if (!isOwnerOrAdmin) myCoins += 100;
+        updateWalletUI();
+        alert("🎉 ലുഡോയിൽ 6 അടിച്ചു 100 കോയിൻസ് ജയിച്ചു!");
+      } else alert(`കിട്ടിയത് ${val}.`);
+    }
+
+    socket.on('update users', (usersList) => {
+      document.getElementById('active-user-count').textContent = usersList.length;
+      const list = document.getElementById('user-rows');
+      list.innerHTML = '';
+      usersList.forEach(u => {
+        list.innerHTML += `
+          <li class="u-row">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="u-avatar-wrap" onclick="openUserProfileModal('${u.name}', '${u.role}', false)">
+                <img class="u-dp" src="${u.avatar}">
+              </div>
+              <div>
+                <strong style="font-size:0.9rem; color:#fff;" onclick="openUserProfileModal('${u.name}', '${u.role}', false)">${u.name}</strong>
+              </div>
+            </div>
+            <span>🇮🇳</span>
+          </li>
+        `;
       });
+    });
+
+    function shareYouTubePrompt() {
+      const url = prompt("YouTube വീഡിയോ ലിങ്ക് നൽകുക:");
+      if (!url) return;
+      const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+      if (match && match[2].length === 11) socket.emit('chat message', { type: 'youtube', content: match[2] });
     }
 
-    function replyToMessage(user, text) {
-      activeReply = { user, text };
-      document.getElementById('reply-to-user').textContent = user;
-      document.getElementById('reply-to-text').textContent = (text.length > 35) ? text.substring(0, 35) + '...' : text;
-      document.getElementById('reply-preview-bar').style.display = 'flex';
-      const inp = document.getElementById('input');
-      inp.focus();
-      inp.placeholder = `Replying to ${user}...`;
+    function shareTikTokPrompt() {
+      if (currentRoom !== 'hanu ameen secret room 💗') return alert("⛔ TikTok / Reels 'hanu ameen secret room'-ൽ മാത്രമേ സാധിക്കൂ!");
+      const url = prompt("TikTok / Reel നേരിട്ടുള്ള വീഡിയോ URL നൽകുക:");
+      if (url) socket.emit('chat message', { type: 'tiktok', content: url.trim() });
     }
 
-    function cancelReply() {
-      activeReply = null;
-      document.getElementById('reply-preview-bar').style.display = 'none';
-      const inp = document.getElementById('input');
-      inp.placeholder = "Type here...";
+    function handleMediaUpload(el) {
+      const file = el.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => socket.emit('chat message', { type: file.type.startsWith('video') ? 'video' : 'image', content: e.target.result });
+      reader.readAsDataURL(file);
+      el.value = '';
     }
 
-    // ടൈപ്പിംഗ് ഇൻഡിക്കേറ്റർ
-    function handleTypingInput() {
-      if (currentRoom === 'hanu ameen secret room 💗') {
-        socket.emit('typing', { user: myName, isTyping: true });
-        clearTimeout(typingTimeout);
-        typingTimeout = setTimeout(() => {
-          socket.emit('typing', { user: myName, isTyping: false });
-        }, 1500);
-      }
-    }
-
-    socket.on('user typing', (data) => {
-      const bar = document.getElementById('typing-indicator-bar');
-      const nameEl = document.getElementById('typing-user-name');
-      if (data.isTyping && currentRoom === 'hanu ameen secret room 💗') {
-        nameEl.textContent = data.user;
-        bar.style.display = 'block';
+    let mediaRecorder, audioChunks = [], isRecording = false;
+    async function toggleVoiceRecord() {
+      const micBtn = document.getElementById('mic-btn');
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+          mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+            const reader = new FileReader();
+            reader.onload = e => socket.emit('chat message', { type: 'audio', content: e.target.result });
+            reader.readAsDataURL(blob);
+            stream.getTracks().forEach(t => t.stop());
+          };
+          mediaRecorder.start();
+          isRecording = true;
+          micBtn.style.color = '#ef4444';
+        } catch (err) { alert("Mic permission unavailable"); }
       } else {
-        bar.style.display = 'none';
-      }
-    });
-
-    // മെസ്സേജ് ഡിലീറ്റ്
-    function promptDeleteMessage(msgId) {
-      if (myRole !== 'Owner') {
-        return alert("⛔ മെസ്സേജ് ഡിലീറ്റ് ചെയ്യാനുള്ള സൗകര്യം Owner-ക്ക് മാത്രമുള്ളതാണ്!");
-      }
-      if (confirm("ഈ മെസ്സേജ് എല്ലാവർക്കും കാണാത്ത രീതിയിൽ ഡിലീറ്റ് ചെയ്യണമെന്നുറപ്പാണോ?")) {
-        socket.emit('delete chat message', msgId);
+        mediaRecorder.stop();
+        isRecording = false;
+        micBtn.style.color = '#9ca3af';
       }
     }
+  </script>
 
-    socket.on('message deleted', (msgId) => {
-      const el = document.getElementById(msgId);
-      if (el) el.remove();
-    });
+  <!-- ലളിതമായ പ്രൊഫൈൽ മോഡൽ -->
+  <div id="account-profile-modal" style="display:none; position:fixed; inset:0; z-index:6000; background:rgba(0,0,0,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#15171e; border:1.5px solid #2a2d3d; width:100%; max-width:320px; border-radius:20px; padding:22px; text-align:center; color:#fff; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
+      <span style="position:absolute; right:16px; top:14px; font-size:1.25rem; cursor:pointer; color:#9ca3af;" onclick="closeProfileModal()">✕</span>
+      <h3 style="margin:0 0 16px 0; font-size:1.15rem; color:#e5e7eb;">My Profile</h3>
 
-    // ഗാലറിയിൽ നിന്ന് DP അപ്‌ലോഡ് (ഓട്ടോ കംപ്രഷൻ)
+      <div style="position:relative; width:94px; height:94px; margin:0 auto 12px auto;">
+        <img id="prof-modal-dp" src="https://api.dicebear.com/7.x/bottts/svg?seed=user" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:2.5px solid #00a8e8;">
+        <button onclick="document.getElementById('avatar-file-input').click()" style="position:absolute; bottom:0; right:0; background:#00a8e8; border:none; border-radius:50%; width:30px; height:30px; color:#fff; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.5);" title="Change Photo">📷</button>
+      </div>
+
+      <h4 id="prof-modal-username" style="margin:0 0 4px 0; font-size:1.25rem; color:#fff;">Username</h4>
+      <div id="prof-modal-role" style="font-size:0.82rem; color:#38bdf8; font-weight:700; margin-bottom:16px;">Member</div>
+
+      <div style="background:#0e0f14; border-radius:12px; padding:12px 14px; text-align:left; font-size:0.88rem; margin-bottom:18px; border:1px solid #1f2230;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#9ca3af;">🏠 Current Room:</span> <strong id="prof-info-room" style="color:#fff;">Kerala Chat Room</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:#9ca3af;">🌐 Country:</span> <strong style="color:#fff;">India 🇮🇳</strong></div>
+      </div>
+
+      <button onclick="document.getElementById('avatar-file-input').click()" style="width:100%; background:#2563eb; color:#fff; border:none; padding:11px; border-radius:10px; font-weight:bold; font-size:0.95rem; cursor:pointer; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px;">📷 ഗ്യാലറിയിൽ നിന്ന് DP മാറ്റുക</button>
+      <button onclick="logoutApp()" style="width:100%; background:#dc2626; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:bold; font-size:0.9rem; cursor:pointer;">🚪 Logout</button>
+    </div>
+  </div>
+
+  <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="uploadNewProfilePic(this)">
+
+  <script>
+    function openUserProfileModal(userName, userRole, isSelf) {
+      closeAllDrawers();
+      document.getElementById("prof-modal-username").textContent = userName;
+      const roleEl = document.getElementById("prof-modal-role");
+      if (roleEl) roleEl.textContent = userRole || "Member";
+      const roomEl = document.getElementById("prof-info-room");
+      if (roomEl) roomEl.textContent = currentRoom;
+      const dpEl = document.getElementById("prof-modal-dp");
+      if (dpEl) dpEl.src = (isSelf && myAvatar) ? myAvatar : (userName === myName ? myAvatar : "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(userName));
+      document.getElementById("account-profile-modal").style.display = "flex";
+    }
+
+    function closeProfileModal() {
+      document.getElementById("account-profile-modal").style.display = "none";
+    }
+
     function uploadNewProfilePic(el) {
       const file = el.files[0];
       if (!file) return;
@@ -406,70 +744,86 @@
         img.onload = function() {
           const canvas = document.createElement("canvas");
           const MAX_SIZE = 300;
-          let width = img.width, height = img.height;
+          let width = img.width;
+          let height = img.height;
+
           if (width > height) {
-            if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+            if (width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            }
           } else {
-            if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+            if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
           }
-          canvas.width = width; canvas.height = height;
+
+          canvas.width = width;
+          canvas.height = height;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
 
-          myAvatar = canvas.toDataURL("image/jpeg", 0.85);
+          const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+          myAvatar = optimizedDataUrl;
           localStorage.setItem("kcr_avatar", myAvatar);
           localStorage.setItem("kcr_saved_dp_" + myName, myAvatar);
 
-          document.getElementById('nav-user-dp').src = myAvatar;
-          document.getElementById('prof-modal-dp').src = myAvatar;
+          const navDp = document.getElementById("nav-user-dp");
+          const modalDp = document.getElementById("prof-modal-dp");
+          if (navDp) navDp.src = myAvatar;
+          if (modalDp) modalDp.src = myAvatar;
 
-          socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: (myRole === 'Owner'), clientRole: myRole });
-          alert("✅ പ്രൊഫൈൽ ഫോട്ടോ അപ്‌ഡേറ്റ് ആയി!");
+          socket.emit("join", { name: myName, avatar: myAvatar, room: currentRoom, isVip: isVip, clientRole: myRole });
+          alert("✅ പ്രൊഫൈൽ ഫോട്ടോ വിജയകരമായി സെറ്റ് ആയി!");
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
       el.value = "";
     }
+  
+  let activeReply = null;
+  let typingTimeout = null;
 
-    // മോഡലുകൾ
-    function openProfileModal() {
-      document.getElementById('prof-info-room').textContent = currentRoom;
-      document.getElementById('account-profile-modal').style.display = 'flex';
-    }
-    function closeProfileModal() {
-      document.getElementById('account-profile-modal').style.display = 'none';
-    }
-    function openUserProfileModal(user, role, isSelf) {
-      document.getElementById('prof-modal-username').textContent = user;
-      document.getElementById('prof-modal-role').textContent = role || 'Member';
-      document.getElementById('prof-info-room').textContent = currentRoom;
-      document.getElementById('prof-modal-dp').src = (user === myName) ? myAvatar : `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user)}`;
-      document.getElementById('account-profile-modal').style.display = 'flex';
-    }
+  function replyToMessage(user, text) {
+    activeReply = { user: user, text: text };
+    document.getElementById("reply-to-text").textContent = user + ": " + (text.length > 35 ? text.substring(0, 35) + "..." : text);
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "flex";
+    const inp = document.getElementById("input");
+    if (inp) { inp.focus(); }
+  }
 
-    function openRoomPicker() { document.getElementById('room-modal').style.display = 'flex'; }
-    function closeRoomPicker() { document.getElementById('room-modal').style.display = 'none'; }
+  function cancelReply() {
+    activeReply = null;
+    const bar = document.getElementById("reply-preview-bar");
+    if (bar) bar.style.display = "none";
+  }
 
-    function selectRoom(roomName) {
-      if (roomName === 'hanu ameen secret room 💗') {
-        const pass = prompt("Enter Secret Room Password:");
-        if (pass !== SECRET_ROOM_PASS) {
-          return alert("❌ തെറ്റായ പാസ്‌വേഡ്!");
-        }
-      }
-      currentRoom = roomName;
-      document.getElementById('nav-room-name').textContent = roomName;
-      closeRoomPicker();
-      socket.emit('switch room', currentRoom);
+  // ഇൻപുട്ട് ടൈപ്പ് ചെയ്യുമ്പോൾ typing ഇവന്റ് അയക്കുന്നു
+  function handleTypingInput() {
+    if (currentRoom === 'hanu ameen secret room 💗') {
+      socket.emit('typing', { user: myName, isTyping: true });
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        socket.emit('typing', { user: myName, isTyping: false });
+      }, 1500);
     }
+  }
 
-    function logoutApp() {
-      localStorage.removeItem('kcr_name');
-      localStorage.removeItem('kcr_role');
-      localStorage.removeItem('kcr_avatar');
-      window.location.reload();
+  socket.on('user typing', (data) => {
+    const bar = document.getElementById("typing-indicator-bar");
+    const nameEl = document.getElementById("typing-user-name");
+    if (!bar || !nameEl) return;
+    if (data.isTyping && currentRoom === 'hanu ameen secret room 💗') {
+      nameEl.textContent = data.user;
+      bar.style.display = "block";
+    } else {
+      bar.style.display = "none";
     }
-  </script>
+  });
+
+</script>
 </body>
 </html>
