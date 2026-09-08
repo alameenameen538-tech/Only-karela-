@@ -1,18 +1,3 @@
-
-const HISTORY_FILE = 'chat_history.json';
-let roomMessages = {};
-try {
-  if (fs.existsSync(HISTORY_FILE)) {
-    roomMessages = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8'));
-  }
-} catch(e) { roomMessages = {}; }
-
-function saveMessagesToFile() {
-  try {
-    fs.writeFileSync(HISTORY_FILE, JSON.stringify(roomMessages), 'utf8');
-  } catch(e) {}
-}
-
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -167,30 +152,52 @@ io.on('connection', (socket) => {
       io.to(socket.currentRoom || "Kerala Chat Room").emit("message deleted", msgId);
     });
 
-    socket.on('chat message', (data) => {
-      const u = users[socket.id] || { name: 'User', avatar: '', role: 'Member', isVip: false };
-      const room = socket.currentRoom || "Kerala Chat Room";
-      if (!roomMessages[room]) roomMessages[room] = [];
+    socket.on('chat message', (msgData) => {
+        const user = users[socket.id] || { name: 'Anonymous', avatar: '', isVip: false, role: 'Member' };
+        const uLower = user.name.toLowerCase().trim();
 
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const msgObj = {
-        id: data.id || ('msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4)),
-        user: u.name,
-        avatar: u.avatar || data.avatar,
-        role: u.role,
-        isVip: u.isVip,
-        type: data.type || 'text',
-        content: data.content,
-        time: timeStr
-      };
+        if (mutedUsers[uLower] && Date.now() < mutedUsers[uLower]) {
+            const timeLeftSec = Math.ceil((mutedUsers[uLower] - Date.now()) / 1000);
+            return socket.emit('mute warning', `നിങ്ങളെ മ്യൂട്ട് ചെയ്തിരിക്കുന്നു! ബാക്കി സമയം: ${timeLeftSec} സെക്കൻഡ്.`);
+        }
 
-      roomMessages[room].push(msgObj);
-      if (roomMessages[room].length > 150) roomMessages[room].shift();
-      saveMessagesToFile();
+        const room = socket.currentRoom || 'Kerala Chat Room';
+        let type = 'text';
+        let content = '';
+        let replyTo = null;
 
-      // എല്ലാവർക്കും ഉടൻ അയക്കുന്നു
-      io.to(room).emit('chat message', msgObj);
+        if (typeof msgData === 'object') {
+            type = msgData.type || 'text';
+            content = msgData.content || msgData.text || '';
+            replyTo = msgData.replyTo || null;
+        } else {
+            content = msgData;
+        }
+
+        const now = new Date();
+        const timeFormatted = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+        const messageData = {
+            id: 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+            user: user.name,
+            type: type,
+            content: content,
+            text: content,
+            replyTo: replyTo,
+            time: timeFormatted,
+            avatar: user.avatar,
+            role: user.role,
+            isVip: user.isVip,
+            room: room
+        };
+
+        if (!roomMessages[room]) roomMessages[room] = [];
+        roomMessages[room].push(messageData);
+
+        if (roomMessages[room].length > 200) roomMessages[room].shift();
+        saveMessagesToFile();
+
+        io.to(room).emit('chat message', messageData);
     });
 
     socket.on('add story', (storyObj) => {
